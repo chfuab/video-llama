@@ -1,0 +1,48 @@
+2024-??-??:
+	Define encode_audiovideoQformer	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/video_llama.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/processors/audio_processor.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/processors/video_processor.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/datasets/builders/base_dataset_builder.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/datasets/builders/video_caption_builder.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/datasets/datasets/base_dataset.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/datasets/datasets/webvid_datasets.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/train_configs/visionbranch_stage1_pretrain.yaml
+2024-02-14: 
+	Define Q-former aligned		/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/Qformer_aligned.py
+
+2024-02-20:
+	Complete evaluation algorithm	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/runners/runner_base.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+					/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/common/eval_metrics.py
+2024-02-21:
+	Add function in SmoothedValue	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/common/logger.py
+
+2024-02-22:
+	Modify task.evaluation		/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+
+2024-02-23:
+	Modify evaluation in train_epoch	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/runners/runner_base.py
+2024-02-29:
+	Integrating Q-former output (by adding linear layer) to imagebind output	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/video_llama.py
+2024-03-01:
+	Intefrating QFormerAligned model into Video-LLAMA	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/video_llama.py
+2024-03-04:
+	Proof reading the code		/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/video_llama.py
+2024-03-07:
+	Streamline evaluation code	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+	define valid step logics	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+2024-03-10:
+	define predict & get-ground-truth method in valid_step for text generation	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+2024-03-11:
+	proof-read evaluation code		/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/runners/runner_base.py
+						/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+	extract variable to train_config	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+
+2024-03-13:
+	adding llama_type flag			/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/tasks/base_task.py
+						/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/runners/runner_base.py
+						/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/video_llama.py
+	define LlamaForSequenceClassification	/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/modeling_llama.py
+2024-03-31:
+	Define LoRA in video_Qformer		/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/Qformer.py
+						/home/chfuab/LLM/video-llama/Video-LLaMA/video_llama/models/LoRA.py
