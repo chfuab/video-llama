@@ -10,9 +10,9 @@ model:
   # If you want train models based on LLaMA-2-chat,
   # some ckpts could be download from our provided huggingface repo
   # i.e.  https://huggingface.co/DAMO-NLP-SG/Video-LLaMA-2-13B-Pretrained
-  llama_model: "" #"ckpt/llama-2-7b-chat-hf"                                            #########################################
-  imagebind_ckpt_path: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/imagebind_path/" #########################################
-  llama_proj_model: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/pretrained_minigpt4.pth" #########################################
+  llama_model: "/mnt/disks/home/chfuab/Llama-2-7b-chat-hf" #"ckpt/llama-2-7b-chat-hf"
+  imagebind_ckpt_path: "/mnt/disks/home/chfuab"
+  llama_proj_model: "/mnt/disks/home/chfuab/pretrained_minigpt4.pth"
 
   # only train vision branch
   equip_audio_branch: True # whether equips the audio branch
@@ -36,10 +36,10 @@ datasets:
   webvid:
     data_type: video
     build_info:
-      anno_dir: /train/anno
-      videos_dir: /train/video
-      anno_dir_val: /val/anno
-      videos_dir_val: /val/video
+      anno_dir: /home/chfuab/webvid/data/train/annotations
+      videos_dir: /home/chfuab/webvid/data/train/videos
+      anno_dir_val: /home/chfuab/webvid/data/eval/annotations
+      videos_dir_val: /home/chfuab/webvid/data/eval/videos
 
     vis_processor:
       train:
@@ -72,14 +72,16 @@ run:
 
   weight_decay: 0.05
   max_epoch: 5
-  batch_size_train: 32
-  batch_size_eval: 32
+  batch_size_train: 1
+  batch_size_eval: 1
+  # batch_size_train: 32
+  # batch_size_eval: 32
   num_workers: 8
   warmup_steps: 2500
   iters_per_epoch: 2500
 
   seed: 42
-  output_dir: "output/videollama_stage1_pretrain" #########################################
+  output_dir: "/mnt/disks/home/chfuab/output_dir"
 
   amp: True
   resume_ckpt_path: null
