@@ -89,7 +89,7 @@ def main():
 
     cfg.pretty_print()
 
-    task = tasks.setup_task(cfg)
+    """ task = tasks.setup_task(cfg)
     datasets = task.build_datasets(cfg)
 
     # datasets['webvid']['train'][0]
@@ -98,7 +98,7 @@ def main():
 
     runner = get_runner_class(cfg)(
         cfg=cfg, job_id=job_id, task=task, model=model, datasets=datasets
-    )
+    ) """
     # runner.train()
 
 
