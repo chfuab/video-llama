@@ -661,12 +661,12 @@ class VideoLLAMA(Blip2Base):
                 time = 1
                 image = einops.repeat(image, 'b c h w -> b c t h w',t = time)
             
-            if self.train_flag == 1:
+            """ if self.train_flag == 1:
                 image = einops.rearrange(image, 'b c t h w -> b t c h w')
                 img_embeds, atts_img = self.encode_audioQformer(image, modality_type=ModalityType.VISION)
                 
             elif self.train_flag == 0:
-                img_embeds, atts_img = self.encode_videoQformer_visual(image)
+                img_embeds, atts_img = self.encode_videoQformer_visual(image) """
 
             if self.train_VA_combined:
                 img_embeds, atts_img = self.encode_videoaudioQformer(audio, image, audio_clip_times_all, image_frame_idx_all, frms_time_idx_all)    #
