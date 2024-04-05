@@ -18,7 +18,7 @@ model:
   equip_audio_branch: True # whether equips the audio branch
   frozen_llama_proj: True
   frozen_video_Qformer: True
-  frozen_audio_Qformer: True
+  frozen_audio_Qformer: False
   frozen_linear_proj: False # True when using QFormerAligned
 
   fusion_head_layers: 2
