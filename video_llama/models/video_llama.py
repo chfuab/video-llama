@@ -517,7 +517,6 @@ class VideoLLAMA(Blip2Base):
     
         return inputs_llama, atts_llama
 
-
     #  input audio shape [b t c h w] 
     def encode_audioQformer(self, audio,modality_type=ModalityType.AUDIO):
         device = audio.device
