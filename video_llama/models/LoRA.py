@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
+from video_llama.models.base_model import BaseModel
 from video_llama.common.registry import registry
 
 @registry.register_model("lora")
-class LoRA(nn.Module):
+class LoRA(BaseModel):
     def __init__(self, dim_A, dim_B, rank, alpha):
         self.A = nn.Linear(dim_A, rank)
         self.B = nn.Linear(rank, dim_B)
