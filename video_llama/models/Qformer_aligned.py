@@ -11,6 +11,9 @@ from video_llama.datasets.data_utils import neg_sampler
 
 @registry.register_model("q_former_aligned")
 class QformerAligned(Blip2Base):
+
+    PRETRAINED_MODEL_CONFIG_DICT={}
+
     def __init__(self,
             vit_model="eva_clip_g",
             q_former_model="https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained_flant5xxl.pth",
