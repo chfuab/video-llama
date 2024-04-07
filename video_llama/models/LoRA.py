@@ -5,6 +5,8 @@ from video_llama.common.registry import registry
 
 @registry.register_model("lora")
 class LoRA(BaseModel):
+    PRETRAINED_MODEL_CONFIG_DICT={}
+
     def __init__(self, dim_A, dim_B, rank, alpha):
         self.A = nn.Linear(dim_A, rank)
         self.B = nn.Linear(rank, dim_B)
