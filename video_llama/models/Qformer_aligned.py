@@ -4,7 +4,6 @@ import torch
 import torch.nn as nn
 
 from video_llama.models.blip2 import Blip2Base, disabled_train
-from video_llama.models.video_llama import VideoLLAMA
 from video_llama.common.registry import registry
 from video_llama.models.ImageBind.models.imagebind_model import ImageBindModel,ModalityType
 from video_llama.models.ImageBind.models import imagebind_model
