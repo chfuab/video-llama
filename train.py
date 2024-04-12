@@ -80,7 +80,7 @@ def main():
 
     cfg = Config(parse_args())
 
-    # init_distributed_mode(cfg.run_cfg)
+    init_distributed_mode(cfg.run_cfg)
 
     setup_seeds(cfg)
 
