@@ -80,7 +80,7 @@ def main():
 
     cfg = Config(parse_args())
 
-    init_distributed_mode(cfg.run_cfg)
+    # init_distributed_mode(cfg.run_cfg)
 
     setup_seeds(cfg)
 
@@ -89,14 +89,14 @@ def main():
 
     cfg.pretty_print()
 
-    """ task = tasks.setup_task(cfg)
+    task = tasks.setup_task(cfg)
     datasets = task.build_datasets(cfg)
 
     # datasets['webvid']['train'][0]
     # datasets
     model = task.build_model(cfg)
 
-    runner = get_runner_class(cfg)(
+    """ runner = get_runner_class(cfg)(
         cfg=cfg, job_id=job_id, task=task, model=model, datasets=datasets
     ) """
     # runner.train()

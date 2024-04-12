@@ -17,8 +17,8 @@ metrics_mapping = {
     "METEOR": Meteor(),
     "ROUGE_L": Rouge(),
     "CIDEr": Cider(),
-    "SPICE": Spice(),
-    "VQA_acc": VQA_acc(),
+    # "SPICE": Spice(),
+    "VQA_acc": VQA_acc(0),
 }
 
 """ class Caption_scorer():

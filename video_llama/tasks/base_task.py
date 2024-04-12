@@ -27,7 +27,7 @@ class BaseTask:
         super().__init__()
 
         self.inst_id_key = "instance_id"
-        self.caption_scorer = Caption_scorer()
+        # self.caption_scorer = Caption_scorer()
         self.triplet_loss = nn.TripletMarginLoss(margin=1.0, eps=1e-7)
 
     @classmethod
