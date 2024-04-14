@@ -124,8 +124,7 @@ def download_cached_file(url, check_hash=True, progress=False):
         # a hack to sync the file path across processes
         parts = torch.hub.urlparse(url)
         filename = os.path.basename(parts.path)
-        # cached_file = os.path.join(timm_hub.get_cache_dir(), filename)
-        cached_file = os.path.join("/mnt/disks/chfuab/temp", filename)
+        cached_file = os.path.join(timm_hub.get_cache_dir(), filename)
 
         return cached_file
 
