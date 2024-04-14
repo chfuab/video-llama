@@ -14,7 +14,7 @@ class LoRA(BaseModel):
         self.alpha = alpha
         self.dim_input = self.A.in_features
         
-        torch.nn.init.zeros(self.B.weight)
+        torch.nn.init.zeros_(self.B.weight)
 
     def forward(self, inputs):
         assert (inputs.size()[-1] == self.dim_input.in_features), \
