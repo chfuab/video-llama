@@ -432,6 +432,7 @@ class BertLayer(nn.Module):
 
         self.intermediate_query = BertIntermediate(config)
         self.output_query = BertOutput(config)
+        print("testing")
 
     def forward(
         self,
