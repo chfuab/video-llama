@@ -8,6 +8,7 @@ class LoRA(BaseModel):
     PRETRAINED_MODEL_CONFIG_DICT={}
 
     def __init__(self, dim_A, dim_B, rank, alpha):
+        super(LoRA, self).__init__()
         self.A = nn.Linear(dim_A, rank)
         self.B = nn.Linear(rank, dim_B)
         self.alpha = alpha
