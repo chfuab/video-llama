@@ -52,7 +52,6 @@ class Blip2Base(BaseModel):
         encoder_config.cross_attention_freq = cross_attention_freq
         encoder_config.query_length = num_query_token
         Qformer = BertLMHeadModel(config=encoder_config)
-        logging.info("loaded Q-former!!!")
         query_tokens = nn.Parameter(
             torch.zeros(1, num_query_token, encoder_config.hidden_size)
         )
