@@ -431,9 +431,10 @@ def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precis
         url, check_hash=False, progress=True
     )
     state_dict = torch.load(cached_file, map_location="cpu") """    
+    print("before loading model")
     state_dict = torch.load("/mnt/disks/chfuab/eva_vit_g.pth", map_location="cpu")   
     interpolate_pos_embed(model,state_dict)
-    print("before loading model")
+    print("before load_state_dict")
     incompatible_keys = model.load_state_dict(state_dict, strict=False)
 #     print(incompatible_keys)
     print("after loading model")
