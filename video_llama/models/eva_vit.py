@@ -432,7 +432,7 @@ def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precis
     )
     state_dict = torch.load(cached_file, map_location="cpu") """    
     print("before loading model")
-    state_dict = torch.load("/mnt/disks/chfuab/eva_vit_g.pth", map_location="cpu")   
+    state_dict = torch.load("/mnt/disks/chfuab/eva_vit_g.pth", map_location="cuda:0")   
     interpolate_pos_embed(model,state_dict)
     print("before load_state_dict")
     incompatible_keys = model.load_state_dict(state_dict, strict=False)
