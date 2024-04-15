@@ -89,12 +89,10 @@ class VideoLLAMA(Blip2Base):
 
         self.tokenizer = self.init_tokenizer()
         self.low_resource = low_resource
-        logging.info("loading VIT!!!")
         print('Loading VIT')
         self.visual_encoder, self.ln_vision = self.init_vision_encoder(
             vit_model, img_size, drop_path_rate, use_grad_checkpoint, vit_precision
         )
-        logging.info("loaded VIT!!!")
         if freeze_vit:
             for name, param in self.visual_encoder.named_parameters():
                 param.requires_grad = False
