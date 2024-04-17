@@ -194,6 +194,7 @@ class VideoLLAMA(Blip2Base):
             self.llama_model = LlamaForCausalLM.from_pretrained(
                 llama_model,
                 torch_dtype=torch.bfloat16,
+                device_map=1,
             )
 
         for name, param in self.llama_model.named_parameters():
