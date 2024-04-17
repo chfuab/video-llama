@@ -182,6 +182,7 @@ class VideoLLAMA(Blip2Base):
         self.llama_type = llama_type
         logging.info('Loading LLAMA Model')
         if self.low_resource:
+            print('low_resource')
             self.llama_model = LlamaForCausalLM.from_pretrained(
                 llama_model,
                 torch_dtype=torch.bfloat16,
@@ -189,6 +190,7 @@ class VideoLLAMA(Blip2Base):
                 device_map={'': device_8bit}
             )
         else:
+            print("normal resource")
             self.llama_model = LlamaForCausalLM.from_pretrained(
                 llama_model,
                 torch_dtype=torch.bfloat16,
