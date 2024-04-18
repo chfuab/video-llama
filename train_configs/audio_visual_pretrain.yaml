@@ -12,7 +12,7 @@ model:
   # i.e.  https://huggingface.co/DAMO-NLP-SG/Video-LLaMA-2-13B-Pretrained
   llama_model: "/mnt/disks/chfuab/Llama-2-7b-hf" #"ckpt/llama-2-7b-chat-hf"
   imagebind_ckpt_path: "/mnt/disks/chfuab"
-  llama_proj_model: "/mnt/disks/chfuab/'pretrained_minigpt4.pth?download=true'"
+  llama_proj_model: "/mnt/disks/chfuab/pretrained_minigpt4_7b.pth"
 
   # only train vision branch
   equip_audio_branch: True # whether equips the audio branch
