@@ -287,7 +287,7 @@ class VideoLLAMA(Blip2Base):
                 imagebind_model.imagebind_huge()
             # self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:1"))
             print("before torch.load")
-            imagebind_temp = torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:0")
+            imagebind_temp = torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cpu")
             print("after torch.load, before load_state_dict")
             self.audio_encoder.load_state_dict(imagebind_temp)
             # free vision encoder
