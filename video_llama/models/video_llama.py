@@ -88,8 +88,8 @@ class VideoLLAMA(Blip2Base):
         super().__init__()
         if equip_audio_branch:
             print("start testing")
-            self.audio_encoder,self.audio_hidden_size = \
-                imagebind_model.imagebind_huge()
+            self.audio_encoder,self.audio_hidden_size = imagebind_model.imagebind_huge()
+            print("stage 1")
             # self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:1"))
             imagebind_temp = torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:0")
             self.audio_encoder.load_state_dict(imagebind_temp)
