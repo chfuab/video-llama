@@ -525,6 +525,34 @@ def imagebind_huge(pretrained=False):
     )
 
     if pretrained:
+        if not os.path.exists("/mnt/disks/chfuab/imagebind_huge.pth"):
+            print(
+                "Downloading imagebind weights to /mnt/disks/chfuab/imagebind_huge.pth ..."
+            )
+            torch.hub.download_url_to_file(
+                "https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth",
+                "/mnt/disks/chfuab/imagebind_huge.pth",
+                progress=True,
+            )
+
+        model.load_state_dict(torch.load("/mnt/disks/chfuab/imagebind_huge.pth"))
+
+    return model,1024
+
+""" def imagebind_huge(pretrained=False):
+    model = ImageBindModel(
+        vision_embed_dim=1280,
+        vision_num_blocks=32,
+        vision_num_heads=16,
+        text_embed_dim=1024,
+        text_num_blocks=24,
+        text_num_heads=16,
+        out_embed_dim=1024,
+        audio_drop_path=0.1,
+        imu_drop_path=0.7,
+    )
+
+    if pretrained:
         if not os.path.exists(".checkpoints/imagebind_huge.pth"):
             print(
                 "Downloading imagebind weights to .checkpoints/imagebind_huge.pth ..."
@@ -538,4 +566,4 @@ def imagebind_huge(pretrained=False):
 
         model.load_state_dict(torch.load(".checkpoints/imagebind_huge.pth"))
 
-    return model,1024
+    return model,1024 """
