@@ -86,16 +86,6 @@ class VideoLLAMA(Blip2Base):
         use_lora = True,
     ):
         super().__init__()
-        if equip_audio_branch:
-            print("start testing")
-            self.audio_encoder,self.audio_hidden_size = imagebind_model.imagebind_huge(pretrained=True)
-            print("stage 1")
-            # self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:1"))
-            # imagebind_temp = torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:1")
-            print("stage 2")
-            # self.audio_encoder.load_state_dict(imagebind_temp)
-            print("end testing")
-
 
         self.tokenizer = self.init_tokenizer()
         self.low_resource = low_resource
@@ -294,9 +284,7 @@ class VideoLLAMA(Blip2Base):
             print (f'Initializing audio encoder from {imagebind_ckpt_path} ...')
             self.audio_encoder,self.audio_hidden_size = \
                 imagebind_model.imagebind_huge()
-            # self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cuda:1"))
-            imagebind_temp = torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cpu")
-            self.audio_encoder.load_state_dict(imagebind_temp)
+            self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location=torch.device("cuda:0"), mmap=True))
             # free vision encoder
             for name, param in self.audio_encoder.named_parameters():
                 param.requires_grad = False
