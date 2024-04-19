@@ -535,7 +535,7 @@ def imagebind_huge(pretrained=False):
                 progress=True,
             )
 
-        model.load_state_dict(torch.load("/mnt/disks/chfuab/imagebind_huge.pth", map_location=torch.device("cuda:0")))
+        model.load_state_dict(torch.load("/mnt/disks/chfuab/imagebind_huge.pth", map_location=torch.device("cuda:0"), mmap=True))
 
     return model,1024
 
