@@ -86,7 +86,26 @@ class VideoLLAMA(Blip2Base):
         use_lora = True,
     ):
         super().__init__()
-        
+
+        self.tokenizer = self.init_tokenizer()
+        self.low_resource = low_resource
+        print('Loading VIT')
+        self.visual_encoder, self.ln_vision = self.init_vision_encoder(
+            vit_model, img_size, drop_path_rate, use_grad_checkpoint, vit_precision
+        )
+        if freeze_vit:
+            for name, param in self.visual_encoder.named_parameters():
+                param.requires_grad = False
+            self.visual_encoder = self.visual_encoder.eval()
+            self.visual_encoder.train = disabled_train
+            for name, param in self.ln_vision.named_parameters():
+                param.requires_grad = False
+            self.ln_vision = self.ln_vision.eval()
+            self.ln_vision.train = disabled_train
+            logging.info("freeze vision encoder")
+        print('Loading VIT Done')
+
+
         if equip_audio_branch:
             print (f'Initializing audio encoder from {imagebind_ckpt_path} ...')
             self.audio_encoder,self.audio_hidden_size = \
@@ -140,23 +159,6 @@ class VideoLLAMA(Blip2Base):
                     for name, param in layer.output_query.lora.named_parameters():
                         param.requires_grad = True
 
-        self.tokenizer = self.init_tokenizer()
-        self.low_resource = low_resource
-        print('Loading VIT')
-        self.visual_encoder, self.ln_vision = self.init_vision_encoder(
-            vit_model, img_size, drop_path_rate, use_grad_checkpoint, vit_precision
-        )
-        if freeze_vit:
-            for name, param in self.visual_encoder.named_parameters():
-                param.requires_grad = False
-            self.visual_encoder = self.visual_encoder.eval()
-            self.visual_encoder.train = disabled_train
-            for name, param in self.ln_vision.named_parameters():
-                param.requires_grad = False
-            self.ln_vision = self.ln_vision.eval()
-            self.ln_vision.train = disabled_train
-            logging.info("freeze vision encoder")
-        print('Loading VIT Done')
 
         print('Loading Q-Former')
         self.Qformer, self.query_tokens = self.init_Qformer(
