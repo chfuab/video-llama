@@ -86,7 +86,12 @@ class VideoLLAMA(Blip2Base):
         use_lora = True,
     ):
         super().__init__()
+        self.audio_encoder,self.audio_hidden_size = \
+            imagebind_model.imagebind_huge()
+        self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location=torch.device("cuda:2"), mmap=True))
+        
 
+        
         self.tokenizer = self.init_tokenizer()
         self.low_resource = low_resource
         print('Loading VIT')
