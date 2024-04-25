@@ -86,7 +86,7 @@ class VideoLLAMA(Blip2Base):
         use_lora = True,
     ):
         super().__init__()
-
+        
         self.tokenizer = self.init_tokenizer()
         self.low_resource = low_resource
         print('Loading VIT')
@@ -104,61 +104,6 @@ class VideoLLAMA(Blip2Base):
             self.ln_vision.train = disabled_train
             logging.info("freeze vision encoder")
         print('Loading VIT Done')
-
-
-        if equip_audio_branch:
-            print (f'Initializing audio encoder from {imagebind_ckpt_path} ...')
-            self.audio_encoder,self.audio_hidden_size = \
-                imagebind_model.imagebind_huge()
-            torch.cuda.empty_cache()
-            self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location=torch.device("cuda:3"), mmap=True))
-            # free vision encoder
-            for name, param in self.audio_encoder.named_parameters():
-                param.requires_grad = False
-            self.audio_encoder.eval()
-            print ('audio encoder initialized.')
-            
-            self.num_audio_query_token = num_audio_query_token
-            self.audio_Qformer,self.audio_query_tokens = self.init_video_Qformer(num_query_token = self.num_audio_query_token,\
-                vision_width=self.audio_hidden_size, num_hidden_layers =2)
-            self.audio_Qformer.cls = None
-            self.audio_Qformer.bert.embeddings.word_embeddings = None
-            self.audio_Qformer.bert.embeddings.position_embeddings = None
-            for layer in self.audio_Qformer.bert.encoder.layer:
-                layer.output = None
-                layer.intermediate = None
-            self.audio_llama_proj = nn.Linear(
-                self.audio_Qformer.config.hidden_size, self.llama_model.config.hidden_size
-            )
-            self.audio_position_embedding = nn.Embedding(8, self.audio_hidden_size)
-            self.audio_visual_position_embedding = nn.Embedding(8, self.audio_hidden_size)
-
-            if frozen_audio_Qformer:
-                #  todo frozen  llama_proj
-                for name, param in self.audio_Qformer.named_parameters():
-                    param.requires_grad = False
-                self.audio_query_tokens.requires_grad = False
-                for name, param in self.audio_llama_proj.named_parameters():
-                    param.requires_grad = False
-                for name, param in self.audio_position_embedding.named_parameters():
-                    param.requires_grad = False
-                logging.info('audio_Qformer and audio-LLAMA proj is frozen')
-            else:
-                for name, param in self.audio_Qformer.named_parameters():
-                    param.requires_grad = True
-                self.audio_query_tokens.requires_grad = True
-                for name, param in self.audio_llama_proj.named_parameters():
-                    param.requires_grad = True
-                for name, param in self.audio_position_embedding.named_parameters():
-                    param.requires_grad = True
-                logging.info('audio_Qformer is not frozen')
-            if use_lora:
-                for layer in self.audio_Qformer.bert.encoder.layer:
-                    for name, param in layer.intermediate_query.lora.named_parameters():
-                        param.requires_grad = True
-                    for name, param in layer.output_query.lora.named_parameters():
-                        param.requires_grad = True
-
 
         print('Loading Q-Former')
         self.Qformer, self.query_tokens = self.init_Qformer(
@@ -335,7 +280,58 @@ class VideoLLAMA(Blip2Base):
         else:
             self.train_VA_combined = False
 
+        if equip_audio_branch:
+            print (f'Initializing audio encoder from {imagebind_ckpt_path} ...')
+            self.audio_encoder,self.audio_hidden_size = \
+                imagebind_model.imagebind_huge()
+            torch.cuda.empty_cache()
+            self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location=torch.device("cuda:3"), mmap=True))
+            # free vision encoder
+            for name, param in self.audio_encoder.named_parameters():
+                param.requires_grad = False
+            self.audio_encoder.eval()
+            print ('audio encoder initialized.')
+            
+            self.num_audio_query_token = num_audio_query_token
+            self.audio_Qformer,self.audio_query_tokens = self.init_video_Qformer(num_query_token = self.num_audio_query_token,\
+                vision_width=self.audio_hidden_size, num_hidden_layers =2)
+            self.audio_Qformer.cls = None
+            self.audio_Qformer.bert.embeddings.word_embeddings = None
+            self.audio_Qformer.bert.embeddings.position_embeddings = None
+            for layer in self.audio_Qformer.bert.encoder.layer:
+                layer.output = None
+                layer.intermediate = None
+            self.audio_llama_proj = nn.Linear(
+                self.audio_Qformer.config.hidden_size, self.llama_model.config.hidden_size
+            )
+            self.audio_position_embedding = nn.Embedding(8, self.audio_hidden_size)
+            self.audio_visual_position_embedding = nn.Embedding(8, self.audio_hidden_size)
 
+            if frozen_audio_Qformer:
+                #  todo frozen  llama_proj
+                for name, param in self.audio_Qformer.named_parameters():
+                    param.requires_grad = False
+                self.audio_query_tokens.requires_grad = False
+                for name, param in self.audio_llama_proj.named_parameters():
+                    param.requires_grad = False
+                for name, param in self.audio_position_embedding.named_parameters():
+                    param.requires_grad = False
+                logging.info('audio_Qformer and audio-LLAMA proj is frozen')
+            else:
+                for name, param in self.audio_Qformer.named_parameters():
+                    param.requires_grad = True
+                self.audio_query_tokens.requires_grad = True
+                for name, param in self.audio_llama_proj.named_parameters():
+                    param.requires_grad = True
+                for name, param in self.audio_position_embedding.named_parameters():
+                    param.requires_grad = True
+                logging.info('audio_Qformer is not frozen')
+            if use_lora:
+                for layer in self.audio_Qformer.bert.encoder.layer:
+                    for name, param in layer.intermediate_query.lora.named_parameters():
+                        param.requires_grad = True
+                    for name, param in layer.output_query.lora.named_parameters():
+                        param.requires_grad = True
 
         self.num_query_token = num_query_token
 
