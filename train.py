@@ -96,9 +96,9 @@ def main():
     # datasets
     model = task.build_model(cfg)
 
-    """ runner = get_runner_class(cfg)(
+    runner = get_runner_class(cfg)(
         cfg=cfg, job_id=job_id, task=task, model=model, datasets=datasets
-    ) """
+    )
     # runner.train()
 
 
