@@ -285,7 +285,7 @@ class VideoLLAMA(Blip2Base):
             self.audio_encoder,self.audio_hidden_size = \
                 imagebind_model.imagebind_huge()
             torch.cuda.empty_cache()
-            self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location=torch.device("cuda:0"), mmap=True))
+            self.audio_encoder.load_state_dict(torch.load("{}/imagebind_huge.pth".format(imagebind_ckpt_path), map_location="cpu"))
             # free vision encoder
             for name, param in self.audio_encoder.named_parameters():
                 param.requires_grad = False
