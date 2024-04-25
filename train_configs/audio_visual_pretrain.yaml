@@ -81,7 +81,7 @@ run:
   iters_per_epoch: 2500
 
   seed: 42
-  output_dir: "/mnt/disks/home/chfuab/output_dir"
+  output_dir: "/mnt/disks/chfuab/output_dir"
 
   amp: True
   resume_ckpt_path: null
