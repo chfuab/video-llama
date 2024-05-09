@@ -77,7 +77,6 @@ def init_distributed_mode(args):
         ),
         flush=True,
     )
-    print("fuck you")
     torch.distributed.init_process_group(
         backend=args.dist_backend,
         init_method=args.dist_url,
@@ -87,8 +86,7 @@ def init_distributed_mode(args):
             days=365
         ),  # allow auto-downloading and de-compressing
     )
-    torch.distributed.barrier()
-    print("fuck your mother")
+    # torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
 
 
