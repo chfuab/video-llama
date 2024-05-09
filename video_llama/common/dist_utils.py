@@ -87,8 +87,8 @@ def init_distributed_mode(args):
             days=365
         ),  # allow auto-downloading and de-compressing
     )
-    print("fuck your mother")
     torch.distributed.barrier()
+    print("fuck your mother")
     setup_for_distributed(args.rank == 0)
 
 
