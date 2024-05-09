@@ -88,6 +88,7 @@ def init_distributed_mode(args):
     )
     # torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
+    print("fuck")
 
 
 def get_dist_info():
