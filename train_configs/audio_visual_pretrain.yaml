@@ -36,10 +36,10 @@ datasets:
   webvid:
     data_type: video
     build_info:
-      anno_dir: ./data/webvid/data/train/annotations
-      videos_dir: ./data/webvid/data/train/videos
-      anno_dir_val: ./data/webvid/data/eval/annotations
-      videos_dir_val: ./data/webvid/data/eval/videos
+      anno_dir: /mnt/disks/chfuab/video-llama/data/webvid/data/train/annotations
+      videos_dir: /mnt/disks/chfuab/video-llama/data/webvid/data/train/videos
+      anno_dir_val: /mnt/disks/chfuab/video-llama/data/webvid/data/eval/annotations
+      videos_dir_val: /mnt/disks/chfuab/video-llama/data/webvid/data/eval/videos
 
     vis_processor:
       train:
