@@ -126,9 +126,11 @@ class WebvidDataset(BaseDataset):
             # fetch video
             video_path = self._get_video_path(sample_dict) 
             # if os.path.exists(video_path):
+            audio, all_clips_timepoints_all = self.audio_processor(video_path)
+            print("*************", audio.size(), "***********")
+            
             try:
                 audio, all_clips_timepoints_all = self.audio_processor(video_path)
-                print("*************", audio.size(), "***********")
             except:
                 print(f"Failed to load examples with audio from {video_path}")            
             try:
