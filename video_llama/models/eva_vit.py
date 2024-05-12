@@ -282,7 +282,7 @@ class VisionTransformer(nn.Module):
                 dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, qk_scale=qk_scale,
                 drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr[i], norm_layer=norm_layer,
                 init_values=init_values, window_size=self.patch_embed.patch_shape if use_rel_pos_bias else None)
-            for i in range(5)])
+            for i in range(depth)])
         print("g")
 #         self.norm = nn.Identity() if use_mean_pooling else norm_layer(embed_dim)
 #         self.fc_norm = norm_layer(embed_dim) if use_mean_pooling else None
