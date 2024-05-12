@@ -94,7 +94,8 @@ run:
   device: "cuda"
   world_size: 1
   dist_url: "env://"
-  distributed: True
+  # distributed: True
+  distributed: False
 
   evaluate_metrics: ["loss", "CIDEr", "METEOR", "ROUGE_L", "SPICE", "Bleu"]
   agg_metrics: "CIDEr"
