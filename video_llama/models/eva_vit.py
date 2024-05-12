@@ -255,24 +255,24 @@ class VisionTransformer(nn.Module):
         self.image_size = img_size
         self.num_classes = num_classes
         self.num_features = self.embed_dim = embed_dim  # num_features for consistency with other models
-
+        print("a")
         self.patch_embed = PatchEmbed(
             img_size=img_size, patch_size=patch_size, in_chans=in_chans, embed_dim=embed_dim)
         num_patches = self.patch_embed.num_patches
-
+        print("b")
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
         if use_abs_pos_emb:
             self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, embed_dim))
         else:
             self.pos_embed = None
         self.pos_drop = nn.Dropout(p=drop_rate)
-
+        print("c")
         if use_shared_rel_pos_bias:
             self.rel_pos_bias = RelativePositionBias(window_size=self.patch_embed.patch_shape, num_heads=num_heads)
         else:
             self.rel_pos_bias = None
         self.use_checkpoint = use_checkpoint
-        
+        print("d")
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # stochastic depth decay rule
         self.use_rel_pos_bias = use_rel_pos_bias
         self.blocks = nn.ModuleList([
@@ -284,7 +284,7 @@ class VisionTransformer(nn.Module):
 #         self.norm = nn.Identity() if use_mean_pooling else norm_layer(embed_dim)
 #         self.fc_norm = norm_layer(embed_dim) if use_mean_pooling else None
 #         self.head = nn.Linear(embed_dim, num_classes) if num_classes > 0 else nn.Identity()
-
+        print("e")
         if self.pos_embed is not None:
             trunc_normal_(self.pos_embed, std=.02)
         trunc_normal_(self.cls_token, std=.02)
@@ -296,7 +296,7 @@ class VisionTransformer(nn.Module):
 #         if isinstance(self.head, nn.Linear):
 #             self.head.weight.data.mul_(init_scale)
 #             self.head.bias.data.mul_(init_scale)
-
+        print("f")
     def fix_init_weight(self):
         def rescale(param, layer_id):
             param.div_(math.sqrt(2.0 * layer_id))
@@ -413,7 +413,7 @@ def convert_weights_to_fp16(model: nn.Module):
     
     
 def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precision="fp16"):
-    print("fuck")
+    
     model = VisionTransformer(
         img_size=img_size,
         patch_size=14,
@@ -431,10 +431,8 @@ def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precis
     """ cached_file = download_cached_file(
         url, check_hash=False, progress=True
     )
-    state_dict = torch.load(cached_file, map_location="cpu") """ 
-    print("fuck your mother")   
+    state_dict = torch.load(cached_file, map_location="cpu") """   
     state_dict = torch.load("/mnt/disks/chfuab/eva_vit_g.pth", map_location="cpu")
-    print("fuck your mother stinky cunt")
     interpolate_pos_embed(model,state_dict)
 
     incompatible_keys = model.load_state_dict(state_dict, strict=False)
