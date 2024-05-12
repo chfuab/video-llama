@@ -91,7 +91,7 @@ class VideoLLAMA(Blip2Base):
         self.low_resource = low_resource
         print('Loading VIT')
         self.visual_encoder, self.ln_vision = self.init_vision_encoder(
-            vit_model, img_size, drop_path_rate, use_grad_checkpoint, vit_precision
+            vit_model, 100, drop_path_rate, use_grad_checkpoint, vit_precision
         )
         if freeze_vit:
             for name, param in self.visual_encoder.named_parameters():
