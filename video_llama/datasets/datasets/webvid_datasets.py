@@ -127,7 +127,7 @@ class WebvidDataset(BaseDataset):
             video_path = self._get_video_path(sample_dict) 
             # if os.path.exists(video_path):
             audio, all_clips_timepoints_all = self.audio_processor(video_path)
-            print("*************", audio.size(), "***********")
+            print("*************", audio, "***********", all_clips_timepoints_all)
             
             try:
                 audio, all_clips_timepoints_all = self.audio_processor(video_path)
