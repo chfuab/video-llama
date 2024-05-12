@@ -274,17 +274,19 @@ class VisionTransformer(nn.Module):
         self.use_checkpoint = use_checkpoint
         print("d")
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # stochastic depth decay rule
+        print("e")
         self.use_rel_pos_bias = use_rel_pos_bias
+        print("f")
         self.blocks = nn.ModuleList([
             Block(
                 dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, qk_scale=qk_scale,
                 drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr[i], norm_layer=norm_layer,
                 init_values=init_values, window_size=self.patch_embed.patch_shape if use_rel_pos_bias else None)
             for i in range(depth)])
+        print("g")
 #         self.norm = nn.Identity() if use_mean_pooling else norm_layer(embed_dim)
 #         self.fc_norm = norm_layer(embed_dim) if use_mean_pooling else None
 #         self.head = nn.Linear(embed_dim, num_classes) if num_classes > 0 else nn.Identity()
-        print("e")
         if self.pos_embed is not None:
             trunc_normal_(self.pos_embed, std=.02)
         trunc_normal_(self.cls_token, std=.02)
@@ -296,7 +298,7 @@ class VisionTransformer(nn.Module):
 #         if isinstance(self.head, nn.Linear):
 #             self.head.weight.data.mul_(init_scale)
 #             self.head.bias.data.mul_(init_scale)
-        print("f")
+
     def fix_init_weight(self):
         def rescale(param, layer_id):
             param.div_(math.sqrt(2.0 * layer_id))
