@@ -413,6 +413,7 @@ def convert_weights_to_fp16(model: nn.Module):
     
     
 def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precision="fp16"):
+    print("fuck")
     model = VisionTransformer(
         img_size=img_size,
         patch_size=14,
@@ -430,10 +431,10 @@ def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precis
     """ cached_file = download_cached_file(
         url, check_hash=False, progress=True
     )
-    state_dict = torch.load(cached_file, map_location="cpu") """    
-    print("fuck")
-    state_dict = torch.load("/mnt/disks/chfuab/eva_vit_g.pth", map_location="cuda:0", mmap=False)
-    print("fuck your mother")
+    state_dict = torch.load(cached_file, map_location="cpu") """ 
+    print("fuck your mother")   
+    state_dict = torch.load("/mnt/disks/chfuab/eva_vit_g.pth", map_location="cpu")
+    print("fuck your mother stinky cunt")
     interpolate_pos_embed(model,state_dict)
 
     incompatible_keys = model.load_state_dict(state_dict, strict=False)
