@@ -415,8 +415,8 @@ def convert_weights_to_fp16(model: nn.Module):
 def create_eva_vit_g(img_size=224,drop_path_rate=0.4,use_checkpoint=False,precision="fp16"):
     print("fuck")
     model = VisionTransformer(
-        img_size=100,
-        patch_size=4,
+        img_size=img_size,
+        patch_size=14,
         use_mean_pooling=False,
         embed_dim=1408,
         depth=39,
