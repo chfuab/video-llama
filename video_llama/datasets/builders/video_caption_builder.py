@@ -29,6 +29,8 @@ class WebvidBuilder(BaseDatasetBuilder):
         data_root_all = [[build_info.videos_dir, build_info.anno_dir], 
                          [build_info.videos_dir_val, build_info.anno_dir_val]]
 
+        print("\n\n\n\n\n\n", self.audio_processor["train"], "\n\n\n\n\n\n")
+
         for i, split in enumerate(splits):
             datasets[split] = dataset_cls[i](
                 vis_processor=self.vis_processors[split],
