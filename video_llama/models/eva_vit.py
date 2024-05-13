@@ -255,35 +255,28 @@ class VisionTransformer(nn.Module):
         self.image_size = img_size
         self.num_classes = num_classes
         self.num_features = self.embed_dim = embed_dim  # num_features for consistency with other models
-        print("a")
         self.patch_embed = PatchEmbed(
             img_size=img_size, patch_size=patch_size, in_chans=in_chans, embed_dim=embed_dim)
         num_patches = self.patch_embed.num_patches
-        print("b")
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
         if use_abs_pos_emb:
             self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, embed_dim))
         else:
             self.pos_embed = None
         self.pos_drop = nn.Dropout(p=drop_rate)
-        print("c")
         if use_shared_rel_pos_bias:
             self.rel_pos_bias = RelativePositionBias(window_size=self.patch_embed.patch_shape, num_heads=num_heads)
         else:
             self.rel_pos_bias = None
         self.use_checkpoint = use_checkpoint
-        print("d")
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # stochastic depth decay rule
-        print("e")
         self.use_rel_pos_bias = use_rel_pos_bias
-        print("f")
         self.blocks = nn.ModuleList([
             Block(
                 dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, qk_scale=qk_scale,
                 drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr[i], norm_layer=norm_layer,
                 init_values=init_values, window_size=self.patch_embed.patch_shape if use_rel_pos_bias else None)
             for i in range(depth)])
-        print("g")
 #         self.norm = nn.Identity() if use_mean_pooling else norm_layer(embed_dim)
 #         self.fc_norm = norm_layer(embed_dim) if use_mean_pooling else None
 #         self.head = nn.Linear(embed_dim, num_classes) if num_classes > 0 else nn.Identity()

@@ -50,7 +50,7 @@ datasets:
         name: "alpro_video_eval"
         n_frms: 8
         image_size: 224
-    audio_proccessor:
+    audio_processor:
       train:
         name: "audio_processor"
       eval:
