@@ -15,6 +15,9 @@ from video_llama.processors.video_processor import (
     AlproVideoTrainProcessor,
     AlproVideoEvalProcessor
 )
+from video_llama.processors.audio_processor import (
+    AudioProcessor
+)
 from video_llama.common.registry import registry
 
 __all__ = [
@@ -24,6 +27,7 @@ __all__ = [
     "BlipCaptionProcessor",
     "AlproVideoTrainProcessor",
     "AlproVideoEvalProcessor",
+    "AudioProcessor",
 ]
 
 

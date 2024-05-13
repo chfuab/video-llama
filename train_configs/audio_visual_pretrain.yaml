@@ -53,10 +53,8 @@ datasets:
     audio_processor:
       train:
         name: "audio_processor"
-        a: "a"
       eval:
         name: "audio_processor"
-        a: "b"
     text_processor:
       train:
         name: "blip_caption"
