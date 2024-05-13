@@ -60,7 +60,6 @@ class BaseDatasetBuilder:
         return datasets
 
     def build_processors(self):
-        print("build_processors loaded")
         vis_proc_cfg = self.config.get("vis_processor")
         aud_proc_cfg = self.config.get("audio_processor")
         txt_proc_cfg = self.config.get("text_processor")
@@ -73,7 +72,6 @@ class BaseDatasetBuilder:
             self.vis_processors["eval"] = self._build_proc_from_cfg(vis_eval_cfg)
 
         if aud_proc_cfg is not None:
-            print("aud_proc_cfg is not None")
             aud_train_cfg = aud_proc_cfg.get("train")
             aud_eval_cfg = aud_proc_cfg.get("eval")
 
