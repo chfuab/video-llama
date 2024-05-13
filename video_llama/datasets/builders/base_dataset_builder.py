@@ -72,13 +72,11 @@ class BaseDatasetBuilder:
             self.vis_processors["eval"] = self._build_proc_from_cfg(vis_eval_cfg)
 
         if aud_proc_cfg is not None:
-            print("aud_proc_cfg is not None")
             aud_train_cfg = aud_proc_cfg.get("train")
             aud_eval_cfg = aud_proc_cfg.get("eval")
 
             self.audio_processor["train"] = self._build_proc_from_cfg(aud_train_cfg)
             self.audio_processor["eval"] = self._build_proc_from_cfg(aud_eval_cfg)
-            print("\n\n\n\n\n\n", self.audio_processor["train"], "\n\n\n\n\n")
 
         if txt_proc_cfg is not None:
             txt_train_cfg = txt_proc_cfg.get("train")
