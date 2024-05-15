@@ -76,7 +76,7 @@ def load_and_transform_audio_data(
 
     for audio_path in audio_paths:
         # print(torchaudio.utils.ffmpeg_utils.get_audio_decoders())
-        waveform, sr = torchaudio.load(audio_path, format="8svx_exp")
+        waveform, sr = torchaudio.load(audio_path, format="mp4")
         print("audio loaded")
         if sample_rate != sr:
             waveform = torchaudio.functional.resample(
