@@ -77,7 +77,7 @@ def load_and_transform_audio_data(
 
     for audio_path in audio_paths:
         print("fuck")
-        waveform, sr = torchaudio.load(audio_path)
+        waveform, sr = torchaudio.load(audio_path, backend="ffmpeg")
         print("audio loaded")
         if sample_rate != sr:
             waveform = torchaudio.functional.resample(
@@ -171,7 +171,7 @@ class AudioProcessor(BaseProcessor):
     def __call__(self, video_path):
         print("call")
         loaded_audio, all_clips_timepoints_all = load_and_transform_audio_data(
-            video_path,
+            [video_path],
             device=self.device,
             clips_per_video=self.clips_per_video,
             clip_duration=self.clip_duration,
