@@ -20,7 +20,8 @@ __all__ = [
     "CCSBUAlignBuilder",
     "WebvidBuilder",
     "LlavaInstruct_Builder",
-    "WebvidInstruct_Builder"
+    "WebvidInstruct_Builder",
+    "Vast27MBuilder"
     
 ]
 

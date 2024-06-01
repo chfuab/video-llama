@@ -4,7 +4,7 @@ import warnings
 
 from video_llama.common.registry import registry
 from video_llama.datasets.builders.base_dataset_builder import BaseDatasetBuilder
-from video_llama.datasets.datasets.webvid_datasets import WebvidDataset
+from video_llama.datasets.datasets.webvid_datasets import WebvidDataset, VAST27MDataset
 
 @registry.register_builder("webvid")
 class WebvidBuilder(BaseDatasetBuilder):
@@ -55,3 +55,36 @@ class WebvidBuilder(BaseDatasetBuilder):
         )
 
         return datasets """
+    
+@registry.register_builder("vast27M")
+class Vast27MBuilder(BaseDatasetBuilder):
+    train_dataset_cls = VAST27MDataset
+    eval_dataset_cls = VAST27MDataset
+    
+    def _download_ann(self):
+        pass
+
+    def _download_vis(self):
+        pass
+
+    def build(self):
+        self.build_processors()
+        datasets = dict()
+
+        build_info = self.config.build_info
+        dataset_cls = [self.train_dataset_cls, self.eval_dataset_cls]
+
+        splits = ["train", "eval"]
+        data_root_all = [[build_info.videos_dir, build_info.anno_dir], 
+                         [build_info.videos_dir_val, build_info.anno_dir_val]]
+
+        for i, split in enumerate(splits):
+            datasets[split] = dataset_cls[i](
+                vis_processor=self.vis_processors[split],
+                audio_processor=self.audio_processor[split],
+                text_processor=self.text_processors[split],
+                vis_root=data_root_all[i][0],
+                ann_root=data_root_all[i][1]
+            )
+
+        return datasets

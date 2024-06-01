@@ -33,13 +33,20 @@ model:
   use_lora: True
 
 datasets:
-  webvid:
+  # webvid:
+  #   data_type: video
+  #   build_info:
+  #     anno_dir: /mnt/disks/chfuab/video-llama/data/webvid/data/train/annotations
+  #     videos_dir: /mnt/disks/chfuab/video-llama/data/webvid/data/train/videos
+  #     anno_dir_val: /mnt/disks/chfuab/video-llama/data/webvid/data/eval/annotations
+  #     videos_dir_val: /mnt/disks/chfuab/video-llama/data/webvid/data/eval/videos
+  vast27M:
     data_type: video
     build_info:
-      anno_dir: /mnt/disks/chfuab/video-llama/data/webvid/data/train/annotations
-      videos_dir: /mnt/disks/chfuab/video-llama/data/webvid/data/train/videos
-      anno_dir_val: /mnt/disks/chfuab/video-llama/data/webvid/data/eval/annotations
-      videos_dir_val: /mnt/disks/chfuab/video-llama/data/webvid/data/eval/videos
+      anno_dir: /mnt/disks/chfuab/video-llama/data/vast27m/train/annotations
+      videos_dir: /mnt/disks/chfuab/video-llama/data/vast27m/train/videos
+      anno_dir_val: /mnt/disks/chfuab/video-llama/data/vast27m/eval/annotations
+      videos_dir_val: /mnt/disks/chfuab/video-llama/data/vast27m/eval/videos
 
     vis_processor:
       train:
