@@ -61,6 +61,7 @@ class WebvidBuilder(BaseDatasetBuilder):
 class Vast27MBuilder(BaseDatasetBuilder):
     train_dataset_cls = VAST27MDataset
     eval_dataset_cls = VAST27MDataset
+    DATASET_CONFIG_DICT = {"default": "configs/datasets/vast27m/defaults.yaml"}
     
     def _download_ann(self):
         pass
