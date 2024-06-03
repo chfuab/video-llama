@@ -7,6 +7,7 @@ from decord import VideoReader
 import random
 import torch
 from torch.utils.data.dataloader import default_collate
+import json
 
 class VAST27MDataset(BaseDataset):
 
@@ -24,7 +25,11 @@ class VAST27MDataset(BaseDataset):
         ts_df = []
         for file_name in os.listdir(ann_root):
             if file_name.endswith('.json'):
-                df = pd.read_json(os.path.join(ann_root, file_name))
+                # df = pd.read_json(os.path.join(ann_root, file_name))
+                file_path = os.path.join(ann_root, file_name)
+                with open(file_path) as f:
+                    json_data = json.load(f)
+                df = pd.DataFrame(json_data)
                 ts_df.append(df)
 
         merged_df = pd.concat(ts_df)
