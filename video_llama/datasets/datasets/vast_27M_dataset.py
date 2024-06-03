@@ -98,6 +98,7 @@ class VAST27MDataset(BaseDataset):
             sample = self.annotation.iloc[index]
             sample_dict = sample.to_dict()
 
+            print("********8", sample_dict, "*************")
             if 'vast_cap' in sample_dict.keys():
                 text = sample_dict['vast_cap'].strip()
             else:
