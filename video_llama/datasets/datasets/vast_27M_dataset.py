@@ -28,7 +28,7 @@ class VAST27MDataset(BaseDataset):
                 # df = pd.read_json(os.path.join(ann_root, file_name))
                 file_path = os.path.join(ann_root, file_name)
                 with open(file_path) as f:
-                    json_data = json.load(f)
+                    json_data = json.loads(f)
                 df = pd.DataFrame(json_data)
                 ts_df.append(df)
 
