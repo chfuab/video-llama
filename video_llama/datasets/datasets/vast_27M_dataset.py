@@ -25,7 +25,8 @@ class VAST27MDataset(BaseDataset):
         ts_df = []
         for file_name in os.listdir(ann_root):
             if file_name.endswith('.json'):
-                df = pd.read_json(os.path.join(ann_root, file_name), orient="records")
+                # df = pd.read_json(os.path.join(ann_root, file_name), orient="records")
+                df = pd.read_json("/mnt/disks/chfuab/video-llama/data/vast27m/train/annotations/anno.json", orient="records")
                 """ file_path = os.path.join(ann_root, file_name)
                 with open(file_path, "r") as f:
                     json_data = json.loads(f.read())
