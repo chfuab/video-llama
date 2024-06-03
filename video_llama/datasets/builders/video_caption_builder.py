@@ -4,7 +4,8 @@ import warnings
 
 from video_llama.common.registry import registry
 from video_llama.datasets.builders.base_dataset_builder import BaseDatasetBuilder
-from video_llama.datasets.datasets.webvid_datasets import WebvidDataset, VAST27MDataset
+from video_llama.datasets.datasets.webvid_datasets import WebvidDataset
+from video_llama.datasets.datasets.vast_27M_dataset import VAST27MDataset
 
 @registry.register_builder("webvid")
 class WebvidBuilder(BaseDatasetBuilder):
