@@ -29,7 +29,7 @@ class VAST27MDataset(BaseDataset):
                 file_path = os.path.join(ann_root, file_name)
                 with open(file_path, "r") as f:
                     json_data = json.loads(f.read())
-                    df = pd.DataFrame(json_data)
+                df = pd.DataFrame(list(json_data))
                 ts_df.append(df)
 
         merged_df = pd.concat(ts_df)
