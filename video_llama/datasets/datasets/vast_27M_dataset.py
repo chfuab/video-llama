@@ -107,7 +107,6 @@ class VAST27MDataset(BaseDataset):
 
             try:
                 audio, all_clips_timepoints_all = self.audio_processor(audio_path)
-                print("********", "loaded audio successfully", "**********")
             except:
                 print(f"Failed to load examples with audio from {audio_path}")            
             try:

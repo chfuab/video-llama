@@ -23,8 +23,11 @@ MAX_INT = registry.get("MAX_INT")
 decord.bridge.set_bridge("torch")
 
 def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
+    print("*********** load_video called ************")
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
+
+    print("********VideoReader successful********")
 
     vlen = len(vr)
     start, end = 0, vlen
@@ -58,6 +61,9 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
         indices = indices_first_half + indices_second_half
     else:
         raise NotImplementedError
+    
+    print("******** successful in sampling loop *********")
+
     # get_batch -> T, H, W, C
     temp_frms = vr.get_batch(indices)
     # print(type(temp_frms))
@@ -223,6 +229,7 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
         Returns:
             torch.tensor: video clip after transforms. Size is (C, T, size, size).
         """
+        print("*********** vis_processor called ************")
         clip, image_idx_time_pair, all_idx_time_pair = load_video(
             video_path=vpath,
             all_clips_timepoints_all=all_clips_timepoints_all,
