@@ -30,9 +30,17 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     start, end = 0, vlen
 
     n_frms = min(n_frms, vlen)
-
+    
+    print("********** fuck you 1 *****************")
+    
     fps = float(vr.get_avg_fps())
+
+    print("********** fuck you 2 *****************")
+
     all_idx_time_pair = [tuple(i, round(i / fps, 1)) for i in range(vlen)]
+
+    print("********** fuck you 3 *****************")
+
     if sampling == "uniform":
         indices = np.arange(start, end, vlen / n_frms).astype(int).tolist()
     elif sampling == "headtail":
