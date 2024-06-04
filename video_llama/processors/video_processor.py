@@ -25,21 +25,14 @@ decord.bridge.set_bridge("torch")
 def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
-    print("**************** fuck you **************")
     vlen = len(vr)
     start, end = 0, vlen
 
     n_frms = min(n_frms, vlen)
     
-    print("********** fuck you 1 *****************")
-    
     fps = float(vr.get_avg_fps())
+    all_idx_time_pair = [(i, round(i / fps, 1)) for i in range(vlen)]
 
-    print("********** fuck you 2 *****************")
-    print(f"***** fps: {fps}, vlen: {vlen} ***************")
-    all_idx_time_pair = [tuple(i, round(i / fps, 1)) for i in range(vlen)]
-
-    print("********** fuck you 3 *****************")
 
     if sampling == "uniform":
         indices = np.arange(start, end, vlen / n_frms).astype(int).tolist()
