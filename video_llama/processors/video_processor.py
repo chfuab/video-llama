@@ -36,7 +36,7 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     fps = float(vr.get_avg_fps())
 
     print("********** fuck you 2 *****************")
-
+    print(f"***** fps: {fps}, vlen: {vlen} ***************")
     all_idx_time_pair = [tuple(i, round(i / fps, 1)) for i in range(vlen)]
 
     print("********** fuck you 3 *****************")
