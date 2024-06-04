@@ -41,7 +41,6 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
         indices_t = sorted(rnd.sample(range(vlen // 2, vlen), n_frms // 2))
         indices = indices_h + indices_t
     elif sampling == "visual-audio-aligned":
-        print("********** enter visual-audio-aligned *****************")
         reject_list = []
         ind = []
         for j, time_clip in enumerate(all_clips_timepoints_all):
@@ -51,21 +50,15 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
                     reject_list.append(tup[1])
                 else:
                     continue
-        print("********** time_clip_for_loop completed **********")
         ind_first_half_len = len(ind) // 2
 
         assert n_frms <= len(ind), "n_frms must be equal or less than length of ind"
 
-        print("**************** passed assertion ********************")
-
         indices_first_half = sorted(rnd.sample(ind[0:ind_first_half_len], n_frms // 2))
         indices_second_half = sorted(rnd.sample(ind[ind_first_half_len:], n_frms // 2))
         indices = indices_first_half + indices_second_half
-        print("******************** indices completed ********************")
     else:
         raise NotImplementedError
-    
-    print("******** successful in sampling loop *********")
 
     # get_batch -> T, H, W, C
     temp_frms = vr.get_batch(indices)
@@ -80,7 +73,7 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     # " " should be added in the start and end
     # msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
 
-    image_idx_time_pair = [tuple(f, round(f / fps, 1)) for f in indices]
+    image_idx_time_pair = [(f, round(f / fps, 1)) for f in indices]
 
     return frms, image_idx_time_pair, all_idx_time_pair
 
