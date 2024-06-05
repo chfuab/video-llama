@@ -81,7 +81,10 @@ class RandomResizedCropVideo(RandomResizedCrop):
         """
         print("RandomResizedCropVideo")
         i, j, h, w = self.get_params(clip, self.scale, self.ratio)
-        return F.resized_crop(clip, i, j, h, w, self.size, self.interpolation_mode)
+        print("RandomResizedCropVideo 1")
+        result = F.resized_crop(clip, i, j, h, w, self.size, self.interpolation_mode)
+        print("RandomResizedCropVideo 2")
+        return result
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(size={self.size}, interpolation_mode={self.interpolation_mode}, scale={self.scale}, ratio={self.ratio})"
