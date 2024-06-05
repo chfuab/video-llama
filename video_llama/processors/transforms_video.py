@@ -79,6 +79,7 @@ class RandomResizedCropVideo(RandomResizedCrop):
             torch.tensor: randomly cropped/resized video clip.
                 size is (C, T, H, W)
         """
+        print("RandomResizedCropVideo")
         i, j, h, w = self.get_params(clip, self.scale, self.ratio)
         return F.resized_crop(clip, i, j, h, w, self.size, self.interpolation_mode)
 
@@ -148,6 +149,7 @@ class ToTensorVideo:
         Return:
             clip (torch.tensor, dtype=torch.float): Size is (C, T, H, W)
         """
+        print("ToTensorVideo")
         return F.to_tensor(clip)
 
     def __repr__(self) -> str:

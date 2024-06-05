@@ -126,6 +126,7 @@ class ToUint8(object):
         pass
 
     def __call__(self, tensor):
+        print("ToUint8")
         return tensor.to(torch.uint8)
 
     def __repr__(self):
@@ -144,6 +145,7 @@ class ToTHWC(object):
         pass
 
     def __call__(self, tensor):
+        print("ToTHWC")
         return tensor.permute(1, 2, 3, 0)
 
     def __repr__(self):
@@ -231,10 +233,8 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             width=self.image_size,
             sampling="visual-audio-aligned",
         )
-        print("fuck 1")
-        transformed_clip = self.transform(clip)
-        print("fuck 2")
-        return transformed_clip, image_idx_time_pair, all_idx_time_pair
+        print(f"size of clip is {clip.size()}")
+        return self.transform(clip), image_idx_time_pair, all_idx_time_pair
 
     @classmethod
     def from_config(cls, cfg=None):
