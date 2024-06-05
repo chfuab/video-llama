@@ -59,15 +59,11 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
         indices = indices_first_half + indices_second_half
     else:
         raise NotImplementedError
-    print("***********fuck 1 *********")
     # get_batch -> T, H, W, C
-    temp_frms = vr.get_batch(indices)
-    print("***********fuck 2 *********")    
+    temp_frms = vr.get_batch(indices) 
     # print(type(temp_frms))
     tensor_frms = torch.from_numpy(temp_frms) if type(temp_frms) is not torch.Tensor else temp_frms
-    print("***********fuck 3 *********")
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
-    print("***********fuck 4 *********")
 
     if not return_msg:
         return frms
@@ -77,7 +73,6 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     # msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
 
     image_idx_time_pair = [(f, round(f / fps, 1)) for f in indices]
-    print("***********fuck 5 *********")
     return frms, image_idx_time_pair, all_idx_time_pair
 
 """ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
@@ -236,8 +231,10 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             width=self.image_size,
             sampling="visual-audio-aligned",
         )
-        print("***********fuck 6 *********")
-        return self.transform(clip), image_idx_time_pair, all_idx_time_pair
+        print("fuck 1")
+        transformed_clip = self.transform(clip)
+        print("fuck 2")
+        return transformed_clip, image_idx_time_pair, all_idx_time_pair
 
     @classmethod
     def from_config(cls, cfg=None):
