@@ -125,7 +125,6 @@ class ToUint8(object):
         pass
 
     def __call__(self, tensor):
-        print("ToUint8")
         return tensor.to(torch.uint8)
 
     def __repr__(self):
@@ -144,7 +143,6 @@ class ToTHWC(object):
         pass
 
     def __call__(self, tensor):
-        print("ToTHWC")
         return tensor.permute(1, 2, 3, 0)
 
     def __repr__(self):

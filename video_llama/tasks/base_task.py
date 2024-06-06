@@ -202,6 +202,7 @@ class BaseTask:
         log_freq=50,
         accum_grad_iters=1,
     ):
+        print("train_epoch")
         return self._train_inner_loop(
             epoch=epoch,
             iters_per_epoch=lr_scheduler.iters_per_epoch,
@@ -289,6 +290,7 @@ class BaseTask:
         When using epoch-based, training stops after one epoch; when using iter-based,
         training stops after #iters_per_epoch iterations.
         """
+        print("_train_inner_loop")
         use_amp = scaler is not None
 
         if not hasattr(data_loader, "__next__"):
@@ -357,6 +359,7 @@ class BaseTask:
         # gather the stats from all processes
         metric_logger.synchronize_between_processes()
         logging.info("Averaged stats: " + str(metric_logger.global_avg()))
+        print("_train_inner_loop - final")
         return {
             k: "{:.3f}".format(meter.global_avg)
             for k, meter in metric_logger.meters.items()
