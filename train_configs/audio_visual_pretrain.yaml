@@ -83,7 +83,8 @@ run:
   batch_size_eval: 1
   # batch_size_train: 32
   # batch_size_eval: 32
-  num_workers: 8
+  # num_workers: 8
+  num_workers: 2
   # warmup_steps: 2500
   # iters_per_epoch: 2500
   warmup_steps: 1
