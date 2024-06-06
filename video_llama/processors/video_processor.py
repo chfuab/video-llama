@@ -61,11 +61,10 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
         raise NotImplementedError
     # get_batch -> T, H, W, C
     temp_frms = vr.get_batch(indices)
-    print(f"************************* {temp_frms.size()} **************************")
     # print(type(temp_frms))
     tensor_frms = torch.from_numpy(temp_frms) if type(temp_frms) is not torch.Tensor else temp_frms
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
-
+    print(f"********************* {frms.size()} ************************")
     if not return_msg:
         return frms
 
