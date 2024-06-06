@@ -231,8 +231,7 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             n_frms=self.n_frms,
             height=self.image_size,
             width=self.image_size,
-            # sampling="visual-audio-aligned",
-            sampling="headtail",
+            sampling="visual-audio-aligned",
         )
         print(f"size of clip is {clip.size()}")
         return self.transform(clip), image_idx_time_pair, all_idx_time_pair
