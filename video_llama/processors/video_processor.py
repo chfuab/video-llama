@@ -25,6 +25,7 @@ decord.bridge.set_bridge("torch")
 def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
+    print(f"********************************** {vr} ********************************")
     vlen = len(vr)
     start, end = 0, vlen
 
