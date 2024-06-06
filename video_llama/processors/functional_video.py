@@ -12,14 +12,10 @@ import torch
 
 def _is_tensor_video_clip(clip):
     if not torch.is_tensor(clip):
-        print("_is_tensor_video_clip 1")
         raise TypeError("clip should be Tensor. Got %s" % type(clip))
 
     if not clip.ndimension() == 4:
-        print("_is_tensor_video_clip 2")
         raise ValueError("clip should be 4D. Got %dD" % clip.dim())
-
-    print("_is_tensor_video_clip 3")
     return True
 
 
