@@ -13,7 +13,7 @@ def get_clip_timepoints(clip_sampler, duration):
     end = 0.0
     while not is_last_clip:
         start, end, _, _, is_last_clip = clip_sampler(end, duration, annotation=None)
-        all_clips_timepoints.append((start, end))
+        all_clips_timepoints.append((float(start), float(end)))
     return all_clips_timepoints
 
 def waveform2melspec(waveform, sample_rate, num_mel_bins, target_length):
