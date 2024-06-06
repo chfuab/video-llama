@@ -25,7 +25,6 @@ decord.bridge.set_bridge("torch")
 def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
-    print(f"********************************** {vr} ********************************")
     vlen = len(vr)
     start, end = 0, vlen
 
@@ -61,7 +60,8 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     else:
         raise NotImplementedError
     # get_batch -> T, H, W, C
-    temp_frms = vr.get_batch(indices) 
+    temp_frms = vr.get_batch(indices)
+    print(f"************************* {temp_frms} **************************")
     # print(type(temp_frms))
     tensor_frms = torch.from_numpy(temp_frms) if type(temp_frms) is not torch.Tensor else temp_frms
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
