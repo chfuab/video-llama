@@ -111,6 +111,7 @@ class VAST27MDataset(BaseDataset):
                 print(f"Failed to load examples with audio from {audio_path}")            
             try:
                 video, image_idx_time_pair, all_idx_time_pair = self.vis_processor(video_path, all_clips_timepoints_all)
+                print(f"**************** dtype of all_clips_timepoints_all {all_clips_timepoints_all} ******************************")
             except:
                 print(f"Failed to load examples with video: {video_path}. "
                             f"Will randomly sample an example as a replacement.")
