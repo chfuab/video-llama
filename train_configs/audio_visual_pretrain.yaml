@@ -84,8 +84,10 @@ run:
   # batch_size_train: 32
   # batch_size_eval: 32
   num_workers: 8
-  warmup_steps: 2500
-  iters_per_epoch: 2500
+  # warmup_steps: 2500
+  # iters_per_epoch: 2500
+  warmup_steps: 10
+  iters_per_epoch: 10
 
   seed: 42
   output_dir: "/mnt/disks/chfuab/output_dir"
