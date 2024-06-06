@@ -319,9 +319,9 @@ class BaseTask:
             # if using iter-based runner, we stop after iters_per_epoch iterations.
             if i >= iters_per_epoch:
                 break
-
+            print("_train_inner_loop 2")
             samples = next(data_loader)
-
+            print("_train_inner_loop 3")
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             samples.update(
                 {
@@ -356,7 +356,7 @@ class BaseTask:
 
         # after train_epoch()
         # gather the stats from all processes
-        print("_train_inner_loop 2")
+        
         metric_logger.synchronize_between_processes()
         logging.info("Averaged stats: " + str(metric_logger.global_avg()))
         print("_train_inner_loop - final")
