@@ -79,8 +79,8 @@ run:
 
   weight_decay: 0.05
   max_epoch: 5
-  batch_size_train: 2
-  batch_size_eval: 2
+  batch_size_train: 1
+  batch_size_eval: 1
   # batch_size_train: 32
   # batch_size_eval: 32
   num_workers: 8

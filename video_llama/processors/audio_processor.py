@@ -106,7 +106,6 @@ def load_and_transform_audio_data(
         all_clips_timepoints_all.append(all_clips_timepoints)
 
     # return torch.stack(audio_outputs, dim=0), all_clips_timepoints_all[0]
-    print(f"all_clips_timepoints_all[0] is {all_clips_timepoints_all[0]}")
     return audio_outputs[0], all_clips_timepoints_all[0]
 
 """ def load_and_transform_audio_data(
