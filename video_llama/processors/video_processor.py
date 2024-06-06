@@ -73,7 +73,6 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     # msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
 
     image_idx_time_pair = [(f, round(f / fps, 1)) for f in indices]
-    print(f"frms size is {frms.size()}")
     return frms, image_idx_time_pair, all_idx_time_pair
 
 """ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
@@ -232,7 +231,8 @@ class AlproVideoTrainProcessor(AlproVideoBaseProcessor):
             n_frms=self.n_frms,
             height=self.image_size,
             width=self.image_size,
-            sampling="visual-audio-aligned",
+            # sampling="visual-audio-aligned",
+            sampling="headtail",
         )
         print(f"size of clip is {clip.size()}")
         return self.transform(clip), image_idx_time_pair, all_idx_time_pair
