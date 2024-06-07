@@ -908,6 +908,7 @@ class VideoLLAMA(Blip2Base):
             frozen_llama_proj=frozen_llama_proj,
             frozen_video_Qformer=frozen_video_Qformer,
             frozen_audio_Qformer=frozen_audio_Qformer,
+            frozen_linear_proj=frozen_linear_proj,
             num_video_query_token=num_video_query_token,
             num_audio_query_token = num_audio_query_token,
             imagebind_ckpt_path = imagebind_ckpt_path,
