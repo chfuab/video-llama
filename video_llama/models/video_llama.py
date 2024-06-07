@@ -151,8 +151,8 @@ class VideoLLAMA(Blip2Base):
             q_former_aligned_ckpt = torch.load(qa_ckpt_path)
             self.q_former_aligned.load_state_dict(q_former_aligned_ckpt['model'], strict=False)
 
-            self.equip_QFormerAligned = equip_QFormerAligned
-            logging.info("Load pretrained QFormerAligned")
+        self.equip_QFormerAligned = equip_QFormerAligned
+        logging.info("Load pretrained QFormerAligned")
 
         logging.info('Loading linear projection layer after Q-Former')
         self.linear_proj = nn.Linear(self.query_tokens.size()[-1], 1024)        ################################
@@ -275,7 +275,7 @@ class VideoLLAMA(Blip2Base):
         else:
             self.train_flag = 3
         
-        print(f"frozen_video_Qformer is {frozen_video_Qformer}, frozen_audio_Qformer is {frozen_audio_Qformer}, frozen_linear_proj is {frozen_linear_proj}")
+        
         if frozen_video_Qformer and (not frozen_audio_Qformer) and (not frozen_linear_proj):
             self.train_VA_combined = True
         else:
