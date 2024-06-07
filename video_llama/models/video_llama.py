@@ -275,6 +275,7 @@ class VideoLLAMA(Blip2Base):
         else:
             self.train_flag = 3
         
+        print(f"frozen_video_Qformer is {frozen_video_Qformer}, frozen_audio_Qformer is {frozen_audio_Qformer}, frozen_linear_proj is {frozen_linear_proj}")
         if frozen_video_Qformer and (not frozen_audio_Qformer) and (not frozen_linear_proj):
             self.train_VA_combined = True
         else:
@@ -670,7 +671,6 @@ class VideoLLAMA(Blip2Base):
                 
             elif self.train_flag == 0:
                 img_embeds, atts_img = self.encode_videoQformer_visual(image) """
-            print(f"self.train_VA_combined is {self.train_VA_combined}")
             if self.train_VA_combined:
                 img_embeds, atts_img = self.encode_videoaudioQformer(audio, image, audio_clip_times_all, image_frame_idx_all, frms_time_idx_all)    #
                 
