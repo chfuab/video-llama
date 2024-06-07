@@ -71,7 +71,7 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     # sec = ", ".join([str(round(f / fps, 1)) for f in indices])
     # " " should be added in the start and end
     # msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
-
+    print(f"image_idx_time_pair: {image_idx_time_pair}")
     return frms, image_idx_time_pair, all_idx_time_pair
 
 """ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
