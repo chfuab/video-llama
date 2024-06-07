@@ -17,6 +17,6 @@ class LoRA(BaseModel):
         torch.nn.init.zeros_(self.B.weight)
 
     def forward(self, inputs):
-        assert (inputs.size()[-1] == self.dim_input.in_features), \
+        assert (inputs.size()[-1] == self.dim_input), \
             "size of last dimension of inputs must be same as dim_A"
         return self.alpha * self.B(self.A(inputs))
