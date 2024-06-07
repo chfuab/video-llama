@@ -38,6 +38,7 @@ class BaseTask:
         model_config = cfg.model_cfg
 
         model_cls = registry.get_model_class(model_config.arch)
+        print(model_config)
         return model_cls.from_config(model_config)
 
     def build_datasets(self, cfg):
@@ -290,7 +291,6 @@ class BaseTask:
         When using epoch-based, training stops after one epoch; when using iter-based,
         training stops after #iters_per_epoch iterations.
         """
-        print("_train_inner_loop")
         use_amp = scaler is not None
 
         if not hasattr(data_loader, "__next__"):
@@ -319,9 +319,7 @@ class BaseTask:
             # if using iter-based runner, we stop after iters_per_epoch iterations.
             if i >= iters_per_epoch:
                 break
-            print("_train_inner_loop 2")
             samples = next(data_loader)
-            print("_train_inner_loop 3")
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             samples.update(
                 {

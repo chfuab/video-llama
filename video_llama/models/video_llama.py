@@ -654,7 +654,6 @@ class VideoLLAMA(Blip2Base):
             loss = outputs.loss
             return {"loss": loss}
         else:
-            print("conv_type not in samples.key")
             image = samples["image"]
             audio = samples["audio"]    #
             audio_clip_times_all = samples["all_audio_clips_timepoints"]

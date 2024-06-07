@@ -52,15 +52,10 @@ def resized_crop(clip, i, j, h, w, size, interpolation_mode="bilinear"):
     Returns:
         clip (torch.tensor): Resized and cropped clip. Size is (C, T, H, W)
     """
-    print("resized_crop")
     if not _is_tensor_video_clip(clip):
-        print("resized_crop 1")
         raise ValueError("clip should be a 4D torch.tensor")
-    print("resized_crop 2")
     clip = crop(clip, i, j, h, w)
-    print("resized_crop 3")
     clip = resize(clip, size, interpolation_mode)
-    print("resized_crop 4")
     return clip
 
 
