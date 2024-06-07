@@ -654,6 +654,7 @@ class VideoLLAMA(Blip2Base):
             loss = outputs.loss
             return {"loss": loss}
         else:
+            print("conv_type not in samples.key")
             image = samples["image"]
             audio = samples["audio"]    #
             audio_clip_times_all = samples["all_audio_clips_timepoints"]
@@ -670,7 +671,7 @@ class VideoLLAMA(Blip2Base):
                 
             elif self.train_flag == 0:
                 img_embeds, atts_img = self.encode_videoQformer_visual(image) """
-
+            print(f"self.train_VA_combined is {self.train_VA_combined}")
             if self.train_VA_combined:
                 img_embeds, atts_img = self.encode_videoaudioQformer(audio, image, audio_clip_times_all, image_frame_idx_all, frms_time_idx_all)    #
                 
