@@ -66,7 +66,6 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
     image_idx_time_pair = [(f, round(f / fps, 1)) for f in indices]
     if not return_msg:
-        print(f"image_idx_time_pair: {image_idx_time_pair}")
         return frms, image_idx_time_pair, all_idx_time_pair
 
     # sec = ", ".join([str(round(f / fps, 1)) for f in indices])

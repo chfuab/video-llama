@@ -672,6 +672,7 @@ class VideoLLAMA(Blip2Base):
             elif self.train_flag == 0:
                 img_embeds, atts_img = self.encode_videoQformer_visual(image) """
             if self.train_VA_combined:
+                print(f"image_frame_idx_all: {image_frame_idx_all}")
                 img_embeds, atts_img = self.encode_videoaudioQformer(audio, image, audio_clip_times_all, image_frame_idx_all, frms_time_idx_all)    #
                 
 
