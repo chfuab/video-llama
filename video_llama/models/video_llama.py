@@ -479,11 +479,11 @@ class VideoLLAMA(Blip2Base):
                 audio_imagebind_finalout_k.append(audio_imagebind_finalout_k_j_temp)
 
             # calculate audio position embedding
-                position_id_list_A = torch.tensor(position_id_list_A)
-                position_embedding_A = self.audio_position_embedding(position_id_list_A)   
+                position_id_list_A = torch.LongTensor(position_id_list_A)
+                position_embedding_A = self.audio_position_embedding(position_id_list_A)  
                 position_embedding_A_all_list.append(position_embedding_A)
             # calculate visual position embedding:
-                position_id_img_frms = torch.tensor([pair[0] for pair in image_frame_idx_all[k]])
+                position_id_img_frms = torch.LongTensor([pair[0] for pair in image_frame_idx_all[k]])
                 position_embed_V = self.audio_visual_position_embedding(position_id_img_frms)
                 position_embedding_V_all_list.append(position_embed_V)
 
