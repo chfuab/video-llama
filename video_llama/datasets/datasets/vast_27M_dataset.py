@@ -131,6 +131,7 @@ class VAST27MDataset(BaseDataset):
         else:  
             raise RuntimeError(f"Failed to fetch video after {num_retries} retries.")
         # "image_id" is kept to stay compatible with the COCO evaluation format
+        print(f"********************* image_idx_time_pair {image_idx_time_pair} *******************")
         return {
             "image": video,
             "audio": audio,
