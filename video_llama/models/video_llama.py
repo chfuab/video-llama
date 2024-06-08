@@ -454,8 +454,9 @@ class VideoLLAMA(Blip2Base):
                 for j, clip_time_tuple in enumerate(audio_clip_times_all[k]):
                     visual_audio_idx_lst = []
                     for pair in image_frame_idx_all[k]:
-                        print(f"**************** pair: {pair} **************************")
-                        print(f"**************** clip_time_tuple: {clip_time_tuple} *********************")
+                        print(f"\n\n\n**************** image_frame_idx_all[0]: {image_frame_idx_all[0]} *********************\n\n\n")
+                        print(f"\n\n\n**************** pair: {pair} **************************\n\n\n")
+                        print(f"\n\n\n**************** clip_time_tuple: {clip_time_tuple} *********************\n\n\n")
                         if pair[1] >= clip_time_tuple[0] and pair[1] <= clip_time_tuple[1]:
                             visual_audio_idx_lst.append(pair[0])
                         else:
