@@ -449,11 +449,11 @@ class VideoLLAMA(Blip2Base):
             position_embedding_V_all_list = []
             audio_imagebind_finalout_k = []
 
-            if not torch.is_tensor(image_frame_idx_all):
+            """ if not torch.is_tensor(image_frame_idx_all):
                 image_frame_idx_all = torch.tensor(image_frame_idx_all)
 
             if image_frame_idx_all.dim() < 3:
-                image_frame_idx_all = image_frame_idx_all.unsqueeze(0)
+                image_frame_idx_all = image_frame_idx_all.unsqueeze(0) """
 
             for k in range(batch_size_A):
                 visual_audio_time_map = dict()
