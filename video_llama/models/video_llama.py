@@ -448,10 +448,12 @@ class VideoLLAMA(Blip2Base):
             position_embedding_A_all_list = []
             position_embedding_V_all_list = []
             audio_imagebind_finalout_k = []
+            print(f"\n\n\n batch_size_A: {batch_size_A}\n\n\n")
+            print(f"\n\n\n image_frame_idx_all: {image_frame_idx_all} \n\n\n")
+            print(f"\n\n\n audio_clip_times_all: {audio_clip_times_all} \n\n\n")
             for k in range(batch_size_A):
                 visual_audio_time_map = dict()
                 for j, clip_time_tuple in enumerate(audio_clip_times_all[k]):
-                    print(f"\n\n\n ****************** clip_time_tuple: {clip_time_tuple} ***************** \n\n\n")
                     visual_audio_idx_lst = []
                     if image_frame_idx_all[k][1] >= clip_time_tuple[0] and image_frame_idx_all[k][1] <= clip_time_tuple[1]:
                         visual_audio_idx_lst.append(image_frame_idx_all[k][0])
