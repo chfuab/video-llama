@@ -31,7 +31,7 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     n_frms = min(n_frms, vlen)
     
     fps = float(vr.get_avg_fps())
-    all_idx_time_pair = [(i, round(i / fps, 1)) for i in range(vlen)]
+    all_idx_time_pair = [[i, round(i / fps, 1)] for i in range(vlen)]
 
 
     if sampling == "uniform":
@@ -64,7 +64,7 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     # print(type(temp_frms))
     tensor_frms = torch.from_numpy(temp_frms) if type(temp_frms) is not torch.Tensor else temp_frms
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
-    image_idx_time_pair = [(f, round(f / fps, 1)) for f in indices]
+    image_idx_time_pair = [[f, round(f / fps, 1)] for f in indices]
     if not return_msg:
         return frms, image_idx_time_pair, all_idx_time_pair
 

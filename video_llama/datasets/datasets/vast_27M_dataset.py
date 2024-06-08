@@ -137,8 +137,8 @@ class VAST27MDataset(BaseDataset):
             "image": video,
             "audio": audio,
             "all_audio_clips_timepoints": torch.tensor(all_clips_timepoints_all),
-            "image_idx_time_pair": image_idx_time_pair,
-            "all_idx_time_pair": all_idx_time_pair, 
+            "image_idx_time_pair": torch.tensor(image_idx_time_pair),
+            "all_idx_time_pair": torch.tensor(all_idx_time_pair), 
             "text_input": caption,
             "type":'video',
         }
