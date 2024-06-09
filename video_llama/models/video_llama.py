@@ -465,6 +465,7 @@ class VideoLLAMA(Blip2Base):
                         else:
                             continue
                     visual_audio_time_map[j] = visual_audio_idx_lst
+                    print(f"\n\n\n clip_time_tuple: {clip_time_tuple}, visual_audio_idx_lst: {visual_audio_idx_lst} \n\n\n")
 
             # calculate audio position_id
                 position_id_list_A = []
