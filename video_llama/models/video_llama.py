@@ -485,7 +485,7 @@ class VideoLLAMA(Blip2Base):
                 position_embedding_A_all_list.append(position_embedding_A)
             # calculate visual position embedding:
 
-                print(f"\n\n\n image_frame_idx_all[0]: {image_frame_idx_all[0]} \n\n\n")
+                print(f"\n\n\n image_frame_idx_all: {image_frame_idx_all} \n\n\n")
                 # print(f"\n\n\n pos_id_imgs {[pair[0] for pair in image_frame_idx_all[k]]} \n\n\n")
 
                 position_id_img_frms = torch.LongTensor([pair[0].int() for pair in image_frame_idx_all[k]]).to(device_V)
