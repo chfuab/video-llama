@@ -179,7 +179,7 @@ class AudioProcessor(BaseProcessor):
     def from_config(cls, cfg):
         device = cfg.get("device", "cpu")
         clips_per_video = cfg.get("clips_per_video", 3)
-        clip_duration = cfg.get("clips_duration", 2)
+        clip_duration = cfg.get("clips_duration", 1.2)
         return cls(
             device=device,
             clips_per_video=clips_per_video,
