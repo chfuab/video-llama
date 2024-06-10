@@ -131,11 +131,8 @@ class BertSelfAttention(nn.Module):
             self.key = nn.Linear(config.encoder_width, self.all_head_size)
             self.value = nn.Linear(config.encoder_width, self.all_head_size)
         else:
-            # self.key = nn.Linear(config.hidden_size, self.all_head_size)
-            # self.value = nn.Linear(config.hidden_size, self.all_head_size)
-            
-            self.key = nn.Linear(1024, self.all_head_size)
-            self.value = nn.Linear(1024, self.all_head_size)
+            self.key = nn.Linear(config.hidden_size, self.all_head_size)
+            self.value = nn.Linear(config.hidden_size, self.all_head_size)
 
         self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
         self.position_embedding_type = getattr(
