@@ -522,12 +522,13 @@ class VideoLLAMA(Blip2Base):
             frame_atts_all = torch.cat((frame_atts_V, frame_atts_A), dim=1)
 
         # Put all things into Qformer. Assume 32 query tokens, hidden_state_V & audio_imagebind_finalout have same dim
-            video_query_output = self.video_Qformer.bert(
+            video_query_output = self.audio_Qformer.bert(
                 query_embeds=query_tokens_all, #[32,768]
                 encoder_hidden_states=hidden_states_all,
                 encoder_attention_mask=frame_atts_all,
                 return_dict=True,
                 )
+            
             video_hidden = video_query_output.last_hidden_state
 
             inputs_llama = self.llama_proj(video_hidden)
