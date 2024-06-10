@@ -40,9 +40,6 @@ class VideoLLAMA(Blip2Base):
         encoder_config.add_cross_attention = True
         encoder_config.cross_attention_freq = 1
         encoder_config.query_length = num_query_token
-
-        encoder_config.hidden_size = 1024
-
         Qformer = BertLMHeadModel(config=encoder_config)
         query_tokens = nn.Parameter(
             torch.zeros(1, num_query_token, encoder_config.hidden_size)
