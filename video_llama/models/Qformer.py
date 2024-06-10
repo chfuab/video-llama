@@ -129,14 +129,14 @@ class BertSelfAttention(nn.Module):
         self.query = nn.Linear(config.hidden_size, self.all_head_size)
         if is_cross_attention:
             print("\n\n\n is_cross_attention \n\n\n")
-            print(f"\n\n\n config.encoder_width: {config.encoder_width.size()} \n\n\n")
-            print(f"\n\n\n self.all_head_size: {self.all_head_size.size()} \n\n\n")
+            print(f"\n\n\n config.encoder_width: {config.encoder_width} \n\n\n")
+            print(f"\n\n\n self.all_head_size: {self.all_head_size} \n\n\n")
             self.key = nn.Linear(config.encoder_width, self.all_head_size)
             self.value = nn.Linear(config.encoder_width, self.all_head_size)
         else:
             print("\n\n\n is_not_cross_attention \n\n\n")
-            print(f"\n\n\n config.hidden_size: {config.hidden_size.size()} \n\n\n")
-            print(f"\n\n\n self.all_head_size: {self.all_head_size.size()} \n\n\n")
+            print(f"\n\n\n config.hidden_size: {config.hidden_size} \n\n\n")
+            print(f"\n\n\n self.all_head_size: {self.all_head_size} \n\n\n")
             self.key = nn.Linear(config.hidden_size, self.all_head_size)
             self.value = nn.Linear(config.hidden_size, self.all_head_size)
 
