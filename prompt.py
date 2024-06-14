@@ -17,8 +17,8 @@ if __name__ == '__main__':
     <</SYS>>
     {user_prompt} [/INST] '''
 
-    # encoding = tokenizer(prompt, return_tensors="pt").to("cuda:0")
-    encoding = tokenizer(user_prompt, return_tensors="pt").to("cuda:0")
+    encoding = tokenizer(prompt, return_tensors="pt").to("cuda:0")
+    # encoding = tokenizer(user_prompt, return_tensors="pt").to("cuda:0")
 
     model = model.eval()
     with torch.no_grad():
