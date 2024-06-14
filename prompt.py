@@ -16,7 +16,7 @@ if __name__ == '__main__':
     {user_prompt} [/INST] '''
 
     encoding = tokenizer(prompt, return_tensors="pt").to("cuda:0")
-    generate_ids = model.generate(encoding.input_ids, max_length=200)
+    generate_ids = model.generate(encoding.input_ids, max_length=1000)
     result = tokenizer.batch_decode(generate_ids, skip_special_tokens=True)[0]
 
     print(result)
