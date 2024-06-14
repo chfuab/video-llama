@@ -8,13 +8,12 @@ if __name__ == '__main__':
     tokenizer = LlamaTokenizer.from_pretrained(model_name)
 
     sys_prompt = "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
-    user_prompt = "Does Alice have brain?"
-    context = "Alice has brain."
+    user_prompt = "What is apple?"
+    # context = "Alice has brain."
 
     prompt = f'''<s>[INST] <<SYS>>
     {sys_prompt}
     <</SYS>>
-    {context}
     {user_prompt} [/INST] '''
 
     encoding = tokenizer(prompt, return_tensors="pt").to("cuda:0")
