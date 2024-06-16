@@ -28,14 +28,17 @@ if __name__ == '__main__':
     Rule: {rule3},
     Description: {description3}'''.format(rule3=rule3, description3=description3)    
 
-
+    mod_user_prompt = '''You are given a description about a creature and a rule to determine what species the creature is. 
+    Your task is to apply the rule to the description and determine what species the creature is. 
+    Give an answer about what species the creature is. Now determine what is the species of the creature according to below rule and description.
+    Rule: {rule},
+    Description: {description}'''.format(rule=rule, description=description)
 
     prompt = f'''<s>[INST] <<SYS>>
     You are a helpful assistant.
     <</SYS>>
-    {user_prompt} [/INST] {model_answer}</s>
-    <s>[INST] {user_prompt_2} [/INST]{model_answer_2}</s>
-    <s>[INST] {user_prompt_3} [/INST]'''
+    {mod_user_prompt} [/INST]'''
+    
 
 
 
