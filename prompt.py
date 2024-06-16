@@ -48,11 +48,11 @@ if __name__ == '__main__':
     [/INST]""".format(BODY=text)
 
 
-    x = "Alice has brain"
-    y = "Does Alice have brain?"
+    x = "Alice has two hands."
+    y = "Alice has one hand."
 
-    sys_prompt_2 = "Alice is a human. You are given a context and a question. Your task is to answer the question based on information in the context. If you don't know the answer, explain why you don't know the answer."
-    user_prompt_2 = "Answer below  question based on information in below context. context: {context}, question: {question}".format(context=x, question=y)
+    sys_prompt_2 = "You are given two pieces of text, namely t1 and t2. Your task is to determine if there is inconsistency between t1 and t2."
+    user_prompt_2 = "Determine if t1 and t2 below is inconsistent to each other. t1: {x}, t2: {y}"
 
 
 
