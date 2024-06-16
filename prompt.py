@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     model = model.eval()
     with torch.no_grad():
-        generate_ids = model.generate(encoding.input_ids, max_length=300, temperature=0.5)
+        generate_ids = model.generate(encoding.input_ids, max_length=300, temperature=0.8)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
     print(result)
