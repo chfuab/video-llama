@@ -13,12 +13,11 @@ if __name__ == '__main__':
 
     sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. The answer should be one sentence long. If you don't know or have not enough information about the answer, explain why."
     
-    user_prompt = '''Determine the species of the creature based on below rule and description.
-    Rule: {rule} 
-    Description: {description}'''.format(rule=rule, description=description)
+    user_prompt = '''Rule: {rule} 
+    Description: {description}. What is the species of the creature?'''.format(rule=rule, description=description)
 
 
-    
+
     
     text = '''Do players understand how to play the game?
     A game’s first tutorial is a great place to start learning, but it’s important to see how well players understand the game’s mechanics. You can observe retention rates, how long players are playing, and if they return to the game after their first session. You can see if your tutorials are effectively teaching the player by tracking metrics such as “Did the player get to the end of tutorial?”, “Did they complete the first level?”, “What is the average number of sessions played during the soft launch period?”, and “What is the average progression rate?”
