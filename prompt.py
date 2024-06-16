@@ -10,13 +10,19 @@ if __name__ == '__main__':
 
     rule = "If the creature has brain, then it's species is human."
     description = "The creature has brain."
+    rule2 = "If the creature has bacckbone, it's species is vertebrates."
+    description2 = "The creature has backbone."
 
-    sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. The answer should be one sentence long. If you don't know or have not enough information about the answer, explain why."
+
+    sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
     
-    user_prompt = '''Tell me what is the species of the creature according to below rule and description.
-    Rule: {rule} 
+    user_prompt = '''Determine what is the species of the creature according to below rule and description.
+    Rule: {rule}, 
     Description: {description}'''.format(rule=rule, description=description)
-
+    model_answer = "The creature's species is human."
+    user_prompt_2 = '''Determine what is the species of the creature according to below rule and description.
+    Rule: {rule2}, 
+    Description: {description2}'''.format(rule2=rule2, description2=description2)
 
 
     
@@ -48,18 +54,11 @@ if __name__ == '__main__':
     [/INST]""".format(BODY=text)
 
 
-    x = "Alice has two hands."
-    y = "Alice has one hand."
-
-    sys_prompt_2 = "You are given two pieces of text, namely t1 and t2. Your task is to determine if there is inconsistency between t1 and t2."
-    user_prompt_2 = "Determine if t1 and t2 below is inconsistent to each other. t1: {x}, t2: {y}".format(x=x, y=y)
-
-
 
     prompt = f'''<s>[INST] <<SYS>>
-    {sys_prompt_2}
+    {sys_prompt}
     <</SYS>>
-    {user_prompt_2} [/INST]'''
+    {user_prompt} [/INST] {model_answer}</s><s>[INST] {user_prompt_2} [/INST]'''
 
 
 
