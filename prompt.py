@@ -12,7 +12,7 @@ if __name__ == '__main__':
     sys_prompt = "You are given a question. Your task is to answer the question. If you don't know the answer, explain why."
     
     # user_prompt = "Rule: If the creature has brain then it's species is human. Description: The creature has brain. What species is the creature? Answer:"
-    user_prompt = "What is ChatGPT?"
+    user_prompt = "Question: What is ChatGPT? Answer:"
 
     prompt = f'''<s>[INST] <<SYS>>
     {sys_prompt}
