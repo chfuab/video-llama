@@ -14,7 +14,7 @@ if __name__ == '__main__':
     description3 = "The creature has backbone."
 
 
-    sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
+    sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to deduce from the rule what species the creature is given the information provided in the description. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
     
     user_prompt = '''Determine what is the species of the creature according to below rule and description.
     Rule: {rule},
@@ -28,14 +28,12 @@ if __name__ == '__main__':
     Rule: {rule3},
     Description: {description3}'''.format(rule3=rule3, description3=description3)    
 
-    mod_user_prompt = '''You are given a description about a creature and a rule to determine what species the creature is. 
-    Your task is to apply the rule to the description and determine what species the creature is. 
-    Give an answer about what species the creature is. Now determine what is the species of the creature according to below rule and description.
+    mod_user_prompt = '''Determine what is the species of the creature according to below rule and description.
     Rule: {rule},
     Description: {description}'''.format(rule=rule, description=description)
 
     prompt = f'''<s>[INST] <<SYS>>
-    You are a helpful assistant.
+    {sys_prompt}
     <</SYS>>
     {mod_user_prompt} [/INST]'''
     
