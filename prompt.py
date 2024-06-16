@@ -12,17 +12,23 @@ if __name__ == '__main__':
     description = "The creature has brain."
     rule2 = "If the creature has hair, it's species is mammal."
     description2 = "The creature has hair."
+    rule3 = "If the creature has backbone, it's species is vertebrates."
+    description3 = "The creature has backbone."
 
 
     sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
     
     user_prompt = '''Determine what is the species of the creature according to below rule and description.
-    Rule: {rule}
+    Rule: {rule},
     Description: {description}'''.format(rule=rule, description=description)
     model_answer = "The creature's species is human."
     user_prompt_2 = '''Determine what is the species of the creature according to below rule and description.
-    Rule: {rule2}
+    Rule: {rule2},
     Description: {description2}'''.format(rule2=rule2, description2=description2)
+    model_answer_2 = "The creature's species is mammal"
+    user_prompt_3 = '''Determine what is the species of the creature according to below rule and description.
+    Rule: {rule3},
+    Description: {description3}'''.format(rule2=rule3, description2=description3)    
 
 
     
@@ -58,7 +64,9 @@ if __name__ == '__main__':
     prompt = f'''<s>[INST] <<SYS>>
     {sys_prompt}
     <</SYS>>
-    {user_prompt} [/INST] {model_answer}</s><s>[INST] {user_prompt_2} [/INST]'''
+    {user_prompt} [/INST] {model_answer}</s>
+    <s>[INST] {user_prompt_2} [/INST]{model_answer_2}</s>
+    <s>[INST] {user_prompt_3} [/INST]'''
 
 
 
