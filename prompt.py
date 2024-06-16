@@ -14,7 +14,7 @@ if __name__ == '__main__':
     description3 = "The creature has backbone."
 
 
-    sys_prompt = "You are given a description about a creature and a rule to determine what species the creature is. Your task is to deduce from the rule what species the creature is given the information provided in the description. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
+    sys_prompt = "You are given a description about a creature and a rule to determine what species the creature is. Your task is to deduce from the rule the species of the creature given the information provided in the description. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
     
     user_prompt = '''Determine what is the species of the creature according to below rule and description.
     Rule: {rule},
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     model = model.eval()
     with torch.no_grad():
-        generate_ids = model.generate(encoding.input_ids, max_length=300, temperature=0.8)
+        generate_ids = model.generate(encoding.input_ids, max_length=300, temperature=0.5)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
     print(result)
