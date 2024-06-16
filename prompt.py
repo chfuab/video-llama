@@ -31,18 +31,7 @@ if __name__ == '__main__':
     The first step is choosing which market you want to soft launch in. You want to choose a market that is similar to your target audience, but with enough scale to give you meaningful metrics. You might want to consider a country with a large number of gamers, a country with a similar culture and demographics to your target audience, or a country where your game’s genre is popular.
     Step 2: Set Your Testing Goals
     Next, you want to set specific goals for what you want to test during the soft launch. These goals should be measurable and tied to specific metrics. For example, one goal could be to increase player retention by 10% during the soft launch period.
-    Step 3: Choose Your Test Size
-    The next step is to decide on the size of your test. This will depend on the metrics you want to measure, the resources you have available, and the cost of user acquisition. For example, if you want to measure retention rates, you may want to test with a smaller group of players. 
-    Step 4: Choose Your Test Period
-    Next, you want to decide on the length of your soft launch test. This will depend on how long it takes to gather meaningful data and how much time you have to make changes to the game before the global launch. You might want to consider testing for at least a week to get a good idea of player engagement and retention.
-    Step 5: Plan Your User Acquisition Strategy
-    During the soft launch, you want to focus on acquiring players who are similar to your target audience. You might want to consider using social media, influencer marketing, or targeted ads to reach your desired audience.
-    Step 6: Monitor and Analyze Your Metrics
-    Once your soft launch is under way, you want to closely monitor your metrics and make changes as needed. This could include adjusting your user acquisition strategy, changing game mechanics, or tweaking your monetization strategy. 
-    Step 7: Iterate and Refine
-    After you have gathered all the data you need from your soft launch, it’s time to iterate and refine your game. This could include changing game mechanics, adjusting your monetization strategy, or improving player engagement and retention.
-    Step 8: Set a Launch Date
-    Finally, once you are happy with the changes you’ve made, it’s time to set a launch date for your game. You want to make sure that you have enough time to scale up your user acquisition efforts.'''
+    '''
 
 
     p5 = """<s>[INST] <<SYS>>
@@ -72,7 +61,7 @@ if __name__ == '__main__':
 
     model = model.eval()
     with torch.no_grad():
-        generate_ids = model.generate(encoding.input_ids, max_length=256)
+        generate_ids = model.generate(encoding.input_ids, max_length=1000)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
     print(result)
