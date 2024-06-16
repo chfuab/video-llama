@@ -10,8 +10,8 @@ if __name__ == '__main__':
 
     rule = "If the creature has brain, then it's species is human."
     description = "The creature has brain."
-    rule2 = "If the creature has bacckbone, it's species is vertebrates."
-    description2 = "The creature has backbone."
+    rule2 = "If the creature is warm-blooded, it's species is mammal."
+    description2 = "The creature is warm-blooded."
 
 
     sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
