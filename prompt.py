@@ -10,18 +10,18 @@ if __name__ == '__main__':
 
     rule = "If the creature has brain, then it's species is human."
     description = "The creature has brain."
-    rule2 = "If the creature is warm-blooded, it's species is mammal."
-    description2 = "The creature is warm-blooded."
+    rule2 = "If the creature has hair, it's species is mammal."
+    description2 = "The creature has hair."
 
 
     sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. If you don't know or have not enough information about the answer, explain why."
     
     user_prompt = '''Determine what is the species of the creature according to below rule and description.
-    Rule: {rule}, 
+    Rule: {rule}
     Description: {description}'''.format(rule=rule, description=description)
     model_answer = "The creature's species is human."
     user_prompt_2 = '''Determine what is the species of the creature according to below rule and description.
-    Rule: {rule2}, 
+    Rule: {rule2}
     Description: {description2}'''.format(rule2=rule2, description2=description2)
 
 
