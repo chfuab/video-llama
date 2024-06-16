@@ -52,7 +52,7 @@ if __name__ == '__main__':
     y = "Alice has one hand."
 
     sys_prompt_2 = "You are given two pieces of text, namely t1 and t2. Your task is to determine if there is inconsistency between t1 and t2."
-    user_prompt_2 = "Determine if t1 and t2 below is inconsistent to each other. t1: {x}, t2: {y}"
+    user_prompt_2 = "Determine if t1 and t2 below is inconsistent to each other. t1: {x}, t2: {y}".format(x=x, y=y)
 
 
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     model = model.eval()
     with torch.no_grad():
-        generate_ids = model.generate(encoding.input_ids, max_length=256, temperature=0.5)
+        generate_ids = model.generate(encoding.input_ids, max_length=256, temperature=0.8)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
     print(result)
