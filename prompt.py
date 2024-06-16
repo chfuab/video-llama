@@ -11,13 +11,13 @@ if __name__ == '__main__':
     sys_prompt = '''You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. 
     Your task is to apply the rule to the description and determine what species the creature is.
     Give an answer about what species the creature is. The answer should be one sentence long. 
-    If you don't know the answer, explain why you don't know the answer.
+    If you don't know or have not enough information about the answer, explain why.
     '''
     
     
     
-    user_prompt = '''Description: The creature has brain.
-    Rule: If the creature has brain then it's species is human.
+    user_prompt = '''Rule: If the creature has brain then it's species is human.
+    Description: The creature has brain. What species is the creature?
     Answer:'''
 
     prompt = f'''<s>[INST] <<SYS>>
