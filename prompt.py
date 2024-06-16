@@ -8,9 +8,14 @@ if __name__ == '__main__':
     model = LlamaForCausalLM.from_pretrained(model_name).to("cuda:0")
     tokenizer = LlamaTokenizer.from_pretrained(model_name)
 
+    rule = "If the creature has brain then it's species is human."
+    description = "The creature has brain."
+
     sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. The answer should be one sentence long. If you don't know or have not enough information about the answer, explain why."
     
-    user_prompt = "Rule: If the creature has brain then it's species is human. Description: The creature has brain. What species is the creature?"
+    user_prompt = '''Determine the species of the creature based on below rule and description. 
+    Rule: {rule}. 
+    Description: {description}'''.format(rule=rule, description=description)
     
 
     prompt = f'''<s>[INST] <<SYS>>
