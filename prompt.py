@@ -52,7 +52,7 @@ if __name__ == '__main__':
     y = "Does Alice have brain?"
 
     sys_prompt_2 = "Alice is a human. You are given a context and a question. Your task is to answer the question based on information in the context. If you don't know the answer, explain why you don't know the answer."
-    user_prompt_2 = "Answer below  question based on information in below context. context: {context} question: {question}".format(context=x, question=y)
+    user_prompt_2 = "Answer below  question based on information in below context. context: {context}, question: {question}".format(context=x, question=y)
 
 
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     model = model.eval()
     with torch.no_grad():
-        generate_ids = model.generate(encoding.input_ids, max_length=256, temperature=0.5)
+        generate_ids = model.generate(encoding.input_ids, max_length=256, temperature=0.5, repetition_penalty=1.5)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
     print(result)
