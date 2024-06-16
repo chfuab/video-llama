@@ -28,7 +28,7 @@ if __name__ == '__main__':
     model_answer_2 = "The creature's species is mammal"
     user_prompt_3 = '''Determine what is the species of the creature according to below rule and description.
     Rule: {rule3},
-    Description: {description3}'''.format(rule2=rule3, description2=description3)    
+    Description: {description3}'''.format(rule3=rule3, description3=description3)    
 
 
     
