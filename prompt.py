@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
 
     prompt = f'''<s>[INST] <<SYS>>
-    {sys_prompt}
+    You are a helpful assistant.
     <</SYS>>
     {user_prompt} [/INST] {model_answer}</s>
     <s>[INST] {user_prompt_2} [/INST]{model_answer_2}</s>
