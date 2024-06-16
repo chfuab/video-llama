@@ -17,7 +17,7 @@ if __name__ == '__main__':
     prompt = f'''<s>[INST] <<SYS>>
     {sys_prompt}
     <</SYS>>
-    {user_prompt} [/INST]</s>'''
+    {user_prompt} [/INST]'''
 
     encoding = tokenizer(prompt, return_tensors="pt").to("cuda:0")
     # encoding = tokenizer(user_prompt, return_tensors="pt").to("cuda:0")
