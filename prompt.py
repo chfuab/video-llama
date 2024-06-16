@@ -13,8 +13,9 @@ if __name__ == '__main__':
 
     sys_prompt = "You are a helpful assistant. You are given a description about a creature and a rule to determine what species the creature is. Your task is to apply the rule to the description and determine what species the creature is. Give an answer about what species the creature is. The answer should be one sentence long. If you don't know or have not enough information about the answer, explain why."
     
-    user_prompt = '''Rule: {rule} 
-    Description: {description}. What is the species of the creature?'''.format(rule=rule, description=description)
+    user_prompt = '''Tell me what is the species of the creature according to below rule and description.
+    Rule: {rule} 
+    Description: {description}'''.format(rule=rule, description=description)
 
 
 
