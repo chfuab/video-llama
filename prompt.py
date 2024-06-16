@@ -48,14 +48,18 @@ if __name__ == '__main__':
     [/INST]""".format(BODY=text)
 
 
+    x = "Alice has brain"
+    y = "Does Alice have brain?"
 
+    sys_prompt_2 = "You are given a context and a question. Your task is to answer the question based on information in the context. If you don't know the answer, explain why you don't know the answer."
+    user_prompt_2 = "Answer below  question based on information in below context. context: {context} question: {question}".format(context=x, question=y)
 
 
 
     prompt = f'''<s>[INST] <<SYS>>
-    {sys_prompt}
+    {sys_prompt_2}
     <</SYS>>
-    {user_prompt} [/INST]'''
+    {user_prompt_2} [/INST]'''
 
 
 
@@ -64,7 +68,7 @@ if __name__ == '__main__':
 
     model = model.eval()
     with torch.no_grad():
-        generate_ids = model.generate(encoding.input_ids, max_length=256, temperature=2.0)
+        generate_ids = model.generate(encoding.input_ids, max_length=256, temperature=0.5)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
     print(result)
