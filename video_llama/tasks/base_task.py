@@ -205,7 +205,7 @@ class BaseTask:
         log_freq=50,
         accum_grad_iters=1,
     ):
-        print("train_epoch")
+        print("\n\n\ntrain_epoch\n\n\n")
         return self._train_inner_loop(
             epoch=epoch,
             iters_per_epoch=lr_scheduler.iters_per_epoch,
