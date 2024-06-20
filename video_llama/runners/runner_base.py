@@ -32,7 +32,7 @@ from video_llama.datasets.datasets.dataloader_utils import (
 )
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader, DistributedSampler
-
+from pprint import pprint
 
 @registry.register_runner("runner_base")
 class RunnerBase:
@@ -617,10 +617,10 @@ class RunnerBase:
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model)
         model.eval()
-        print("\n\n\n")
-        print(self.task)
-        print("\n\n\n")
-        results, records = self.task.evaluation(model, data_loader, metrics)
+        
+        # results, records = self.task.evaluation(model, data_loader, metrics)
+        results = self.task.evaluation(model, data_loader, metrics)
+        pprint(results)
 
         return results
 
