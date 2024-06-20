@@ -617,12 +617,8 @@ class RunnerBase:
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model)
         model.eval()
-        
-        assert self.task is None, "self.task is not none!!"
 
         results, records = self.task.evaluation(model, data_loader, metrics)
-
-        pprint(results)
 
         return results
 
