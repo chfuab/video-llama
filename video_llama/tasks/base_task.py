@@ -143,7 +143,12 @@ class BaseTask:
         return results """
 
     
-    def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
+    def evaluation(self, 
+                   # model, 
+                   # data_loader, 
+                   # metrics, 
+                   # cuda_enabled=True
+                   ):
         print("\n\n\n evaluation \n\n\n")
         """ metric_logger = MetricLogger(delimiter="  ")
         header = "Evaluation"
