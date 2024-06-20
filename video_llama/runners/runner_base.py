@@ -618,7 +618,7 @@ class RunnerBase:
             model = self._reload_best_model(model)
         model.eval()
         print("\n\n\n")
-        self.task.pretty_print()
+        print(self.task)
         print("\n\n\n")
         results, records = self.task.evaluation(model, data_loader, metrics)
 
