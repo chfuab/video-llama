@@ -617,7 +617,9 @@ class RunnerBase:
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model)
         model.eval()
-        print("\n\n\n fuck your mother \n\n\n")
+        print("\n\n\n")
+        self.task.pretty_print()
+        print("\n\n\n")
         results, records = self.task.evaluation(model, data_loader, metrics)
 
         return results
