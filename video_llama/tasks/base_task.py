@@ -143,14 +143,9 @@ class BaseTask:
         return results """
 
     
-    def evaluation(self, 
-                   # model, 
-                   # data_loader, 
-                   # metrics, 
-                   # cuda_enabled=True
-                   ):
+    def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
         print("\n\n\n evaluation \n\n\n")
-        """ metric_logger = MetricLogger(delimiter="  ")
+        metric_logger = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable
         print_freq = 10
@@ -198,7 +193,7 @@ class BaseTask:
         }, {
             k: meter.value_record
             for k, meter in metric_logger.meters.items()
-        } """
+        }
 
     def train_epoch(
         self,
