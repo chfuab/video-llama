@@ -618,9 +618,9 @@ class RunnerBase:
             model = self._reload_best_model(model)
         model.eval()
 
-        results, records = self.task.evaluation(model, data_loader, metrics)
-
-        return results
+        # results, records = self.task.evaluation(model, data_loader, metrics)
+        self.task.evaluation(model, data_loader, metrics)
+        # return results
 
     def unwrap_dist_model(self, model):
         if self.use_distributed:
