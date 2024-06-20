@@ -141,12 +141,11 @@ class BaseTask:
             dist.barrier()
 
         return results """
-    def fuck_you(self):
-        print("\n\n\n fuck your mother it works \n\n\n")
+
     
     def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
         print("\n\n\n evaluation \n\n\n")
-        metric_logger = MetricLogger(delimiter="  ")
+        """ metric_logger = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable
         print_freq = 10
@@ -194,7 +193,7 @@ class BaseTask:
         }, {
             k: meter.value_record
             for k, meter in metric_logger.meters.items()
-        }
+        } """
 
     def train_epoch(
         self,
