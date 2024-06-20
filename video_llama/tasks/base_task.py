@@ -141,7 +141,7 @@ class BaseTask:
             dist.barrier()
 
         return results """
-    def fuck_you():
+    def fuck_you(self):
         print("\n\n\n fuck your mother it works \n\n\n")
     
     def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
