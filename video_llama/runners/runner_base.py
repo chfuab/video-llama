@@ -608,6 +608,7 @@ class RunnerBase:
                 During training, we will reload the best checkpoint for validation.
                 During testing, we will use provided weights and skip reloading the best checkpoint .
         """
+        self.task.fuck_you()
         data_loader = self.dataloaders.get(split_name, None)
         assert data_loader, "data_loader for split {} is None.".format(split_name)
 
@@ -618,9 +619,9 @@ class RunnerBase:
             model = self._reload_best_model(model)
         model.eval()
 
-        # results, records = self.task.evaluation(model, data_loader, metrics)
-        self.task.evaluation(model, data_loader, metrics)
-        # return results
+        results, records = self.task.evaluation(model, data_loader, metrics)
+
+        return results
 
     def unwrap_dist_model(self, model):
         if self.use_distributed:

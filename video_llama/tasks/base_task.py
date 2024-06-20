@@ -141,6 +141,9 @@ class BaseTask:
             dist.barrier()
 
         return results """
+    def fuck_you():
+        print("\n\n\n fuck your mother it works \n\n\n")
+    
     def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
         print("\n\n\n evaluation \n\n\n")
         metric_logger = MetricLogger(delimiter="  ")
@@ -205,7 +208,7 @@ class BaseTask:
         log_freq=50,
         accum_grad_iters=1,
     ):
-        print("\n\n\ntrain_epoch\n\n\n")
+        print("train_epoch")
         return self._train_inner_loop(
             epoch=epoch,
             iters_per_epoch=lr_scheduler.iters_per_epoch,
