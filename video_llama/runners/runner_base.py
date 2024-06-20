@@ -618,7 +618,7 @@ class RunnerBase:
             model = self._reload_best_model(model)
         model.eval()
         
-        assert self.task is not None, "self.task is none!!"
+        assert self.task is None, "self.task is not none!!"
 
         results, records = self.task.evaluation(model, data_loader, metrics)
 
