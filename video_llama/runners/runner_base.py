@@ -618,8 +618,10 @@ class RunnerBase:
             model = self._reload_best_model(model)
         model.eval()
         
-        # results, records = self.task.evaluation(model, data_loader, metrics)
-        results = self.task.evaluation(model, data_loader, metrics)
+        assert self.task is not None, "self.task is none!!"
+
+        results, records = self.task.evaluation(model, data_loader, metrics)
+
         pprint(results)
 
         return results

@@ -185,15 +185,11 @@ class BaseTask:
 
         assert metric_logger.meters is not None, "\n\n\n metric_logger.meters is none \n\n\n"
 
-        """ return {
+        return {
             k: "{:.3f}".format(meter.global_avg)
             for k, meter in metric_logger.meters.items()
         }, {
             k: meter.value_record
-            for k, meter in metric_logger.meters.items()
-        } """
-        return {
-            k: "{:.3f}".format(meter.global_avg)
             for k, meter in metric_logger.meters.items()
         }
 
