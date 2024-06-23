@@ -694,7 +694,8 @@ class RunnerBase:
         for dataset, bsz, is_train, collate_fn in zip(
             datasets, batch_sizes, is_trains, collate_fns
         ):
-            if isinstance(dataset, list) or isinstance(dataset, tuple):
+            # if isinstance(dataset, list) or isinstance(dataset, tuple):
+            if (isinstance(dataset, list) and (len(dataset) > 1)) or isinstance(dataset, tuple):
                 if hasattr(dataset[0], 'sample_ratio') and dataset_ratios is None:
                     dataset_ratios = [d.sample_ratio for d in dataset]
                 loader = MultiIterLoader(
