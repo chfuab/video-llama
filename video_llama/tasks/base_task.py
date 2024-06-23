@@ -160,7 +160,7 @@ class BaseTask:
 
         results = []
 
-        for samples in metric_logger.log_every(data_loader, print_freq, header):
+        for samples in metric_logger.log_every(data_loader.loaders[0], print_freq, header):
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             eval_output = {}
             for name in metrics:
