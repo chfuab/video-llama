@@ -40,8 +40,11 @@ class MultiIterLoader:
     def __next__(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
+        self.loader_idx = loader_idx
         return next(self.loaders[loader_idx])
 
+    def __len__(self):
+        return len(self.loaders[self.loader_idx])
 
 class PrefetchLoader(object):
     """
