@@ -132,7 +132,10 @@ class MetricLogger(object):
         end = time.time()
         iter_time = SmoothedValue(fmt="{avg:.4f}")
         data_time = SmoothedValue(fmt="{avg:.4f}")
-        space_fmt = ":" + str(len(str(len(iterable)))) + "d"
+        if not hasattr(iterable, "__len__"):
+            space_fmt = "NA"
+        else:
+            space_fmt = ":" + str(len(str(len(iterable)))) + "d"
         log_msg = [
             header,
             "[{0" + space_fmt + "}/{1}]",
