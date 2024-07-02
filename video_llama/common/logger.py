@@ -132,10 +132,7 @@ class MetricLogger(object):
         end = time.time()
         iter_time = SmoothedValue(fmt="{avg:.4f}")
         data_time = SmoothedValue(fmt="{avg:.4f}")
-        if not hasattr(iterable, "__len__"):
-            space_fmt = "NA"
-        else:
-            space_fmt = ":" + str(len(str(len(iterable)))) + "d"
+        space_fmt = ":" + str(len(str(len(iterable)))) + "d"
         log_msg = [
             header,
             "[{0" + space_fmt + "}/{1}]",
@@ -183,12 +180,11 @@ class MetricLogger(object):
                 end = time.time()
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
-        if hasattr(iterable, "__len__"):
-            print(
-                "{} Total time: {} ({:.4f} s / it)".format(
-                    header, total_time_str, total_time / len(iterable)
-                )
+        print(
+            "{} Total time: {} ({:.4f} s / it)".format(
+                header, total_time_str, total_time / len(iterable)
             )
+        )
 
 
 class AttrDict(dict):
