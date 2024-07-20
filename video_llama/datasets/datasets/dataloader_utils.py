@@ -51,9 +51,8 @@ class MultiIterLoader:
         return length
 
     def __iter__(self):
-        loader_it = iter(self.loaders)
-        self.preload(loader_it)
-        batch = self.next(loader_it)
+        self.preload()
+        batch = self.batch
         while batch is not None:
             is_tuple = isinstance(batch, tuple)
             if is_tuple:
@@ -63,11 +62,12 @@ class MultiIterLoader:
                 yield task, batch
             else:
                 yield batch
-            batch = self.next(loader_it)
+            self.preload()
+            batch = self.batch
 
-    def preload(self, it):
+    def preload(self):
         try:
-            self.batch = next(it)
+            self.batch = self.__next__()
         except StopIteration:
             self.batch = None
             return
