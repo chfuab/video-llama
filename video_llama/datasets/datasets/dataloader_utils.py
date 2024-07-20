@@ -37,6 +37,8 @@ class MultiIterLoader:
         self.loaders = loaders
         self.ratios = ratios
 
+
+
     def __next__(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
@@ -47,6 +49,31 @@ class MultiIterLoader:
         for loader in self.loaders:
             length += len(loader)
         return length
+
+    def __iter__(self):
+        loader_it = iter(self.loaders)
+        self.preload(loader_it)
+        batch = self.next(loader_it)
+        while batch is not None:
+            is_tuple = isinstance(batch, tuple)
+            if is_tuple:
+                task, batch = batch
+
+            if is_tuple:
+                yield task, batch
+            else:
+                yield batch
+            batch = self.next(loader_it)
+
+    def preload(self, it):
+        try:
+            self.batch = next(it)
+        except StopIteration:
+            self.batch = None
+            return
+        with torch.cuda.stream(self.stream):
+            self.batch = move_to_cuda(self.batch)
+
 class PrefetchLoader(object):
     """
     Modified from https://github.com/ChenRocks/UNITER.

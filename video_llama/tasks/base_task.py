@@ -160,7 +160,6 @@ class BaseTask:
 
         results = []
 
-        print("\n\n\n Before for loop \n\n\n")
         for samples in metric_logger.log_every(data_loader, print_freq, header):
             print("\n\n\n Inside for loop \n\n\n")
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
