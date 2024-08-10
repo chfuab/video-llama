@@ -77,6 +77,7 @@ class MultiIterLoader:
             self.batch = None
             return
         with torch.cuda.stream(self.stream):
+            print(f"\n\n\n {self.batch} \n\n\n")
             self.batch = move_to_cuda(self.batch)
 
 class PrefetchLoader(object):
