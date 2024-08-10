@@ -36,6 +36,7 @@ class MultiIterLoader:
 
         self.loaders = loaders
         self.ratios = ratios
+        self.stream = torch.cuda.Stream()
 
 
 
