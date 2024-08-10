@@ -53,6 +53,8 @@ class MultiIterLoader:
     def __iter__(self):
         self.preload()
         batch = self.batch
+        if batch is not None:
+            record_cuda_stream(batch)
         while batch is not None:
             is_tuple = isinstance(batch, tuple)
             if is_tuple:
@@ -62,6 +64,8 @@ class MultiIterLoader:
                 yield task, batch
             else:
                 yield batch
+            if batch is not None:
+                record_cuda_stream(batch)
             self.preload()
             batch = self.batch
 
