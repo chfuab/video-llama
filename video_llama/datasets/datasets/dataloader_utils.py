@@ -40,7 +40,7 @@ class MultiIterLoader:
 
 
 
-    def __next__(self):
+    def next_data_sample(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         return next(self.loaders[loader_idx])
@@ -72,12 +72,12 @@ class MultiIterLoader:
 
     def preload(self):
         try:
-            self.batch = self.__next__()
+            self.batch = self.next_data_sample()
         except StopIteration:
             self.batch = None
             return
         with torch.cuda.stream(self.stream):
-            print(f"\n\n\n {self.batch} \n\n\n")
+            print(f"\n\n\n self.batch is: {self.batch} \n\n\n")
             self.batch = move_to_cuda(self.batch)
 
 class PrefetchLoader(object):
