@@ -43,7 +43,7 @@ class MultiIterLoader:
     def next_data_sample(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        print(f"\n\n\n self.loaders: {self.loaders} \n\n\n loader_idx: {loader_idx} \n\n\n")
+        print(f"\n\n\n self.loaders: {self.loaders} \n\n\n loader_idx: {loader_idx} \n\n\n self.loaders[loader_idx]: {self.loaders[loader_idx]}")
         return next(self.loaders[loader_idx])
     
     def __len__(self):
