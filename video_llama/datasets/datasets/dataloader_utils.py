@@ -148,9 +148,6 @@ class PrefetchLoader(object):
         method = self.loader.__getattribute__(name)
         return method
 
-    def __next__(self):
-        pass
-
 def record_cuda_stream(batch):
     if isinstance(batch, torch.Tensor):
         batch.record_stream(torch.cuda.current_stream())
