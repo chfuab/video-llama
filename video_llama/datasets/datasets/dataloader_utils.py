@@ -144,6 +144,14 @@ class PrefetchLoader(object):
         self.preload(it)
         return batch
 
+    def __next__(self, it):
+        torch.cuda.current_stream().wait_stream(self.stream)
+        batch = self.batch
+        if batch is not None:
+            record_cuda_stream(batch)
+        self.preload(it)
+        return batch
+
     def __getattr__(self, name):
         method = self.loader.__getattribute__(name)
         return method
