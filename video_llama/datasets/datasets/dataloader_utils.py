@@ -44,7 +44,41 @@ class MultiIterLoader:
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         return next(self.loaders[loader_idx])
+    
+    def __len__(self):
+        length = 0
+        for loader in self.loaders:
+            length += len(loader)
+        return length
 
+    def __iter__(self):
+        self.preload()
+        batch = self.batch
+        if batch is not None:
+            record_cuda_stream(batch)
+        while batch is not None:
+            is_tuple = isinstance(batch, tuple)
+            if is_tuple:
+                task, batch = batch
+
+            if is_tuple:
+                yield task, batch
+            else:
+                yield batch
+            if batch is not None:
+                record_cuda_stream(batch)
+            self.preload()
+            batch = self.batch
+
+    def preload(self):
+        try:
+            self.batch = self.next_data_sample()
+        except StopIteration:
+            self.batch = None
+            return
+        with torch.cuda.stream(self.stream):
+            print(f"\n\n\n self.batch is: {self.batch} \n\n\n")
+            self.batch = move_to_cuda(self.batch)
 
 class PrefetchLoader(object):
     """
