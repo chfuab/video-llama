@@ -96,7 +96,7 @@ class PrefetchLoader(object):
     def __iter__(self):
         loader_it = iter(self.loader)
         self.preload(loader_it)
-        batch = self.next(loader_it)
+        batch = next(loader_it)
         while batch is not None:
             is_tuple = isinstance(batch, tuple)
             if is_tuple:
