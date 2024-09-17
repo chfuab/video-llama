@@ -108,7 +108,8 @@ class PrefetchLoader(object):
             else:
                 yield batch
             # batch = self.next(loader_it)
-            batch = self.next(loader_it)
+            self.preload(loader_it)
+            batch = self.batch
 
     def __len__(self):
         return len(self.loader)
