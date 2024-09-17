@@ -136,13 +136,13 @@ class PrefetchLoader(object):
             # self.next_input = self.next_input_gpu
             # self.next_target = self.next_target_gpu
 
-    def next(self, it):
+    """ def next(self, it):
         torch.cuda.current_stream().wait_stream(self.stream)
         batch = self.batch
         if batch is not None:
             record_cuda_stream(batch)
         self.preload(it)
-        return batch
+        return batch """
 
     def __next__(self, it):
         torch.cuda.current_stream().wait_stream(self.stream)
