@@ -43,6 +43,7 @@ class MultiIterLoader:
     def __iter__(self):
         loader_idx_it = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         selected_loader_it = self.loaders_it[loader_idx_it]
+        print(f"\n\n\n MultiIterLoader selected_loader_it: {selected_loader_it} \n\n\n")
         batch = next(selected_loader_it)
 
         while batch is not None:
@@ -79,6 +80,7 @@ class PrefetchLoader(object):
 
     def __iter__(self):
         loader_it = iter(self.loader)
+        print(f"\n\n\n PrefetchLoader loader_it: {loader_it} \n\n\n")
         self.preload(loader_it)
         batch = self.next(loader_it)
         while batch is not None:
@@ -97,7 +99,7 @@ class PrefetchLoader(object):
 
     def preload(self, it):
         try:
-            print(f"\n\n\n it is: {it} \n\n\n")
+            print(f"\n\n\n preload it: {it} \n\n\n")
             self.batch = next(it)
         except StopIteration:
             self.batch = None
