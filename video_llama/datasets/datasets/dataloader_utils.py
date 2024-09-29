@@ -135,7 +135,7 @@ class PrefetchLoader(object):
     
     def __next__(self):
         ldr_it = self.ldr_it
-        self.preload(loader_it)
+        self.preload(ldr_it)
         batch = self.next(ldr_it)
         return batch
 
