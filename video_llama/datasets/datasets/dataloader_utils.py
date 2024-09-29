@@ -98,7 +98,7 @@ class PrefetchLoader(object):
 
     def preload(self, it):
         try:
-            self.batch = next(it)
+            self.batch = next(iter(it))
         except StopIteration:
             self.batch = None
             return
