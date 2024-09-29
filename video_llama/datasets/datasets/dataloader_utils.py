@@ -56,6 +56,12 @@ class MultiIterLoader:
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         return next(self.loaders[loader_idx])
+    
+    def __len__(self):
+        length = 0
+        for loader in self.loaders:
+            length += len(loader)
+        return length
 
 
 class PrefetchLoader(object):
@@ -69,7 +75,7 @@ class PrefetchLoader(object):
     def __init__(self, loader):
         self.loader = loader
         self.stream = torch.cuda.Stream()
-        self.ldr_it = iter(self.loader)              ##################
+        self.ldr_it = iter(self.loader)
 
     def __iter__(self):
         loader_it = iter(self.loader)
