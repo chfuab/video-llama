@@ -162,7 +162,8 @@ class BaseTask:
 
         print(f"\n\n\n data_loader is: {data_loader}\n\n\n")
 
-        """ for samples in metric_logger.log_every(data_loader, print_freq, header):
+        # for samples in metric_logger.log_every(data_loader, print_freq, header):
+        for samples in data_loader:
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             eval_output = {}
             for name in metrics:
@@ -192,7 +193,7 @@ class BaseTask:
         }, {
             k: meter.value_record
             for k, meter in metric_logger.meters.items()
-        } """
+        }
 
     def train_epoch(
         self,
