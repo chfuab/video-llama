@@ -98,7 +98,6 @@ class PrefetchLoader(object):
 
     def preload(self, it):
         try:
-            print(f"\n\n\n preload it: {it} \n\n\n")
             self.batch = next(it)
         except StopIteration:
             self.batch = None
@@ -136,6 +135,7 @@ class PrefetchLoader(object):
     
     def __next__(self):
         ldr_it = self.ldr_it
+        self.preload(loader_it)
         batch = self.next(ldr_it)
         return batch
 
