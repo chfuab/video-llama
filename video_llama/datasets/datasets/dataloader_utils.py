@@ -135,6 +135,7 @@ class PrefetchLoader(object):
     
     def __next__(self):
         ldr_it = self.ldr_it
+        print(f"\n\n\n ldr_it: {ldr_it} \n\n\n")
         self.preload(ldr_it)
         batch = self.next(ldr_it)
         return batch
