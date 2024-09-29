@@ -36,27 +36,49 @@ class MultiIterLoader:
 
         self.loaders = loaders
         self.ratios = ratios
-        ######
-        self.loaders_it = [iter(loader) for loader in loaders]
-        
-
-    def __iter__(self):
-        loader_idx_it = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        selected_loader_it = self.loaders_it[loader_idx_it]
-        batch = next(selected_loader_it)
-
-        while batch is not None:
-            yield batch
-            ldr_idx_it = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-            sel_ldr_it = self.loaders_it[ldr_idx_it]
-            batch = next(sel_ldr_it)
+        self.stream = torch.cuda.Stream()
 
 
-    def __next__(self):
+
+    def next_data_sample(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         return next(self.loaders[loader_idx])
+    
+    def __len__(self):
+        length = 0
+        for loader in self.loaders:
+            length += len(loader)
+        return length
 
+    def __iter__(self):
+        self.preload()
+        batch = self.batch
+        if batch is not None:
+            record_cuda_stream(batch)
+        while batch is not None:
+            is_tuple = isinstance(batch, tuple)
+            if is_tuple:
+                task, batch = batch
+
+            if is_tuple:
+                yield task, batch
+            else:
+                yield batch
+            if batch is not None:
+                record_cuda_stream(batch)
+            self.preload()
+            batch = self.batch
+
+    def preload(self):
+        try:
+            self.batch = self.next_data_sample()
+        except StopIteration:
+            self.batch = None
+            return
+        with torch.cuda.stream(self.stream):
+            print(f"\n\n\n self.batch is: {self.batch} \n\n\n")
+            self.batch = move_to_cuda(self.batch)
 
 class PrefetchLoader(object):
     """
@@ -68,12 +90,15 @@ class PrefetchLoader(object):
 
     def __init__(self, loader):
         self.loader = loader
+        self.it = iter(self.loader)
         self.stream = torch.cuda.Stream()
 
     def __iter__(self):
         loader_it = iter(self.loader)
         self.preload(loader_it)
-        batch = self.next(loader_it)
+        print(f"\n\n\n loader_it is:{loader_it}\n\n\n")
+        # batch = next(loader_it)
+        batch = self.batch
         while batch is not None:
             is_tuple = isinstance(batch, tuple)
             if is_tuple:
@@ -83,7 +108,9 @@ class PrefetchLoader(object):
                 yield task, batch
             else:
                 yield batch
-            batch = self.next(loader_it)
+            # batch = self.next(loader_it)
+            self.preload(loader_it)
+            batch = self.batch
 
     def __len__(self):
         return len(self.loader)
@@ -113,18 +140,25 @@ class PrefetchLoader(object):
             # self.next_input = self.next_input_gpu
             # self.next_target = self.next_target_gpu
 
-    def next(self, it):
+    """ def next(self, it):
         torch.cuda.current_stream().wait_stream(self.stream)
         batch = self.batch
         if batch is not None:
             record_cuda_stream(batch)
         self.preload(it)
+        return batch """
+
+    def __next__(self):
+        torch.cuda.current_stream().wait_stream(self.stream)
+        self.preload(self.it)
+        batch = self.batch
+        if batch is not None:
+            record_cuda_stream(batch)
         return batch
 
     def __getattr__(self, name):
         method = self.loader.__getattribute__(name)
         return method
-
 
 def record_cuda_stream(batch):
     if isinstance(batch, torch.Tensor):
