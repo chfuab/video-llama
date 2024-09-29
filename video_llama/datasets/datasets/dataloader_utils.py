@@ -79,6 +79,7 @@ class PrefetchLoader(object):
 
     def __iter__(self):
         loader_it = iter(self.loader)
+        print(f"\n\n\n loader_it is: {loader_it} \n\n\n")
         self.preload(loader_it)
         batch = self.next(loader_it)
         while batch is not None:
