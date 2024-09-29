@@ -162,8 +162,7 @@ class BaseTask:
 
         print(f"\n\n\n data_loader is: {data_loader}\n\n\n")
 
-        # for samples in metric_logger.log_every(data_loader, print_freq, header):
-        for samples in data_loader:
+        for samples in metric_logger.log_every(data_loader, print_freq, header):
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             eval_output = {}
             for name in metrics:
