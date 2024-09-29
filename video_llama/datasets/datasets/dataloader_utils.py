@@ -41,16 +41,16 @@ class MultiIterLoader:
         
 
     def __iter__(self):
-        loader_idx_it = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        selected_loader_it = self.loaders_it[loader_idx_it]
-        print(f"\n\n\n MultiIterLoader selected_loader_it: {selected_loader_it} \n\n\n")
-        batch = next(selected_loader_it)
+        loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
+        selected_loader = self.loaders[loader_idx]
+        print(f"\n\n\n MultiIterLoader selected_loader_it: {selected_loader} \n\n\n")
+        batch = next(selected_loader)
 
         while batch is not None:
             yield batch
-            ldr_idx_it = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-            sel_ldr_it = self.loaders_it[ldr_idx_it]
-            batch = next(sel_ldr_it)
+            ldr_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
+            sel_ldr = self.loaders[ldr_idx]
+            batch = next(sel_ldr)
 
 
     def __next__(self):
@@ -80,7 +80,6 @@ class PrefetchLoader(object):
 
     def __iter__(self):
         loader_it = iter(self.loader)
-        print(f"\n\n\n PrefetchLoader loader_it: {loader_it} \n\n\n")
         self.preload(loader_it)
         batch = self.next(loader_it)
         while batch is not None:
