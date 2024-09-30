@@ -161,7 +161,7 @@ class BaseTask:
         results = []
 
         print(f"\n\n\n data_loader is: {data_loader}\n\n\n")
-
+        torch.cuda.empty_cache()
         for samples in metric_logger.log_every(data_loader, print_freq, header):
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             eval_output = {}
