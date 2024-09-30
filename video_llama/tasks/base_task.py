@@ -104,7 +104,7 @@ class BaseTask:
         return prediction
 
 
-    def get_ground_truth(samples, metrics_name):
+    def get_ground_truth(self, samples, metrics_name):
         batch_size = samples.size()[0]
 
         if metrics_name == "VQA_acc":
