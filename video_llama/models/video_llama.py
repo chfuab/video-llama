@@ -1033,7 +1033,7 @@ class VideoLLAMA(Blip2Base):
         result_ids = softmax_func(logits).argmax(dim=2)
 
         print(f"\n\n\n result_ids is: {result_ids[0][0]} \n\n\n")
-        decoded_tokens = [[self.llama_tokenizer._convert_id_to_token(result_ids[k][s]) for s in range(seq_length)] for k in range(batch_size)]
+        decoded_tokens = [[self.llama_tokenizer._convert_id_to_token(int(result_ids[k][s])) for s in range(seq_length)] for k in range(batch_size)]
         result_texts = {k: [self.llama_tokenizer.convert_tokens_to_string(decoded_tokens[k])] for k in range(batch_size)}
         return result_texts
     
