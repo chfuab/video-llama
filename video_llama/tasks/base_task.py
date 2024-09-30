@@ -90,6 +90,7 @@ class BaseTask:
     def valid_step(self, model, samples, metrics_name):
         pred = self.predict(model, samples, metrics_name)
         gt = self.get_ground_truth(samples, metrics_name)
+        print(f"\n\n\n pred is: {pred}, gt is: {gt} \n\n\n")
         result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
         return {
             metrics_name : result_scores
