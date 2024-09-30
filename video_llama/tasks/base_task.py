@@ -179,7 +179,8 @@ class BaseTask:
             meters_pair = zip(metric_logger.meters.keys(), meter_values)
             for k, v in meters_pair:
                 print(f"\n\n\n k,v: {k}, {v} \n\n\n")
-                val = int(v[0])
+                va = int(v[0])
+                val = va
                 
                 metric_logger.update(k=val)
 
