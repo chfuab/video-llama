@@ -95,7 +95,7 @@ class BaseTask:
             metrics_name : result_scores
         }
 
-    def predict(model, samples, metrics_name):
+    def predict(self, model, samples, metrics_name):
         logits = model(samples)["logits"]
         if metrics_name == "VQA_acc":
             prediction = model.decode_llama_choice(logits)
