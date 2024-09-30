@@ -105,7 +105,6 @@ class BaseTask:
 
 
     def get_ground_truth(self, samples, metrics_name):
-        batch_size = samples.size()[0]
 
         if metrics_name == "VQA_acc":
             pass
