@@ -91,6 +91,7 @@ class BaseTask:
         pred = self.predict(model, samples, metrics_name)
         gt = self.get_ground_truth(samples, metrics_name)
         result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
+        print(f"\n\n\n result_scores: {result_scores} \n\n\n")
         return {
             metrics_name : result_scores
         }
