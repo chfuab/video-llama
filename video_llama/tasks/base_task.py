@@ -91,7 +91,6 @@ class BaseTask:
         pred = self.predict(model, samples, metrics_name)
         gt = self.get_ground_truth(samples, metrics_name)
         result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
-        print(f"\n\n\n result_scores: {result_scores} \n\n\n")
         return {
             metrics_name : result_scores
         }
@@ -166,6 +165,7 @@ class BaseTask:
             for name in metrics:
                 eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name) # load the best checkpoint of the model?
                 eval_output.update(eval_output_temp)
+                print(f"\n\n\n eval_output: {eval_output} \n\n\n")
             # update evaluation metrics
             meter_values = []
             for v in eval_output.values():
