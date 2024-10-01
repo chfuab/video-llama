@@ -173,6 +173,7 @@ class BaseTask:
                 else:
                     meter_values.append(v)
             
+            print(f"\n\n\n meter values: {meter_values} \n\n\n")
             meters_pair = zip(metric_logger.meters.keys(), meter_values)
             mp = meters_pair
             for k, v in mp:
