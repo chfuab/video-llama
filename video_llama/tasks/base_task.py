@@ -90,7 +90,6 @@ class BaseTask:
     def valid_step(self, model, samples, metrics_name):
         pred = self.predict(model, samples, metrics_name)
         gt = self.get_ground_truth(samples, metrics_name)
-        print(f"\n\n\n pred is: {pred}, gt is: {gt} \n\n\n")
         result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
         return {
             metrics_name : result_scores
@@ -160,8 +159,6 @@ class BaseTask:
 
         results = []
 
-        print(f"\n\n\n data_loader is: {data_loader}\n\n\n")
-        torch.cuda.empty_cache()
         for samples in metric_logger.log_every(data_loader, print_freq, header):
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             eval_output = {}
@@ -177,12 +174,9 @@ class BaseTask:
                     meter_values.append(v)
             
             meters_pair = zip(metric_logger.meters.keys(), meter_values)
-            for k, v in meters_pair:
-                print(f"\n\n\n k,v: {k}, {v} \n\n\n")
-                va = int(v[0])
-                val = va
-                
-                metric_logger.update(k=val)
+            mp = meters_pair
+            for k, v in mp:
+                metric_logger.update(k=v)
 
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
