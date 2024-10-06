@@ -109,5 +109,5 @@ run:
   # distributed: True
   distributed: False
 
-  evaluate_metrics: ["CIDEr", "ROUGE_L", "Bleu"]
+  evaluate_metrics: ["CIDEr", "ROUGE_L", "Bleu-1", "Bleu-2", "Bleu-3", "Bleu-4"]
   agg_metrics: "CIDEr"

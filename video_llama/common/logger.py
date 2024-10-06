@@ -94,8 +94,6 @@ class MetricLogger(object):
                 v = v.item()
             assert isinstance(v, (float, int, str, list, dict, tuple))
             self.meters[k].update(v)
-            # print(f"k is: {k}, v is: {v}")
-        # print(f"\n\n\n  self.meters[ROUGE_L].total: {self.meters['ROUGE_L'].total} \n\n\n self.meters[ROUGE_L].count: {self.meters['ROUGE_L'].count} \n\n\n")
 
     def __getattr__(self, attr):
         if attr in self.meters:
