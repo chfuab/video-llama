@@ -43,7 +43,6 @@ class MultiIterLoader:
     def __iter__(self):
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         selected_loader = self.loaders[loader_idx]
-        print(f"\n\n\n MultiIterLoader selected_loader_it: {selected_loader} \n\n\n")
         batch = next(selected_loader)
 
         while batch is not None:

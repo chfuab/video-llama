@@ -481,7 +481,6 @@ class VideoLLAMA(Blip2Base):
             # calculate audio position embedding
                 position_id_list_A = [t.int() for t in position_id_list_A]
                 position_id_list_A = torch.arange(len(position_id_list_A), dtype=torch.long, device=device_V)
-                print(f"\n\n\n position_id_list_A: {position_id_list_A} \n\n\n")
                 position_embedding_A = self.audio_position_embedding(position_id_list_A)  
                 position_embedding_A_all_list.append(position_embedding_A)
             # calculate visual position embedding:
@@ -1032,7 +1031,6 @@ class VideoLLAMA(Blip2Base):
         softmax_func = nn.Softmax(dim=2)
         result_ids = softmax_func(logits).argmax(dim=2)
 
-        print(f"\n\n\n result_ids is: {result_ids[0][0]} \n\n\n")
         decoded_tokens = [[self.llama_tokenizer._convert_id_to_token(int(result_ids[k][s])) for s in range(seq_length)] for k in range(batch_size)]
         result_texts = {k: [self.llama_tokenizer.convert_tokens_to_string(decoded_tokens[k])] for k in range(batch_size)}
         return result_texts
