@@ -150,6 +150,7 @@ class BaseTask:
         print_freq = 10
 
         meter_scorer = []
+        print(f"metrics: {metrics}")
         for scorer in metrics: # "metrics" is a list of metrics names
             # if the scorer is a list with multiple items:
             if type(scorer) == list:
