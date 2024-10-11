@@ -149,19 +149,18 @@ class BaseTask:
         # TODO make it configurable
         print_freq = 10
 
-        meter_scorer = []
+
         for scorer in metrics: # "metrics" is a list of metrics names
             # if the scorer is a list with multiple items:
             if type(scorer) == list:
+                print(f"\n\n\n {scorer} \n\n\n")
                 for i in scorer:
                     metric_logger.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
                     metric_logger_display.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
-                    meter_scorer.append(scorer[i])
             # if the scorer has single item
             else:
                 metric_logger.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                metric_logger_display.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                meter_scorer.append(scorer)        
+                metric_logger_display.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))      
         results = []
 
         curr_iter_eval = 0
@@ -184,7 +183,6 @@ class BaseTask:
                 else:
                     meter_values.append(v)
             
-            # meters_pair = zip(meter_scorer, meter_values)
             metric_logger_display.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_1=meter_values[2], Bleu_2=meter_values[3], Bleu_3=meter_values[4], Bleu_4=meter_values[5])
             
             curr_iter_eval += 1

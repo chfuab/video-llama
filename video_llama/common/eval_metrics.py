@@ -14,7 +14,7 @@ class VQA_acc:
 
 metrics_mapping = {
     "Bleu": Bleu(4),
-    "METEOR": Meteor(),
+    # "METEOR": Meteor(),
     "ROUGE_L": Rouge(),
     "CIDEr": Cider(),
     # "SPICE": Spice(),
