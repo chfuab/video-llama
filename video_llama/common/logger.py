@@ -141,7 +141,6 @@ class MetricLogger(object):
             header,
             "[{0" + space_fmt + "}/{1}]",
             "eta: {eta}",
-            "{meters}",
             "time: {time}",
             "data: {data}",
         ]
