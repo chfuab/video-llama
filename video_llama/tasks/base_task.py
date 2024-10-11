@@ -202,7 +202,7 @@ class BaseTask:
             dist.barrier()
 
         return {
-            k: "{:.3f}".format(meter.global_avg)
+            k: "{:.3f}".format(meter.global_avg())
             for k, meter in metric_logger_display.meters.items()
         }, {
             k: meter.value_record
