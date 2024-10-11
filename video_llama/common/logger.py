@@ -162,7 +162,7 @@ class MetricLogger(object):
                             i,
                             len(iterable),
                             eta=eta_string,
-                            meters=str(self),
+                            # meters=str(self),
                             time=str(iter_time),
                             data=str(data_time),
                             memory=torch.cuda.max_memory_allocated() / MB,
@@ -174,7 +174,7 @@ class MetricLogger(object):
                             i,
                             len(iterable),
                             eta=eta_string,
-                            meters=str(self),
+                            # meters=str(self),
                             time=str(iter_time),
                             data=str(data_time),
                         )
