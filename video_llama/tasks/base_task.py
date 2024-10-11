@@ -144,6 +144,7 @@ class BaseTask:
     
     def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
         metric_logger = MetricLogger(delimiter="  ")
+        metric_logger_display = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable
         print_freq = 10
@@ -154,10 +155,12 @@ class BaseTask:
             if type(scorer) == list:
                 for i in scorer:
                     metric_logger.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
+                    metric_logger_display.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
                     meter_scorer.append(scorer[i])
             # if the scorer has single item
             else:
-                metric_logger.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))  
+                metric_logger.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger_display.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))
                 meter_scorer.append(scorer)        
         results = []
 
@@ -177,10 +180,11 @@ class BaseTask:
             
             # meters_pair = zip(meter_scorer, meter_values)
             metric_logger.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_1=meter_values[2], Bleu_2=meter_values[3], Bleu_3=meter_values[4], Bleu_4=meter_values[5])
+            metric_logger_display.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_1=meter_values[2], Bleu_2=meter_values[3], Bleu_3=meter_values[4], Bleu_4=meter_values[5])
             # print(f"\n\n\n metric_logger_content: {metric_logger.meters['CIDEr'].total}, {metric_logger.meters['CIDEr'].count} \n\n\n")
             # print(f"metric_logger.meters['CIDEr']: {str(metric_logger.meters['CIDEr'])}")
 
-        logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
+        logging_str = "Averaged stats: \n" + str(metric_logger_display.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
         if is_dist_avail_and_initialized():
@@ -188,10 +192,10 @@ class BaseTask:
 
         return {
             k: "{:.3f}".format(meter.global_avg)
-            for k, meter in metric_logger.meters.items()
+            for k, meter in metric_logger_display.meters.items()
         }, {
             k: meter.value_record
-            for k, meter in metric_logger.meters.items()
+            for k, meter in metric_logger_display.meters.items()
         }
 
     def train_epoch(
