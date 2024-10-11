@@ -94,8 +94,8 @@ class MetricLogger(object):
                 v = v.item()
             assert isinstance(v, (float, int, str, list, dict, tuple))
             self.meters[k].update(v)
-            print(f"\n\n\n k is: {k}, values: {v} \n\n\n")
-        print(f"\n\n\n self.meter: {self.meters} \n\n\n self.meters.total: {self.meters['CIDEr'].total} \n\n\n self.meters.count: {self.meters['CIDEr'].count}")
+            print(f"\n\n\n self.meter.count: {self.meters[k].count} \n\n\n self.meter.total: {self.meters[k].total}")
+
 
     def __getattr__(self, attr):
         if attr in self.meters:
