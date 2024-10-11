@@ -176,9 +176,7 @@ class BaseTask:
                 else:
                     meter_values.append(v)
             
-            meters_pair = zip(meter_scorer, meter_values)
-            """ for k, v in meters_pair:
-                metric_logger.update(k=v) """
+            # meters_pair = zip(meter_scorer, meter_values)
             metric_logger.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_1=meter_values[2], Bleu_2=meter_values[3], Bleu_3=meter_values[4], Bleu_4=meter_values[5])
 
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
