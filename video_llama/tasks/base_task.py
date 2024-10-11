@@ -159,7 +159,6 @@ class BaseTask:
             else:
                 metric_logger.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))  
                 meter_scorer.append(scorer)        
-
         results = []
 
         for samples in metric_logger.log_every(data_loader, print_freq, header):
