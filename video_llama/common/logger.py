@@ -119,7 +119,7 @@ class MetricLogger(object):
     def global_avg(self):
         loss_str = []
         for name, meter in self.meters.items():
-            print(f"\n\n\n {meter.total}, {meter.count}  \n\n\n")
+            print(f"\n\n\n {name}: {meter.total}, {meter.count}  \n\n\n")
             loss_str.append("{}: {:.4f}".format(name, meter.global_avg()))
         return self.delimiter.join(loss_str)
 
