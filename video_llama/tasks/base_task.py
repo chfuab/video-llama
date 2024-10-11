@@ -150,9 +150,8 @@ class BaseTask:
         print_freq = 10
 
 
-        for scorer in metrics: # "metrics" is a list of metrics names
+        """ for scorer in metrics: # "metrics" is a list of metrics names
             # if the scorer is a list with multiple items:
-            print(f"\n\n\n {scorer} \n\n\n")
             if type(scorer) == list:
                 for i in scorer:
                     metric_logger.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
@@ -160,7 +159,15 @@ class BaseTask:
             # if the scorer has single item
             else:
                 metric_logger.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                metric_logger_display.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))      
+                metric_logger_display.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}")) """
+        metric_logger.add_meter("CIDEr", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        metric_logger.add_meter("ROUGE_L", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        metric_logger_display.add_meter("CIDEr", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        metric_logger_display.add_meter("ROUGE_L", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        for i in range(4):
+            metric_logger.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
+            metric_logger_display.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        
         results = []
 
         curr_iter_eval = 0
@@ -183,7 +190,7 @@ class BaseTask:
                 else:
                     meter_values.append(v)
             
-            metric_logger_display.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_1=meter_values[2], Bleu_2=meter_values[3], Bleu_3=meter_values[4], Bleu_4=meter_values[5])
+            metric_logger_display.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_0=meter_values[2], Bleu_1=meter_values[3], Bleu_2=meter_values[4], Bleu_3=meter_values[5])
             
             curr_iter_eval += 1
         logging_str = "Averaged stats: \n" + str(metric_logger_display.global_avg())    # getting avg over all batch size of samples in one epoch
