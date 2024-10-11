@@ -166,6 +166,7 @@ class BaseTask:
 
         curr_iter_eval = 0
         tot_iter_eval = len(data_loader)
+
         for samples in metric_logger.log_every(data_loader, print_freq, header):
             if curr_iter_eval >= tot_iter_eval:
                 break
@@ -185,7 +186,7 @@ class BaseTask:
             
             # meters_pair = zip(meter_scorer, meter_values)
             metric_logger_display.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_1=meter_values[2], Bleu_2=meter_values[3], Bleu_3=meter_values[4], Bleu_4=meter_values[5])
-
+            print(f"\n\n\n {str(metric_logger_display.global_avg())} \n\n\n")
             curr_iter_eval += 1
         logging_str = "Averaged stats: \n" + str(metric_logger_display.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
