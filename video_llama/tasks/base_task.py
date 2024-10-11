@@ -370,7 +370,7 @@ class BaseTask:
         metric_logger.synchronize_between_processes()
         logging.info("Averaged stats: " + str(metric_logger.global_avg()))
         return {
-            k: "{:.3f}".format(meter.global_avg)
+            k: "{:.3f}".format(meter.global_avg())
             for k, meter in metric_logger.meters.items()
         }
 
