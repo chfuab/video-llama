@@ -440,6 +440,7 @@ class RunnerBase:
             self._load_checkpoint(self.resume_ckpt_path)
 
         window = []
+        window_str = []
         window_size = 5
         allowed_metrics_delta = 0.1
         agg_metrics = self.agg_metrics
@@ -464,7 +465,9 @@ class RunnerBase:
                         assert (agg_metrics in val_log), "the selected agg_metrics is not defined in evaluation"
                         agg_metrics_value = val_log[agg_metrics]
 
-                        window.append(agg_metrics_value)
+                        window_str.append(agg_metrics_value)
+
+                        window = [float(element) for element in window_str]
                         if len(window) < window_size:
                             continue
                         cnt = 0
