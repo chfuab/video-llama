@@ -152,8 +152,8 @@ class BaseTask:
 
         for scorer in metrics: # "metrics" is a list of metrics names
             # if the scorer is a list with multiple items:
+            print(f"\n\n\n {scorer} \n\n\n")
             if type(scorer) == list:
-                print(f"\n\n\n {scorer} \n\n\n")
                 for i in scorer:
                     metric_logger.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
                     metric_logger_display.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
