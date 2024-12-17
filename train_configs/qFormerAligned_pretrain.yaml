@@ -10,20 +10,20 @@ model:
   # If you want train models based on LLaMA-2-chat,
   # some ckpts could be download from our provided huggingface repo
   # i.e.  https://huggingface.co/DAMO-NLP-SG/Video-LLaMA-2-13B-Pretrained
-  llama_model: "" #"ckpt/llama-2-7b-chat-hf"
+  # llama_model: "" #"ckpt/llama-2-7b-chat-hf"
   imagebind_ckpt_path: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/imagebind_path/" ############################################
-  llama_proj_model: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/pretrained_minigpt4.pth"
+  # llama_proj_model: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/pretrained_minigpt4.pth"
 
   # only train vision branch
   equip_audio_branch: True # whether equips the audio branch
-  frozen_llama_proj: False
-  frozen_video_Qformer: True
-  frozen_audio_Qformer: True
+  # frozen_llama_proj: False
+  # frozen_video_Qformer: True
+  # frozen_audio_Qformer: True
 
-  fusion_head_layers: 2
-  max_frame_pos: 32
-  fusion_header_type: "seqTransf"
-  num_video_query_token: 32
+  # fusion_head_layers: 2
+  # max_frame_pos: 32
+  # fusion_header_type: "seqTransf"
+  # num_video_query_token: 32
 
 datasets:
   cc_sbu_align:
@@ -55,9 +55,9 @@ run:
 
   weight_decay: 0.05
   max_epoch: 100
-  batch_size_train: 32
-  batch_size_eval: 32
-  num_workers: 8
+  batch_size_train: 1 # 32
+  batch_size_eval: 1 # 32
+  num_workers: 1 # 8
   warmup_steps: 2500
   iters_per_epoch: 2500
 
@@ -77,5 +77,5 @@ run:
   dist_url: "env://"
   distributed: True
 
-  evaluate_metrics: ["loss", "CIDEr", "METEOR", "ROUGE_L", "SPICE", "Bleu"]
+  evaluate_metrics: ["CIDEr", "ROUGE_L", "Bleu"]
   agg_metrics: "CIDEr"
