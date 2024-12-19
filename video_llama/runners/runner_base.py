@@ -623,6 +623,11 @@ class RunnerBase:
 
         results, records = self.task.evaluation(model, data_loader, metrics)
 
+        ###
+        if self.config.model_cfg.arch == "q_former_aligned":
+            results = None
+        ###
+
         return results
 
     def unwrap_dist_model(self, model):
