@@ -621,11 +621,13 @@ class RunnerBase:
             model = self._reload_best_model(model)
         model.eval()
 
-        results, records = self.task.evaluation(model, data_loader, metrics)
+        # results, records = self.task.evaluation(model, data_loader, metrics)
 
         ###
         if self.config.model_cfg.arch == "q_former_aligned":
             results = None
+        else:
+            results, records = self.task.evaluation(model, data_loader, metrics)
         ###
 
         return results
