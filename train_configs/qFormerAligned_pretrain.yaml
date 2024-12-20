@@ -1,6 +1,6 @@
 model:
   arch: q_former_aligned
-  # model_type: pretrain_vicuna
+  model_type: pretrain_vicuna
   freeze_vit: True
   freeze_qformer: True # use LoRA to train the q_former
 

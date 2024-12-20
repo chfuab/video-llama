@@ -12,7 +12,10 @@ from video_llama.datasets.data_utils import neg_sampler
 @registry.register_model("q_former_aligned")
 class QformerAligned(Blip2Base):
 
-    PRETRAINED_MODEL_CONFIG_DICT={}
+    PRETRAINED_MODEL_CONFIG_DICT = {
+        "pretrain_vicuna": "configs/models/video_llama.yaml",
+        "pretrain_llama_v2": "configs/models/video_llama.yaml",
+    }
 
     def __init__(self,
             vit_model="eva_clip_g",
