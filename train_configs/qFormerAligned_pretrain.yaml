@@ -11,7 +11,7 @@ model:
   # some ckpts could be download from our provided huggingface repo
   # i.e.  https://huggingface.co/DAMO-NLP-SG/Video-LLaMA-2-13B-Pretrained
   # llama_model: "" #"ckpt/llama-2-7b-chat-hf"
-  imagebind_ckpt_path: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/imagebind_path/" ############################################
+  imagebind_ckpt_path: "/mnt/disks/chfuab" ############################################
   # llama_proj_model: "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt/pretrained_minigpt4.pth"
 
   # only train vision branch
@@ -29,8 +29,8 @@ datasets:
   cc_sbu_align:
     data_type: images
     build_info:
-      storage_train: /path/LLaVA_cc3m/train ############################################
-      storage_eval: /path/LLaVA_cc3m/eval ############################################
+      storage_train: /mnt/disks/chfuab/q_former_aligned_data/train ############################################
+      storage_eval: /mnt/disks/chfuab/q_former_aligned_data/eval ############################################
     vis_processor:
       train:
         name: "blip2_image_train"
