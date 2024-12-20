@@ -91,8 +91,10 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
 
         datasets = dict()
         splits = ["train", "eval"]
-        if not os.path.exists(storage_path):
-            warnings.warn("storage path {} does not exist.".format(storage_path))
+        
+        for i in range(2): 
+            if not os.path.exists(storage_path[i]):
+                warnings.warn("storage path {} does not exist.".format(storage_path[i]))
 
         # create datasets
         dataset_cls = [self.train_dataset_cls, self.eval_dataset_cls]
