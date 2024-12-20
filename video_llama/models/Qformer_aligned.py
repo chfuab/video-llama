@@ -178,3 +178,4 @@ class QformerAligned(Blip2Base):
             print("Load first Checkpoint: {}".format(ckpt_path))
             ckpt = torch.load(ckpt_path, map_location="cpu")
             msg = model.load_state_dict(ckpt['model'], strict=False)
+        return model

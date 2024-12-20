@@ -81,7 +81,6 @@ class RunnerBase:
         A property to get the DDP-wrapped model on the device.
         """
         # move model to device
-        print(f"\n\n\n {self._model} \n\n\n")
         if self._model.device != self.device:
             self._model = self._model.to(self.device)
 
