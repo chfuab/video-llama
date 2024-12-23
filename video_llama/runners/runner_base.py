@@ -719,7 +719,7 @@ class RunnerBase:
                 loader = _create_loader(dataset, num_workers, bsz, is_train, collate_fn)
 
             loaders.append(loader)
-
+        print(f"loader is: {next(iter(loaders[0]))['image']}")
         return loaders
 
     @main_process
