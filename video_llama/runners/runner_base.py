@@ -501,7 +501,9 @@ class RunnerBase:
                             
                             self.log_stats(stats=val_log, split_name='eval')
                             break
-
+                else:
+                    if not self.evaluate_only:
+                        self._save_checkpoint(cur_epoch, is_best=False)                    
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
                 if not self.evaluate_only:
@@ -681,7 +683,7 @@ class RunnerBase:
                         sampler = sampler if is_train else None
                 else:
                     sampler = None
-                    
+
                 loader = DataLoader(
                     dataset,
                     batch_size=bsz,
