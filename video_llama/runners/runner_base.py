@@ -681,7 +681,7 @@ class RunnerBase:
                         sampler = sampler if is_train else None
                 else:
                     sampler = None
-                print(f"\n\n\n dataset is: {len(dataset)}\n\n\n")
+                    
                 loader = DataLoader(
                     dataset,
                     batch_size=bsz,
