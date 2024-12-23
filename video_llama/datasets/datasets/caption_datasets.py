@@ -26,12 +26,12 @@ class __DisplMixin:
 
 
 class CaptionDataset(BaseDataset, __DisplMixin):
-    def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
+    def __init__(self, vis_processor, text_processor, audio_processor, vis_root, ann_paths):
         """
         vis_root (string): Root directory of images (e.g. coco/images/)
         ann_root (string): directory to store the annotation file
         """
-        super().__init__(vis_processor, text_processor, vis_root, ann_paths)
+        super().__init__(vis_processor, text_processor, audio_processor, vis_root, ann_paths)
 
         self.img_ids = {}
         n = 0
