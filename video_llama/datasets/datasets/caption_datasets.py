@@ -50,7 +50,8 @@ class CaptionDataset(BaseDataset, __DisplMixin):
     def __getitem__(self, index):
 
         # TODO this assumes image input, not general enough
-        ann = self.annotation[index]
+        # ann = self.annotation[index]
+        ann = self.annotation_mod[index]
 
         img_file = '{:0>12}.jpg'.format(ann["image_id"])
         image_path = os.path.join(self.vis_root, img_file)

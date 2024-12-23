@@ -55,7 +55,8 @@ class BaseDataset(Dataset):
         self._add_instance_ids()
 
     def __len__(self):
-        return len(self.annotation)
+        # return len(self.annotation)
+        return len(self.annotation_mod)
 
     def collater(self, samples):
         return default_collate(samples)
@@ -71,7 +72,8 @@ class BaseDataset(Dataset):
 
 
     def _add_instance_ids(self, key="instance_id"):
-        for idx, ann in enumerate(self.annotation):
+        # for idx, ann in enumerate(self.annotation):
+        for idx, ann in enumerate(self.annotation_mod):
             ann[key] = str(idx)
 
 
