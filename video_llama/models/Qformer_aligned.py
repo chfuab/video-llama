@@ -137,6 +137,7 @@ class QformerAligned(Blip2Base):
 
             sim_list = []
             for pos in embeds_list:
+                print(f"\n\n\n {anchors[k, :]}, {pos} \n\n\n")
                 sim_list.append(self.cos(anchors[k, :], pos)) # max similarity for positive images & hard negative images
             idx = sim_list.index(max(sim_list))
 
