@@ -32,7 +32,7 @@ class BaseDataset(Dataset):
         self._add_instance_ids() """
     
     def __init__(
-        self, vis_processor=None, text_processor=None, audio_processor=None, vis_root=None, ann_paths=None
+        self, vis_processor=None, text_processor=None, audio_processor=None, vis_root=None, ann_paths=[]
     ):
         """
         vis_root (string): Root directory of images (e.g. coco/images/)
