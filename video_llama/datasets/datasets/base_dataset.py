@@ -47,7 +47,7 @@ class BaseDataset(Dataset):
         self.annotation_mod = []
         for ann_path in ann_paths:
             self.annotation_mod.extend(json.load(open(ann_path, "r")))
-        print(f"\n\n\n {self.annotation_mod}\n\n\n")
+        print(f"\n\n\n {ann_paths}, {self.annotation_mod}\n\n\n")
 
         self.vis_processor = vis_processor
         self.audio_processor = audio_processor
