@@ -109,6 +109,7 @@ class QformerAligned(Blip2Base):
 
     def qformer_branch(self, image):
         device = image.device
+        print(f"\n\n\n {image.size()} \n\n\n")
         image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
