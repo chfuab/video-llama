@@ -92,7 +92,6 @@ class QformerAligned(Blip2Base):
         images = samples['image']
         batch_size = images.size()[0]
         negative_images = neg_sampler(batch_size=batch_size, image=images)
-        print(f"\n\n\n {images.size()}, {negative_images.size()} \n\n\n")
         q_former_branch_outputs = self.qformer_branch(image=images)
         neg_embeds = self.qformer_branch(image=negative_images)
         anchors = self.imagebind_branch(image=images)
@@ -131,7 +130,7 @@ class QformerAligned(Blip2Base):
         batch_size = embeds.size()[0]
 
         embed_selected_list = []
-        for k in batch_size:
+        for k in range(batch_size):
             embeds_list = []
             for i in num_query:
                 embeds_list.append(embeds[k, i, :])
