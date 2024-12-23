@@ -104,7 +104,8 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
                 text_processor=self.text_processors[split],
                 audio_processor=None,
                 vis_root=os.path.join(storage_path[i], 'image'),
-                ann_paths=[os.path.join(storage_path[i], 'metadata.json')],
+                # ann_paths=[os.path.join(storage_path[i], 'metadata.json')],
+                ann_paths=[os.path.join(storage_path[i], 'metadata_1.json')],
                 # ann_paths=[os.path.join(storage_path[i], 'filter_cap.json')],
             )
 
