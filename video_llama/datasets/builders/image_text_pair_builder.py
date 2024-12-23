@@ -106,6 +106,6 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
                 # ann_paths=[os.path.join(storage_path[i], 'filter_cap.json')],
                 vis_root=os.path.join(storage_path[i], 'image'),
             )
-        print(f"\n\n\n dataset: {datasets["train"]}\n\n\n")
+        print(f"\n\n\n dataset: {datasets['train']}\n\n\n")
         return datasets
 
