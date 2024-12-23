@@ -39,11 +39,9 @@ class BaseDataset(Dataset):
         ann_root (string): directory to store the annotation file
         """
         self.vis_root = vis_root
-        print(f"\n\n\n {self.vis_root}, {ann_paths}\n\n\n")
-        self.annotation = []
+        """ self.annotation = []
         for ann_path in ann_paths:
-            self.annotation.extend(json.load(open(ann_path, "r"))["annotations"])
-            # self.annotation.extend(json.load(open(ann_path, "r"))['annotations'])
+            self.annotation.extend(json.load(open(ann_path, "r"))["annotations"]) """
         self.annotation_mod = []
         for ann_path in ann_paths:
             self.annotation_mod.extend(json.load(open(ann_path, "r")))
