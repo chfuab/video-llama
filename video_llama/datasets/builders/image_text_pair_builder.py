@@ -102,9 +102,9 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
             datasets[split] = dataset_cls[i](
                 vis_processor=self.vis_processors[split],
                 text_processor=self.text_processors[split],
+                vis_root=os.path.join(storage_path[i], 'image'),
                 ann_paths=[os.path.join(storage_path[i], 'metadata.json')],
                 # ann_paths=[os.path.join(storage_path[i], 'filter_cap.json')],
-                vis_root=os.path.join(storage_path[i], 'image'),
             )
 
         return datasets
