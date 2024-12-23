@@ -200,7 +200,7 @@ def concat_datasets(datasets):
 def neg_sampler(batch_size, image):
     negative_samples_list = []
     for k in range(batch_size):
-        neg_samples_idx = range(batch_size).remove(k)
+        neg_samples_idx = [i for i in range(batch_size) if i != k]
         selected_neg_idx = rnd.sample(neg_samples_idx, 1)
         negative_samples_list.append(image[selected_neg_idx, :, :, :])
     negative_images = torch.stack(negative_samples_list, dim=0)
