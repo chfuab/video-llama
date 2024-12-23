@@ -681,7 +681,7 @@ class RunnerBase:
                         sampler = sampler if is_train else None
                 else:
                     sampler = None
-
+                print(f"\n\n\n dataset is: {len(dataset)}, {dataset[0]}\n\n\n")
                 loader = DataLoader(
                     dataset,
                     batch_size=bsz,
@@ -719,7 +719,7 @@ class RunnerBase:
                 loader = _create_loader(dataset, num_workers, bsz, is_train, collate_fn)
 
             loaders.append(loader)
-        print(f"loader is: {next(iter(loaders[0]))['image']}")
+
         return loaders
 
     @main_process
