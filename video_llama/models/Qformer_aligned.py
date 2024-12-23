@@ -89,6 +89,7 @@ class QformerAligned(Blip2Base):
     def forward(self, images):
         # image = positive_images = samples['image']
         # assume using cc_sbu dataset
+        print(f"\n\n\n{images}\n\n\n")
         batch_size = images.size()[0]
         negative_images = neg_sampler(batch_size=batch_size, image=images)
 
