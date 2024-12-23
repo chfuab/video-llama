@@ -92,7 +92,7 @@ class QformerAligned(Blip2Base):
         images = samples['image']
         batch_size = images.size()[0]
         negative_images = neg_sampler(batch_size=batch_size, image=images)
-
+        print(f"\n\n\n {images.size()}, {negative_images.size()} \n\n\n")
         q_former_branch_outputs = self.qformer_branch(image=images)
         neg_embeds = self.qformer_branch(image=negative_images)
         anchors = self.imagebind_branch(image=images)
@@ -109,7 +109,6 @@ class QformerAligned(Blip2Base):
 
     def qformer_branch(self, image):
         device = image.device
-        print(f"\n\n\n {image.size()} \n\n\n")
         image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
