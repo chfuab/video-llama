@@ -204,4 +204,5 @@ def neg_sampler(batch_size, image):
         selected_neg_idx = rnd.sample(neg_samples_idx, 1)
         negative_samples_list.append(image[selected_neg_idx, :, :, :])
     negative_images = torch.stack(negative_samples_list, dim=0)
+    negative_images = torch.squeeze(negative_images, 1)
     return negative_images
