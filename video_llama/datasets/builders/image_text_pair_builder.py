@@ -97,7 +97,6 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
                 warnings.warn("storage path {} does not exist.".format(storage_path[i]))
 
         # create datasets
-        print(f"\n\n\n{[os.path.join(storage_path[0], 'metadata.json')]}\n\n\n")
         dataset_cls = [self.train_dataset_cls, self.eval_dataset_cls]
         for i, split in enumerate(splits):
             datasets[split] = dataset_cls[i](
