@@ -55,8 +55,8 @@ run:
 
   weight_decay: 0.05
   max_epoch: 100
-  batch_size_train: 1 # 32
-  batch_size_eval: 1 # 32
+  batch_size_train: 2 # 32
+  batch_size_eval: 2 # 32
   num_workers: 1 # 8
   warmup_steps: 2500
   iters_per_epoch: 2500
