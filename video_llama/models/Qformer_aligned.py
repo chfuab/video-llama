@@ -132,7 +132,7 @@ class QformerAligned(Blip2Base):
         embed_selected_list = []
         for k in range(batch_size):
             embeds_list = []
-            for i in num_query:
+            for i in range(num_query):
                 embeds_list.append(embeds[k, i, :])
 
             sim_list = []
