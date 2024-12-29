@@ -96,8 +96,7 @@ class BaseTask:
                 metrics_name : result_scores[0]
             }
         elif model_name == 'q_former_aligned':
-            images = samples["image"]
-            loss = model(images)["loss"]
+            loss = model(samples)["loss"]
             return {
                 'loss': loss
             }
