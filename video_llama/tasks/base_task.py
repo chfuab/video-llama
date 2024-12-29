@@ -172,7 +172,7 @@ class BaseTask:
 
                 eval_output = {}
                 for name in metrics:    # metrics for Q-former-aligned is loss only
-                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name)
+                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name)
                     eval_output.update(eval_output_temp)
 
                 meter_values = []
@@ -212,7 +212,7 @@ class BaseTask:
                 samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
                 eval_output = {}
                 for name in metrics:
-                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name) # load the best checkpoint of the model?
+                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
                     eval_output.update(eval_output_temp)
                 # update evaluation metrics
                 meter_values = []
