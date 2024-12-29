@@ -171,8 +171,9 @@ class BaseTask:
 
                 eval_output = {}
                 for name in metrics:    # metrics for Q-former-aligned is loss only
-                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name)
-                    eval_output.update(eval_output_temp)
+                    with torch.cuda.amp.autocast(enabled=True):
+                        eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name)
+                        eval_output.update(eval_output_temp)
 
                 meter_values = []
                 for v in eval_output.values():
