@@ -626,10 +626,9 @@ class RunnerBase:
         # results, records = self.task.evaluation(model, data_loader, metrics)
 
         ###
-        if self.config.model_cfg.arch == "q_former_aligned":
-            results = None
-        else:
-            results, records = self.task.evaluation(model, data_loader, metrics)
+        # if self.config.model_cfg.arch == "q_former_aligned":
+        model_name = self.config.model_cfg.arch
+        results, records = self.task.evaluation(model, data_loader, metrics, model_name)
         ###
 
         return results

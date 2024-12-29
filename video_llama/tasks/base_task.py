@@ -87,13 +87,20 @@ class BaseTask:
     """
     """ def valid_step(self, model, samples):
         raise NotImplementedError """
-    def valid_step(self, model, samples, metrics_name):
-        pred = self.predict(model, samples, metrics_name)
-        gt = self.get_ground_truth(samples, metrics_name)
-        result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
-        return {
-            metrics_name : result_scores[0]
-        }
+    def valid_step(self, model, samples, metrics_name, model_name):
+        if model_name == 'video_llama':
+            pred = self.predict(model, samples, metrics_name)
+            gt = self.get_ground_truth(samples, metrics_name)
+            result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
+            return {
+                metrics_name : result_scores[0]
+            }
+        elif model_name == 'q_former_aligned':
+            images = samples["image"]
+            loss = model(images)["loss"]
+            return {
+                'loss': loss
+            }
 
     def predict(self, model, samples, metrics_name):
         logits = model(samples)["logits"]
@@ -142,70 +149,96 @@ class BaseTask:
         return results """
 
     
-    def evaluation(self, model, data_loader, metrics, cuda_enabled=True):
+    def evaluation(self, model, data_loader, metrics, model_name, cuda_enabled=True):
         metric_logger = MetricLogger(delimiter="  ")
         metric_logger_display = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable
         print_freq = 10
 
+        if model_name == 'q_former_aligned':
+##################################################################3
+            if not hasattr(data_loader, "__next__"):
+                # convert to iterator if not already
+                data_loader = iter(data_loader)
 
-        """ for scorer in metrics: # "metrics" is a list of metrics names
-            # if the scorer is a list with multiple items:
-            if type(scorer) == list:
-                for i in scorer:
-                    metric_logger.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
-                    metric_logger_display.add_meter(scorer[i], SmoothedValue(window_size=1, fmt="{value:.6f}"))
-            # if the scorer has single item
-            else:
-                metric_logger.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                metric_logger_display.add_meter(scorer, SmoothedValue(window_size=1, fmt="{value:.4f}")) """
-        metric_logger.add_meter("CIDEr", SmoothedValue(window_size=1, fmt="{value:.4f}"))
-        metric_logger.add_meter("ROUGE_L", SmoothedValue(window_size=1, fmt="{value:.4f}"))
-        metric_logger_display.add_meter("CIDEr", SmoothedValue(window_size=1, fmt="{value:.4f}"))
-        metric_logger_display.add_meter("ROUGE_L", SmoothedValue(window_size=1, fmt="{value:.4f}"))
-        for i in range(4):
-            metric_logger.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
-            metric_logger_display.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
-        
-        results = []
+            metric_logger = MetricLogger(delimiter="  ")
+            metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
 
-        curr_iter_eval = 0
-        tot_iter_eval = len(data_loader)
 
-        for samples in metric_logger.log_every(data_loader, print_freq, header):
-            if curr_iter_eval >= tot_iter_eval:
-                break
+            for i in metric_logger.log_every(data_loader, print_freq, header):
+                samples = next(data_loader)
+                samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
 
-            samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
-            eval_output = {}
-            for name in metrics:
-                eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name) # load the best checkpoint of the model?
-                eval_output.update(eval_output_temp)
-            # update evaluation metrics
-            meter_values = []
-            for v in eval_output.values():
-                if type(v) == list:
-                    meter_values.extend(v)
-                else:
+                eval_output = {}
+                for name in metrics:    # metrics for Q-former-aligned is loss only
+                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name)
+                    eval_output.update(eval_output_temp)
+
+                meter_values = []
+                for v in eval_output.values():
                     meter_values.append(v)
-            
-            metric_logger_display.update(CIDEr=1.0, ROUGE_L=meter_values[1], Bleu_0=meter_values[2], Bleu_1=meter_values[3], Bleu_2=meter_values[4], Bleu_3=meter_values[5])
-            
-            curr_iter_eval += 1
-        logging_str = "Averaged stats: \n" + str(metric_logger_display.global_avg())    # getting avg over all batch size of samples in one epoch
-        logging.info(logging_str)
 
-        if is_dist_avail_and_initialized():
-            dist.barrier()
+                metric_logger.update(loss=eval_output['loss'].item())
 
-        return {
-            k: "{:.3f}".format(meter.global_avg())
-            for k, meter in metric_logger_display.meters.items()
-        }, {
-            k: meter.value_record
-            for k, meter in metric_logger_display.meters.items()
-        }
+            # after train_epoch()
+            # gather the stats from all processes
+
+            metric_logger.synchronize_between_processes()
+            logging.info("Averaged stats: " + str(metric_logger.global_avg()))
+
+            return {
+                k: "{:.3f}".format(meter.global_avg())
+                for k, meter in metric_logger.meters.items()
+            }
+
+#################################################################################################
+        elif model_name == 'video_llama':
+            m = ['CIDEr', 'ROUGE_L']
+            for item in m:
+                metric_logger.add_meter(item, SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger_display.add_meter(item, SmoothedValue(window_size=1, fmt="{value:.4f}"))
+            for i in range(4):
+                metric_logger.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger_display.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
+
+            curr_iter_eval = 0
+            tot_iter_eval = len(data_loader)
+
+            for samples in metric_logger.log_every(data_loader, print_freq, header):
+                if curr_iter_eval >= tot_iter_eval:
+                    break
+
+                samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
+                eval_output = {}
+                for name in metrics:
+                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name) # load the best checkpoint of the model?
+                    eval_output.update(eval_output_temp)
+                # update evaluation metrics
+                meter_values = []
+                for v in eval_output.values():
+                    if type(v) == list:
+                        meter_values.extend(v)
+                    else:
+                        meter_values.append(v)
+
+                metric_logger_display.update(CIDEr=meter_values[0], ROUGE_L=meter_values[1], Bleu_0=meter_values[2], Bleu_1=meter_values[3], Bleu_2=meter_values[4], Bleu_3=meter_values[5])
+
+                curr_iter_eval += 1
+            logging_str = "Averaged stats: \n" + str(metric_logger_display.global_avg())    # getting avg over all batch size of samples in one epoch
+            logging.info(logging_str)
+
+            if is_dist_avail_and_initialized():
+                dist.barrier()
+
+            return {
+                k: "{:.3f}".format(meter.global_avg())
+                for k, meter in metric_logger_display.meters.items()
+            }, {
+                k: meter.value_record
+                for k, meter in metric_logger_display.meters.items()
+            }
+
 
     def train_epoch(
         self,
