@@ -148,7 +148,7 @@ class BaseTask:
         return results """
 
     
-    def evaluation(self, model, data_loader, metrics, model_name, cuda_enabled=True):
+    def evaluation(self, model, data_loader, iters_per_epoch, metrics, model_name, cuda_enabled=True):
         metric_logger = MetricLogger(delimiter="  ")
         metric_logger_display = MetricLogger(delimiter="  ")
         header = "Evaluation"
@@ -165,7 +165,9 @@ class BaseTask:
             metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
 
 
-            for i in metric_logger.log_every(data_loader, print_freq, header):
+            for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
+                if i >= iters_per_epoch:
+                    break
                 samples = next(data_loader)
                 samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
 

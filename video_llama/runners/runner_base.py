@@ -628,7 +628,8 @@ class RunnerBase:
         ###
         # if self.config.model_cfg.arch == "q_former_aligned":
         model_name = self.config.model_cfg.arch
-        results, records = self.task.evaluation(model, data_loader, metrics, model_name)
+        iters_per_epoch = self.config.run_cfg.get("iters_per_epoch", None)
+        results, records = self.task.evaluation(model, data_loader, iters_per_epoch, metrics, model_name)
         ###
 
         return results
