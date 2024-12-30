@@ -500,7 +500,7 @@ class RunnerBase:
                             val_log.update({"best_epoch": best_epoch, "best_agg_metric": best_agg_metric})
                             
                             self.log_stats(stats=val_log, split_name='eval')
-                            record_log = [float(val) for val in record_log]
+                            record_log = [float(val) for val in record_log['loss']]
                             self.log_stats(stats=record_log, split_name='eval-record')
                             break
                 else:
