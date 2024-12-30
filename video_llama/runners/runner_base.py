@@ -457,7 +457,7 @@ class RunnerBase:
             if len(self.valid_splits) > 0:
                 logging.info("Evaluating on val")
 
-                val_log = self.eval_epoch(
+                val_log , record_log = self.eval_epoch(
                     split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch
                 )
                 if val_log is not None:
@@ -500,6 +500,7 @@ class RunnerBase:
                             val_log.update({"best_epoch": best_epoch, "best_agg_metric": best_agg_metric})
                             
                             self.log_stats(stats=val_log, split_name='eval')
+                            self.log_stats(stats=record_log, split_name='eval-record')
                             break
                 else:
                     if not self.evaluate_only:
@@ -632,7 +633,7 @@ class RunnerBase:
         results, records = self.task.evaluation(model, data_loader, iters_per_epoch, metrics, model_name)
         ###
 
-        return results
+        return results, records
 
     def unwrap_dist_model(self, model):
         if self.use_distributed:

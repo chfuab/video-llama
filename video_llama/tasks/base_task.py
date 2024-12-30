@@ -192,6 +192,9 @@ class BaseTask:
             return {
                 k: "{:.3f}".format(meter.global_avg())
                 for k, meter in metric_logger.meters.items()
+            }, {
+                k: meter.value_record
+                for k, meter in metric_logger.meters.items()
             }
 
 #################################################################################################
