@@ -180,7 +180,7 @@ class BaseTask:
                     meter_values.append(v)
 
                 metric_logger.update(loss=eval_output['loss'].item())
-
+            print("\n\n\n end of for loop \n\n\n")
             # after train_epoch()
             # gather the stats from all processes
 
