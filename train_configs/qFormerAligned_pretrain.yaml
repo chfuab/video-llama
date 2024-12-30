@@ -79,4 +79,4 @@ run:
   distributed: False
 
   evaluate_metrics: ["loss"]
-  agg_metrics: "CIDEr"
+  agg_metrics: "loss"
