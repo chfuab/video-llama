@@ -353,6 +353,14 @@ class RunnerBase:
     def agg_metrics(self):
         return self.config.run_cfg.get("agg_metrics", None)
     
+    @property
+    def agg_mode(self):
+        return self.config.run_cfg.get("agg_mode", None)
+    
+    @property
+    def allowed_metrics_delta(self):
+        return self.config.run_cfg.get("allowed_metrics_delta", None)
+    
     def setup_output_dir(self):
         lib_root = Path(registry.get_path("library_root"))
 
@@ -442,9 +450,9 @@ class RunnerBase:
         window = []
         window_str = []
         window_size = 5
-        allowed_metrics_delta = 0.1
+        allowed_metrics_delta = self.allowed_metrics_delta
         agg_metrics = self.agg_metrics
-        agg_mode = max
+        agg_mode = self.agg_mode
 
         for cur_epoch in range(self.start_epoch, self.max_epoch):
             # training phase
@@ -461,6 +469,7 @@ class RunnerBase:
                     split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch
                 )
                 if val_log is not None:
+                    self.log_stats(stats=val_log, split_name='eval')
                     if is_main_process():
                         assert (agg_metrics in val_log), "the selected agg_metrics is not defined in evaluation"
                         agg_metrics_value = val_log[agg_metrics]
@@ -498,11 +507,9 @@ class RunnerBase:
 
                             self._save_checkpoint(cur_epoch, is_best=True)
                             val_log.update({"best_epoch": best_epoch, "best_agg_metric": best_agg_metric})
-                            
-                            self.log_stats(stats=val_log, split_name='eval')
 
-                            record_log = [float(val) for val in record_log['loss']]
-                            self.log_stats(stats=record_log, split_name='eval')
+                            """ record_log = [float(val) for val in record_log['loss']]
+                            self.log_stats(stats=record_log, split_name='eval') """
                             break
                 else:
                     if not self.evaluate_only:

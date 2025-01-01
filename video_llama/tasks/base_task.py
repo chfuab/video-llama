@@ -156,7 +156,6 @@ class BaseTask:
         print_freq = 1
 
         if model_name == 'q_former_aligned':
-##################################################################3
             if not hasattr(data_loader, "__next__"):
                 # convert to iterator if not already
                 data_loader = iter(data_loader)
@@ -182,7 +181,6 @@ class BaseTask:
                     meter_values.append(v)
 
                 metric_logger.update(loss=eval_output['loss'].item())
-            print("\n\n\n end of for loop \n\n\n")
             # after train_epoch()
             # gather the stats from all processes
 
@@ -197,7 +195,6 @@ class BaseTask:
                 for k, meter in metric_logger.meters.items()
             }
 
-#################################################################################################
         elif model_name == 'video_llama':
             m = ['CIDEr', 'ROUGE_L']
             for item in m:
