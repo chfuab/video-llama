@@ -29,8 +29,8 @@ datasets:
   cc_sbu_align:
     data_type: images
     build_info:
-      storage_train: /mnt/disks/chfuab/q_former_aligned_data/train ############################################
-      storage_eval: /mnt/disks/chfuab/q_former_aligned_data/eval ############################################
+      storage_train: /mnt/disks/chfuab/q_former_aligned_data ############################################
+      storage_eval: /mnt/disks/chfuab/q_former_aligned_data ############################################
     vis_processor:
       train:
         name: "blip2_image_train"
