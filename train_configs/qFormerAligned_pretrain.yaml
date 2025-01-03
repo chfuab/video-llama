@@ -55,11 +55,11 @@ run:
 
   weight_decay: 0.05
   max_epoch: 100
-  batch_size_train: 2 # 32
-  batch_size_eval: 2 # 32
+  batch_size_train: 32
+  batch_size_eval: 32
   num_workers: 1 # 8
   warmup_steps: 2500
-  iters_per_epoch: 3 # 2500
+  iters_per_epoch: 2500
 
   seed: 42
   output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned" ############################################
