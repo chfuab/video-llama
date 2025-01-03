@@ -88,6 +88,7 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
 
         build_info = self.config.build_info
         storage_path = [build_info.storage_train, build_info.storage_eval]
+        metadata_path = ['metadata_train', 'metadata_eval']
 
         datasets = dict()
         splits = ["train", "eval"]
@@ -105,7 +106,7 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
                 audio_processor=None,
                 vis_root=os.path.join(storage_path[i], 'image'),
                 # ann_paths=[os.path.join(storage_path[i], 'metadata.json')],
-                ann_paths=[os.path.join(storage_path[i], 'metadata_1.json')],
+                ann_paths=[os.path.join(storage_path[i], metadata_path[i])],
                 # ann_paths=[os.path.join(storage_path[i], 'filter_cap.json')],
             )
 
