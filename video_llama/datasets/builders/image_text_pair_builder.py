@@ -88,7 +88,7 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
 
         build_info = self.config.build_info
         storage_path = [build_info.storage_train, build_info.storage_eval]
-        metadata_path = ['metadata_train', 'metadata_eval']
+        metadata_path = ['metadata_train.json', 'metadata_eval.json']
 
         datasets = dict()
         splits = ["train", "eval"]
