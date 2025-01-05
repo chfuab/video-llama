@@ -153,7 +153,7 @@ class BaseTask:
         metric_logger_display = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable
-        print_freq = 1
+        print_freq = 50
 
         if model_name == 'q_former_aligned':
             if not hasattr(data_loader, "__next__"):
