@@ -71,7 +71,7 @@ run:
   evaluate: False ###
   train_splits: ["train"]
   valid_splits: ["eval"]
-  test_splits: ["test"]
+  test_splits: ["eval"]
 
   device: "cuda"
   world_size: 1
