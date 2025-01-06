@@ -507,7 +507,7 @@ class RunnerBase:
 
                             if not self.evaluate_only:
                                 self._save_checkpoint(cur_epoch, is_best=True)
-                                
+
                             val_log.update({"best_epoch": best_epoch, "best_agg_metric": best_agg_metric})
 
                             """ record_log = [float(val) for val in record_log['loss']]
@@ -642,6 +642,7 @@ class RunnerBase:
         model_name = self.config.model_cfg.arch
         iters_per_epoch = self.config.run_cfg.get("iters_per_epoch_eval", None)
         verify_q_former_aligned = self.config.run_cfg.get("verify_q_former_aligned", False)
+        
         results, records = self.task.evaluation(model, data_loader, iters_per_epoch, metrics, model_name, verify_q_former_aligned)
         ###
 
