@@ -68,7 +68,7 @@ run:
   amp: True
   resume_ckpt_path: null
 
-  evaluate: True
+  evaluate: True ###
   train_splits: ["train"]
   valid_splits: ["eval"]
   test_splits: ["test"]
