@@ -86,27 +86,52 @@ class QformerAligned(Blip2Base):
         self.triplet_loss = nn.TripletMarginLoss(margin=self.triplet_loss_margin, eps=1e-7)
         
 
-    def forward(self, samples):
+    def forward(self, samples, verify_q_former_aligned):
         # image = positive_images = samples['image']
         # assume using cc_sbu dataset
         images = samples['image']
         batch_size = images.size()[0]
         negative_images = neg_sampler(batch_size=batch_size, image=images)
-        q_former_branch_outputs = self.qformer_branch(image=images)
-        neg_embeds = self.qformer_branch(image=negative_images)
+
+        ### start
+        if verify_q_former_aligned:
+            q_hidden_states_pos, q_hidden_states_transformed_pos = self.qformer_branch(image=images, 
+                                                      verify_q_former_aligned=verify_q_former_aligned)
+            q_hidden_states_neg, q_hidden_states_transformed_neg = self.qformer_branch(image=negative_images, 
+                                         verify_q_former_aligned=verify_q_former_aligned)
+        ### end
+        else:
+            q_former_branch_outputs = self.qformer_branch(image=images, verify_q_former_aligned=verify_q_former_aligned)
+            neg_embeds = self.qformer_branch(image=negative_images, verify_q_former_aligned=verify_q_former_aligned)
+        
         anchors = self.imagebind_branch(image=images)
 
+        ### start
+        if verify_q_former_aligned:
+            pos_embedding_transformed = self.select_embed(embeds=q_hidden_states_transformed_pos, anchors=anchors)
+            neg_embedding_transformed = self.select_embed(embeds=q_hidden_states_transformed_neg, anchors=anchors)
+            pos_embedding_general = self.select_embed(embeds=q_hidden_states_pos, anchors=anchors)
+            neg_embedding_general = self.select_embed(embeds=q_hidden_states_neg, anchors=anchors)
+
+            loss_verify_q_former = self.triplet_loss(anchors, pos_embedding_transformed, neg_embedding_transformed)
+            loss_general = self.triplet_loss(anchors, pos_embedding_general, neg_embedding_general)
+
+            return {
+                'loss_general': loss_general,
+                'loss_verify_q_former': loss_verify_q_former
+            }
+        ### end
         # calculate loss
-        pos_embedding = self.select_embed(embeds=q_former_branch_outputs, anchors=anchors)
-        neg_embedding = self.select_embed(embeds=neg_embeds, anchors=anchors)
-        loss = self.triplet_loss(anchors, pos_embedding, neg_embedding)
+        else:
+            pos_embedding = self.select_embed(embeds=q_former_branch_outputs, anchors=anchors)
+            neg_embedding = self.select_embed(embeds=neg_embeds, anchors=anchors)
+            loss = self.triplet_loss(anchors, pos_embedding, neg_embedding)
+            return {
+                "q_former_branch_outputs": q_former_branch_outputs,
+                "loss": loss 
+            }
 
-        return {
-            "q_former_branch_outputs": q_former_branch_outputs,
-            "loss": loss 
-        }
-
-    def qformer_branch(self, image):
+    def qformer_branch(self, image, verify_q_former_aligned):
         device = image.device
         image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
@@ -119,6 +144,13 @@ class QformerAligned(Blip2Base):
             )
         q_hidden_state = query_output.last_hidden_state
         q_hidden_state_transformed = self.linear_proj(q_hidden_state)
+        ###
+        if verify_q_former_aligned:
+            return {
+                'q_hidden_state': q_hidden_state,
+                'q_hidden_state_transformed': q_hidden_state_transformed
+            }
+        ###
         return q_hidden_state_transformed
 
     def imagebind_branch(self, image):

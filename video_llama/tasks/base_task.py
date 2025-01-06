@@ -87,7 +87,7 @@ class BaseTask:
     """
     """ def valid_step(self, model, samples):
         raise NotImplementedError """
-    def valid_step(self, model, samples, metrics_name, model_name):
+    def valid_step(self, model, samples, metrics_name, model_name, verify_q_former_aligned):
         if model_name == 'video_llama':
             pred = self.predict(model, samples, metrics_name)
             gt = self.get_ground_truth(samples, metrics_name)
@@ -96,10 +96,18 @@ class BaseTask:
                 metrics_name : result_scores[0]
             }
         elif model_name == 'q_former_aligned':
-            loss = model(samples)["loss"]
-            return {
-                'loss': loss
-            }
+            ###
+            if verify_q_former_aligned:
+                return {
+                    'loss_general': model(samples, verify_q_former_aligned)['loss_general'],
+                    'loss_verify_q_former': model(samples, verify_q_former_aligned)['loss_verify_q_former']
+                }
+            ###
+            else:
+                loss = model(samples, verify_q_former_aligned)["loss"]
+                return {
+                    'loss': loss
+                }
 
     def predict(self, model, samples, metrics_name):
         logits = model(samples)["logits"]
@@ -148,7 +156,7 @@ class BaseTask:
         return results """
 
     
-    def evaluation(self, model, data_loader, iters_per_epoch, metrics, model_name, cuda_enabled=True):
+    def evaluation(self, model, data_loader, iters_per_epoch, metrics, model_name, verify_q_former_aligned, cuda_enabled=True):
         metric_logger = MetricLogger(delimiter="  ")
         metric_logger_display = MetricLogger(delimiter="  ")
         header = "Evaluation"
@@ -161,7 +169,15 @@ class BaseTask:
                 data_loader = iter(data_loader)
 
             metric_logger = MetricLogger(delimiter="  ")
-            metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+            
+
+            ###
+            if verify_q_former_aligned:
+                metric_logger.add_meter("loss_verify_q_former", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger.add_meter("loss_general", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+            ###
+            else:
+                metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
 
 
             for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
@@ -173,14 +189,17 @@ class BaseTask:
                 eval_output = {}
                 for name in metrics:    # metrics for Q-former-aligned is loss only
                     with torch.cuda.amp.autocast(enabled=True):
-                        eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name)
+                        eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, 
+                                                           model_name=model_name, verify_q_former_aligned=verify_q_former_aligned)
                         eval_output.update(eval_output_temp)
 
-                meter_values = []
-                for v in eval_output.values():
-                    meter_values.append(v)
-
-                metric_logger.update(loss=eval_output['loss'].item())
+                ###
+                if verify_q_former_aligned:
+                    metric_logger.update(loss_verify_q_former=eval_output['loss_verify_q_former'].item())
+                    metric_logger.update(loss_general=eval_output['loss_general'].item())
+                ###
+                else:
+                    metric_logger.update(loss=eval_output['loss'].item())
             # after train_epoch()
             # gather the stats from all processes
 
