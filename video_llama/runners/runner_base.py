@@ -773,7 +773,8 @@ class RunnerBase:
         """
         Load the best checkpoint for evaluation.
         """
-        checkpoint_path = os.path.join(self.output_dir, "checkpoint_best.pth")
+        # checkpoint_path = os.path.join(self.output_dir, "checkpoint_best.pth")
+        checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_best.pth")
 
         logging.info("Loading checkpoint from {}.".format(checkpoint_path))
         checkpoint = torch.load(checkpoint_path, map_location="cpu")
