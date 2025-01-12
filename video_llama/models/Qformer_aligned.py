@@ -108,18 +108,15 @@ class QformerAligned(Blip2Base):
 
         ### start
         if verify_q_former_aligned:
-            pos_embedding_transformed = self.select_embed(embeds=q_hidden_states_transformed_pos, anchors=anchors)
-            neg_embedding_transformed = self.select_embed(embeds=q_hidden_states_transformed_neg, anchors=anchors)
-            pos_embedding_general = self.select_embed(embeds=q_hidden_states_pos, anchors=anchors)
-            neg_embedding_general = self.select_embed(embeds=q_hidden_states_neg, anchors=anchors)
+            pos_embedding_transformed = self.select_embed(embeds=q_hidden_states_transformed_pos['q_hidden_state_transformed'], anchors=anchors)
+            neg_embedding_transformed = self.select_embed(embeds=q_hidden_states_transformed_neg['q_hidden_state_transformed'], anchors=anchors)
+            pos_embedding_general = self.select_embed(embeds=q_hidden_states_pos['q_hidden_state'], anchors=anchors)
+            neg_embedding_general = self.select_embed(embeds=q_hidden_states_neg['q_hidden_state'], anchors=anchors)
 
             loss_verify_q_former = self.triplet_loss(anchors, pos_embedding_transformed, neg_embedding_transformed)
             loss_general = self.triplet_loss(anchors, pos_embedding_general, neg_embedding_general)
 
-            return {
-                'loss_general': loss_general,
-                'loss_verify_q_former': loss_verify_q_former
-            }
+            return {'loss_general': loss_general, 'loss_verify_q_former': loss_verify_q_former}
         ### end
         # calculate loss
         else:
@@ -147,7 +144,8 @@ class QformerAligned(Blip2Base):
         ###
         if verify_q_former_aligned:
             return {
-                'q_hidden_state': q_hidden_state,
+                'q_hidden_state': q_hidden_state
+            }, {
                 'q_hidden_state_transformed': q_hidden_state_transformed
             }
         ###
