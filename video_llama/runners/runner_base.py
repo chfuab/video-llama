@@ -540,10 +540,13 @@ class RunnerBase:
 
         if len(self.test_splits) > 0:
             for split_name in self.test_splits:
-                test_logs[split_name] = self.eval_epoch(
+                """ test_logs[split_name] = self.eval_epoch(
+                    split_name=split_name, cur_epoch=cur_epoch, metrics=self.metrics, skip_reload=skip_reload
+                ) """
+                test_logs[split_name], record = self.eval_epoch(
                     split_name=split_name, cur_epoch=cur_epoch, metrics=self.metrics, skip_reload=skip_reload
                 )
-
+            self.log_stats(stats=test_logs, split_name='eval')
             return test_logs
 
     def train_epoch(self, epoch):

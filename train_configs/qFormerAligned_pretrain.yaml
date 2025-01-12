@@ -63,7 +63,7 @@ run:
   iters_per_epoch_eval: 500
 
   seed: 42
-  output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned" ############################################
+  output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned/20250105094" ############################################
 
   amp: True
   resume_ckpt_path: null
