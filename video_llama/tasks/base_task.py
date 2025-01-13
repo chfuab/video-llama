@@ -99,7 +99,8 @@ class BaseTask:
             ###
             if verify_q_former_aligned:
                 return {
-                    'similarity': model(samples, verify_q_former_aligned)
+                    'rate': model(samples, verify_q_former_aligned)['rate'],
+                    'avg_sim_per_batch': model(samples, verify_q_former_aligned)['avg_sim_per_batch']
                 }
             ###
             else:
@@ -172,7 +173,8 @@ class BaseTask:
 
             ###
             if verify_q_former_aligned:
-                metric_logger.add_meter("similarity", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger.add_meter("rate", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger.add_meter("avg_sim_per_batch", SmoothedValue(window_size=1, fmt="{value:.4f}"))
             ###
             else:
                 metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
@@ -193,7 +195,8 @@ class BaseTask:
 
                 ###
                 if verify_q_former_aligned:
-                    metric_logger.update(similarity=eval_output['similarity'].item())
+                    metric_logger.update(similarity=eval_output['avg_sim_per_batch'].item())
+                    metric_logger.update(similarity=eval_output['rate'].item())
                 ###
                 else:
                     metric_logger.update(loss=eval_output['loss'].item())

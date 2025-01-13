@@ -103,16 +103,19 @@ class QformerAligned(Blip2Base):
         if verify_q_former_aligned:
             pos_embedding = self.select_embed(embeds=q_former_branch_outputs, anchors=anchors)
             cnt = 0
+            avg_sim_per_batch = 0
             for k in range(batch_size):
                 sim_list = []
                 for i in range(batch_size):
                     cos_sim = self.cos(torch.unsqueeze(anchors[k, :], 0), torch.unsqueeze(pos_embedding[i, :], 0))
                     sim_list.append(cos_sim)
                 idx = sim_list.index(max(sim_list))
+                max_similarity = max(sim_list)
                 if k == idx: 
                     cnt =+ 1
+                    avg_sim_per_batch += max_similarity
             rate = cnt / batch_size
-            return rate
+            return {'rate': rate, 'avg_sim_per_batch': avg_sim_per_batch}
         ### end
         # calculate loss
         else:

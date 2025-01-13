@@ -79,7 +79,7 @@ run:
   # distributed: True
   distributed: False
 
-  evaluate_metrics: ["similarity"]
+  evaluate_metrics: ["rate", 'avg_sim_per_batch']
   agg_metrics: "loss"
   agg_mode: "min"
   allowed_metrics_delta: 0.1
