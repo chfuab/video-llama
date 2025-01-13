@@ -99,8 +99,7 @@ class BaseTask:
             ###
             if verify_q_former_aligned:
                 return {
-                    'loss_general': model(samples, verify_q_former_aligned)['loss_general'],
-                    'loss_verify_q_former': model(samples, verify_q_former_aligned)['loss_verify_q_former']
+                    'similarity': model(samples, verify_q_former_aligned)
                 }
             ###
             else:
@@ -173,8 +172,7 @@ class BaseTask:
 
             ###
             if verify_q_former_aligned:
-                metric_logger.add_meter("loss_verify_q_former", SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                metric_logger.add_meter("loss_general", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+                metric_logger.add_meter("similarity", SmoothedValue(window_size=1, fmt="{value:.4f}"))
             ###
             else:
                 metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
@@ -195,8 +193,7 @@ class BaseTask:
 
                 ###
                 if verify_q_former_aligned:
-                    metric_logger.update(loss_verify_q_former=eval_output['loss_verify_q_former'].item())
-                    metric_logger.update(loss_general=eval_output['loss_general'].item())
+                    metric_logger.update(similarity=eval_output['similarity'].item())
                 ###
                 else:
                     metric_logger.update(loss=eval_output['loss'].item())

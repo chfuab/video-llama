@@ -93,22 +93,26 @@ class QformerAligned(Blip2Base):
         batch_size = images.size()[0]
         negative_images = neg_sampler(batch_size=batch_size, image=images)
 
-        ### start
-        if verify_q_former_aligned:
-            q_hidden_states_pos, q_hidden_states_transformed_pos = self.qformer_branch(image=images, 
-                                                      verify_q_former_aligned=verify_q_former_aligned)
-            q_hidden_states_neg, q_hidden_states_transformed_neg = self.qformer_branch(image=negative_images, 
-                                         verify_q_former_aligned=verify_q_former_aligned)
-        ### end
-        else:
-            q_former_branch_outputs = self.qformer_branch(image=images, verify_q_former_aligned=verify_q_former_aligned)
-            neg_embeds = self.qformer_branch(image=negative_images, verify_q_former_aligned=verify_q_former_aligned)
+        q_former_branch_outputs = self.qformer_branch(image=images, verify_q_former_aligned=verify_q_former_aligned)
+        neg_embeds = self.qformer_branch(image=negative_images, verify_q_former_aligned=verify_q_former_aligned)
+            
         
         anchors = self.imagebind_branch(image=images)
 
         ### start
         if verify_q_former_aligned:
-            return
+            pos_embedding = self.select_embed(embeds=q_former_branch_outputs, anchors=anchors)
+            cnt = 0
+            for k in range(batch_size):
+                sim_list = []
+                for i in range(batch_size):
+                    cos_sim = self.cos(torch.unsqueeze(anchors[k, :], 0), torch.unsqueeze(pos_embedding[i, :], 0))
+                    sim_list.append(cos_sim)
+                idx = sim_list.index(max(sim_list))
+                if k == idx: 
+                    cnt =+ 1
+            rate = cnt / batch_size
+            return rate
         ### end
         # calculate loss
         else:
@@ -133,14 +137,7 @@ class QformerAligned(Blip2Base):
             )
         q_hidden_state = query_output.last_hidden_state
         q_hidden_state_transformed = self.linear_proj(q_hidden_state)
-        ###
-        if verify_q_former_aligned:
-            return {
-                'q_hidden_state': q_hidden_state
-            }, {
-                'q_hidden_state_transformed': q_hidden_state_transformed
-            }
-        ###
+
         return q_hidden_state_transformed
 
     def imagebind_branch(self, image):
