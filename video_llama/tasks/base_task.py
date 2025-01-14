@@ -196,7 +196,7 @@ class BaseTask:
                 ###
                 if verify_q_former_aligned:
                     metric_logger.update(similarity=eval_output['avg_sim_per_batch'].item())
-                    metric_logger.update(similarity=eval_output['rate'].item())
+                    metric_logger.update(similarity=eval_output['rate'])
                 ###
                 else:
                     metric_logger.update(loss=eval_output['loss'].item())
