@@ -115,6 +115,7 @@ class QformerAligned(Blip2Base):
                     cnt =+ 1
                     avg_sim_per_batch += max_similarity
             rate = cnt / batch_size
+            avg_sim_per_batch = avg_sim_per_batch / batch_size
             return {'rate': rate, 'avg_sim_per_batch': avg_sim_per_batch}
         ### end
         # calculate loss
