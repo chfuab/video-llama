@@ -112,7 +112,7 @@ class QformerAligned(Blip2Base):
                 idx = sim_list.index(max(sim_list))
                 max_similarity = max(sim_list)
                 if k == idx: 
-                    cnt =+ 1
+                    cnt += 1
                     avg_sim_per_batch += max_similarity
             rate = cnt / batch_size
             avg_sim_per_batch = avg_sim_per_batch / batch_size
