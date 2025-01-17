@@ -77,7 +77,7 @@ class BaseTask:
             images = samples["image"]
             loss = model(images, verify_q_former_aligned=False)["loss"]
         else:
-            loss = model(samples)["loss"]
+            loss = model(samples, verify_q_former_aligned=False)["loss"]
         return loss
 
 
