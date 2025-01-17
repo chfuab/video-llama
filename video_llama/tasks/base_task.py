@@ -75,7 +75,7 @@ class BaseTask:
     def train_step(self, model, samples):
         if type(model).__name__ == "q_former_aligned":
             images = samples["image"]
-            loss = model(images)["loss"]
+            loss = model(images, verify_q_former_aligned=False)["loss"]
         else:
             loss = model(samples)["loss"]
         return loss
