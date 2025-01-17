@@ -59,8 +59,8 @@ run:
   batch_size_eval: 32
   num_workers: 1 # 8
   warmup_steps: 2500
-  iters_per_epoch: 2500
-  iters_per_epoch_eval: 50
+  iters_per_epoch: 10000
+  iters_per_epoch_eval: 1000
 
   seed: 42
   output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned" ############################################
