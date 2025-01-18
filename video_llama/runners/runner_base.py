@@ -818,8 +818,8 @@ class RunnerBase:
     def log_stats(self, stats, split_name):
         if isinstance(stats, dict):
             log_stats = {**{f"{split_name}_{k}": v for k, v in stats.items()}}
-            with open(os.path.join(self.output_dir, "log.txt"), "a") as f:
-            # with open(os.path.join(self.config.run_cfg.output_dir, "log.txt"), "a") as f:
+            # with open(os.path.join(self.output_dir, "log.txt"), "a") as f:
+            with open(os.path.join(self.config.run_cfg.output_dir, "log.txt"), "a") as f:
                 f.write(json.dumps(log_stats) + "\n")
         elif isinstance(stats, list):
             pass

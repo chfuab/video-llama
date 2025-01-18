@@ -63,7 +63,7 @@ run:
   iters_per_epoch_eval: 50
 
   seed: 42
-  output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned" ############################################
+  output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned/20250117115" ############################################
 
   amp: True
   resume_ckpt_path: null
@@ -83,4 +83,4 @@ run:
   agg_metrics: "loss"
   agg_mode: "min"
   allowed_metrics_delta: 0.1
-  verify_q_former_aligned: False
+  verify_q_former_aligned: True
