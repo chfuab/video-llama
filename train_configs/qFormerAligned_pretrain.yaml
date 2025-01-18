@@ -59,7 +59,7 @@ run:
   batch_size_eval: 32
   num_workers: 1 # 8
   warmup_steps: 2500
-  iters_per_epoch: 1000
+  iters_per_epoch: 100
   iters_per_epoch_eval: 50
 
   seed: 42
@@ -83,4 +83,4 @@ run:
   agg_metrics: "loss"
   agg_mode: "min"
   allowed_metrics_delta: 0.1
-  verify_q_former_aligned: True
+  verify_q_former_aligned: False

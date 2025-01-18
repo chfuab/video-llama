@@ -498,6 +498,8 @@ class RunnerBase:
                                 if (window[i+1] - window[i] > allowed_metrics_delta) or \
                                     (window[i+1] - window[0] > allowed_metrics_delta):
                                     cnt -= 1
+                        
+                        print(f"\n\n\n elements of window are: {window} \n\n\n no of cnt is: {cnt} \n\n\n")
                         if cnt > 0:
                             window.pop(0)
                             # window.append(agg_metrics_value)
