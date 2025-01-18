@@ -82,5 +82,5 @@ run:
   evaluate_metrics: ["rate", 'avg_sim_per_batch']
   agg_metrics: "loss"
   agg_mode: "min"
-  allowed_metrics_delta: 0.1
+  allowed_metrics_delta: 0.01
   verify_q_former_aligned: False
