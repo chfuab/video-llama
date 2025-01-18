@@ -480,14 +480,14 @@ class RunnerBase:
                         if len(window) < window_size:
                             continue
                         cnt = 0
-                        if agg_mode == max:
+                        if agg_mode == "max":
                             for i in range(0, len(window)-1):
                                 if ((window[i+1] - window[i]) > allowed_metrics_delta) or ((window[i+1] - window[0]) > allowed_metrics_delta):
                                     best_agg_metric = window[i+1]
                                     cnt += 1
                                 if ((window[i+1] - window[i]) < -1 * allowed_metrics_delta) or ((window[i+1] - window[0]) < -1 * allowed_metrics_delta):
                                     cnt -= 1
-                        elif agg_mode == min:
+                        elif agg_mode == "min":
                             for i in range(0, len(window)-1):
                                 if ((window[i+1] - window[i]) < allowed_metrics_delta * -1) or ((window[i+1] - window[0]) < allowed_metrics_delta * -1):
                                     best_agg_metric = window[i+1]
