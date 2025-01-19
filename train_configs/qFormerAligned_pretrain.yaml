@@ -59,8 +59,8 @@ run:
   batch_size_eval: 32
   num_workers: 1 # 8
   warmup_steps: 2500
-  iters_per_epoch: 100
-  iters_per_epoch_eval: 10
+  iters_per_epoch: 13750
+  iters_per_epoch_eval: 1000
 
   seed: 42
   output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned/20250117115" ############################################
@@ -82,5 +82,5 @@ run:
   evaluate_metrics: ["rate", 'avg_sim_per_batch']
   agg_metrics: "loss"
   agg_mode: "min"
-  allowed_metrics_delta: 0.01
+  allowed_metrics_delta: 0.03
   verify_q_former_aligned: False
