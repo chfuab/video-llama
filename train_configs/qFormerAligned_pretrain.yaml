@@ -54,7 +54,7 @@ run:
   warmup_lr: 1e-6
 
   weight_decay: 0.05
-  max_epoch: 10 # 100
+  max_epoch: 50 # 100
   batch_size_train: 32
   batch_size_eval: 32
   num_workers: 1 # 8
@@ -63,7 +63,7 @@ run:
   iters_per_epoch_eval: 1000
 
   seed: 42
-  output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned/20250117115" ############################################
+  output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned" ############################################
 
   amp: True
   resume_ckpt_path: null
