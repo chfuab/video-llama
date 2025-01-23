@@ -468,6 +468,8 @@ class RunnerBase:
                 val_log , record_log = self.eval_epoch(
                     split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch
                 )
+                if cur_epoch % 2 == 0:
+                    self._save_checkpoint(cur_epoch, is_best=False)
                 if val_log is not None:
                     self.log_stats(stats=val_log, split_name='eval')
                     if is_main_process():
@@ -510,8 +512,7 @@ class RunnerBase:
                             """ record_log = [float(val) for val in record_log['loss']]
                             self.log_stats(stats=record_log, split_name='eval') """
                             break
-                    if cur_epoch % 2 == 0:
-                        self._save_checkpoint(cur_epoch, is_best=False)
+                    
                 else:
                     if not self.evaluate_only:
                         self._save_checkpoint(cur_epoch, is_best=False)                    
@@ -817,8 +818,8 @@ class RunnerBase:
     def log_stats(self, stats, split_name):
         if isinstance(stats, dict):
             log_stats = {**{f"{split_name}_{k}": v for k, v in stats.items()}}
-            # with open(os.path.join(self.output_dir, "log.txt"), "a") as f:
-            with open(os.path.join(self.config.run_cfg.output_dir, "log.txt"), "a") as f:
+            with open(os.path.join(self.output_dir, "log.txt"), "a") as f:
+            # with open(os.path.join(self.config.run_cfg.output_dir, "log.txt"), "a") as f:
                 f.write(json.dumps(log_stats) + "\n")
         elif isinstance(stats, list):
             pass
