@@ -498,6 +498,7 @@ class RunnerBase:
                             window.pop(0)
                             # window.append(agg_metrics_value)
                             continue
+                        
                         else:
                             best_epoch, best_agg_metric = cur_epoch, agg_metrics_value
 
@@ -509,6 +510,8 @@ class RunnerBase:
                             """ record_log = [float(val) for val in record_log['loss']]
                             self.log_stats(stats=record_log, split_name='eval') """
                             break
+                    if cur_epoch % 2 == 0:
+                        self._save_checkpoint(cur_epoch, is_best=False)
                 else:
                     if not self.evaluate_only:
                         self._save_checkpoint(cur_epoch, is_best=False)                    
