@@ -66,7 +66,7 @@ run:
   output_dir: "/mnt/disks/chfuab/video-llama/output/Q_former_aligned" ############################################
 
   amp: True
-  resume_ckpt_path: null
+  resume_ckpt_path: /mnt/disks/chfuab/output_dir/20250125015/checkpoint_5.pth
 
   evaluate: False ###
   train_splits: ["train"]
