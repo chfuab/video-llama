@@ -6,6 +6,7 @@ model:
   
 
   # Q-Former
+  num_frames: 8
   num_query_token: 32
 
   # If you want train models based on LLaMA-2-chat,

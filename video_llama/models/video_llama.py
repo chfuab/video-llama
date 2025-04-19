@@ -57,6 +57,7 @@ class VideoLLAMA(Blip2Base):
         vit_precision="fp16",
         freeze_vit=True,
         freeze_qformer=True,
+        num_frames=8,
         num_query_token=32,
         llama_model="",
         prompt_path="",
@@ -84,6 +85,7 @@ class VideoLLAMA(Blip2Base):
         qa_ckpt_path = "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt",
         llama_type = "causalLM",
         use_lora_in_Qformer = True,
+        use_lora_in_video_Qformer=True,
     ):
         super().__init__()
         
@@ -117,14 +119,22 @@ class VideoLLAMA(Blip2Base):
             layer.intermediate = None
         self.load_from_pretrained(url_or_filename=q_former_model)
 
+        # concat data of self.query_tokens together and form a new nn.Parameter object so their data can be updated together after communicating with each other.
+        all_query_tokens = ()
+        for i in range(num_frames):
+            all_query_tokens = all_query_tokens + (self.query_tokens.data,)
+        all_query_tokens_tensor = torch.cat(all_query_tokens, dim=1)
+        self.all_query_tokens = nn.Parameter(all_query_tokens_tensor)
+
         if freeze_qformer:
             for name, param in self.Qformer.named_parameters():
                 param.requires_grad = False
             self.Qformer = self.Qformer.eval()
             self.Qformer.train = disabled_train
-            self.query_tokens.requires_grad = False
+            self.all_query_tokens.requires_grad = False
             logging.info("freeze Qformer")
         if use_lora_in_Qformer:
+            self.all_query_tokens.requires_grad = True
             for layer in self.Qformer.bert.encoder.layer:
                 for name, param in layer.intermediate_query.lora.named_parameters():
                     param.requires_grad = True
@@ -264,13 +274,13 @@ class VideoLLAMA(Blip2Base):
             self.video_query_tokens.requires_grad = False
             
             logging.info('video_Qformer is frozen')
-        else:
-            for name, param in self.video_Qformer.named_parameters():
-                param.requires_grad = True
-            for name, param in self.video_frame_position_embedding.named_parameters():
-                param.requires_grad = True
+        if use_lora_in_video_Qformer:
             self.video_query_tokens.requires_grad = True
-            logging.info('video_Qformer is not frozen')
+            for layer in self.video_Qformer.bert.encoder.layer:
+                for name, param in layer.intermediate_query.lora.named_parameters():
+                    param.requires_grad = True
+                for name, param in layer.output_query.lora.named_parameters():
+                    param.requires_grad = True
 
         if frozen_video_Qformer and (not frozen_audio_Qformer):
             self.train_flag = 1 # 只训练audio_Qformer
@@ -335,8 +345,6 @@ class VideoLLAMA(Blip2Base):
                 logging.info('audio_Qformer is not frozen')
             
 
-        self.num_query_token = num_query_token
-
         #  self.audio_hidden_size
     def vit_to_cpu(self):
         self.ln_vision.to("cpu")
@@ -358,12 +366,8 @@ class VideoLLAMA(Blip2Base):
             image_embeds = einops.rearrange(image_embeds, '(b t) q h -> b (t q) h')
             
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
-            query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
+            query_tokens = self.all_query_tokens.expand(image_embeds.shape[0], -1, -1)
             # the num_of_frame of query tokens can communicate with each other in Q-former self-attention layer
-            all_query_token = ()
-            for tl in range(time_length):
-                all_query_token = all_query_token + (query_tokens,)
-            query_tokens = torch.cat(all_query_token, 1) 
 
             query_output = self.Qformer.bert(
                 query_embeds=query_tokens,
@@ -784,6 +788,7 @@ class VideoLLAMA(Blip2Base):
         vit_model = cfg.get("vit_model", "eva_clip_g")
         q_former_model = cfg.get("q_former_model", "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained_flant5xxl.pth")
         img_size = cfg.get("image_size")
+        num_frames = cfg.get("num_frames", 8)
         num_query_token = cfg.get("num_query_token")
         llama_model = cfg.get("llama_model")
 
@@ -814,6 +819,10 @@ class VideoLLAMA(Blip2Base):
         equip_audio_branch= cfg.get("equip_audio_branch", True)
         num_audio_query_token =  cfg.get("num_audio_query_token", 8)
         imagebind_ckpt_path = cfg.get("imagebind_ckpt_path", '/mnt/workspace/ckpt')
+
+        use_lora_in_Qformer = cfg.get("use_lora_in_Qformer", True)
+        use_lora_in_video_Qformer = cfg.get("use_lora_in_video_Qformer", True)
+
         model = cls(
             vit_model=vit_model,
             q_former_model=q_former_model,
@@ -823,6 +832,7 @@ class VideoLLAMA(Blip2Base):
             vit_precision=vit_precision,
             freeze_vit=freeze_vit,
             freeze_qformer=freeze_qformer,
+            num_frames=num_frames,
             num_query_token=num_query_token,
             llama_model=llama_model,
             prompt_path=prompt_path,
@@ -841,7 +851,9 @@ class VideoLLAMA(Blip2Base):
             num_audio_query_token = num_audio_query_token,
             imagebind_ckpt_path = imagebind_ckpt_path,
             equip_audio_branch = equip_audio_branch,
-            llama_proj_model = llama_proj_model
+            llama_proj_model = llama_proj_model,
+            use_lora_in_Qformer = True,
+            use_lora_in_video_Qformer=True,
         )
 
         ckpt_path = cfg.get("ckpt", "")  # load weights of MiniGPT-4
