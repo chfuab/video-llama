@@ -48,4 +48,6 @@ if __name__ == '__main__':
         generate_ids = model.generate(encoding.input_ids, max_length=300, temperature=0.5)
         result = tokenizer.decode(generate_ids[0], skip_special_tokens=True)
 
-    print(result)
+    tokens = tokenizer("<s></s>[INST][/INST]\n")
+    print(tokens)
+    # print(result)

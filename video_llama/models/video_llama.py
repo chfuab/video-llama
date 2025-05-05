@@ -603,6 +603,58 @@ class VideoLLAMA(Blip2Base):
                 )
             loss = outputs.loss
             return {"loss": loss}
+        
+        elif "text_sys" in samples.keys():
+            image = samples["image"]
+            text_sys = samples["text_sys"]
+            text_a = samples["text_a"]
+            text_b = samples["text_b"]
+            correct_ans = samples["correct_ans"]
+
+            if len(image.size()) != 5:
+                time = 1
+                image = einops.repeat(image, 'b c h w -> b c t h w',t = time)
+            
+            if self.train_flag == 1:
+                image = einops.rearrange(image, 'b c t h w -> b t c h w')
+                img_embeds, atts_img = self.encode_audioQformer(image, modality_type=ModalityType.VISION)
+                
+            elif self.train_flag == 0:
+                img_embeds, atts_img = self.encode_videoQformer_visual(image)
+
+            self.llama_tokenizer.padding_side = "right"
+
+            text_sys_tokens = self.tokenization(text_sys, image)
+            text_a_tokens = self.tokenization(text_a, image)
+            text_b_tokens = self.tokenization(text_b, image)
+
+            text_sys_ids = text_sys_tokens.input_ids
+            text_a_ids = text_a_tokens.input_ids
+            text_b_ids = text_b_tokens.input_ids
+
+            text_sys_mask = text_sys_tokens.attention_mask
+            text_a_mask = text_a_tokens.attention_mask
+            text_b_mask = text_b_tokens.attention_mask
+
+            sys_embeds = self.llama_model.model.embed_tokens(text_sys_ids)
+            a_embeds = self.llama_model.model.embed_tokens(text_a_ids)
+            b_embeds = self.llama_model.model.embed_tokens(text_b_ids)
+
+            full_embeds = torch.cat([sys_embeds, a_embeds, img_embeds, b_embeds], dim=1)
+            full_att_mask = torch.cat([text_sys_mask, text_a_mask, atts_img, text_b_mask], dim=1)
+
+            targets = self.tokenization(correct_ans, image).input_ids
+
+            with self.maybe_autocast():
+                outputs = self.llama_model(
+                    inputs_embeds=full_embeds,
+                    attention_mask=full_att_mask,
+                    return_dict=True,
+                    labels=targets,
+                )
+            loss = outputs.loss
+            logits = outputs.logits       
+
         else:
             image = samples["image"]
 
@@ -782,6 +834,15 @@ class VideoLLAMA(Blip2Base):
 
         return {"loss": loss} 
     """
+    def tokenization(self, text, image):
+        return self.llama_tokenizer(
+                text,
+                return_tensors="pt",
+                padding="longest",
+                truncation=True,
+                max_length=self.max_txt_len,
+                add_special_tokens=False
+                ).to(image.device)
     
     @classmethod
     def from_config(cls, cfg):

@@ -16,7 +16,7 @@ from video_llama.common.logger import MetricLogger, SmoothedValue
 from video_llama.common.registry import registry
 from video_llama.datasets.data_utils import prepare_sample
 from video_llama.common.eval_metrics import metrics_mapping
-
+from torch.nn import Softmax
 
 class BaseTask:
     """ def __init__(self, **kwargs):
@@ -89,42 +89,41 @@ class BaseTask:
         raise NotImplementedError """
     def valid_step(self, model, samples, metrics_name, model_name, verify_q_former_aligned):
         if model_name == 'video_llama':
-            pred = self.predict(model, samples, metrics_name)
-            gt = self.get_ground_truth(samples, metrics_name)
-            result_scores = metrics_mapping[metrics_name].compute_score(pred, gt)
-            return {
-                metrics_name : result_scores[0]
-            }
-        elif model_name == 'q_former_aligned':
-            ###
-            if verify_q_former_aligned:
-                return {
-                    'loss_general': model(samples, verify_q_former_aligned)['loss_general'],
-                    'loss_verify_q_former': model(samples, verify_q_former_aligned)['loss_verify_q_former']
-                }
-            ###
-            else:
-                loss = model(samples, verify_q_former_aligned)["loss"]
-                return {
-                    'loss': loss
-                }
+            if metrics_name == "accuracy":
+                logits = model(samples)["logits"]
+                # assume the logits is of shape (batch_size, seq_length, vocab_size)
+                output_softmax = Softmax(dim=2)(logits)
+                output_ids = torch.argmax(output_softmax, dim=2)
+                output_ids_shape = tuple(output_ids.size())
+                
+                output_token_flatten = [model.llama_tokenizer._convert_id_to_token(id) for id in torch.flatten(output_ids).tolist()]
+                
+                batch_of_tokens = []
+                tokens = []
+                idx = 0
+                for token in output_token_flatten:
+                    tokens.append(token)
+                    idx += 1
+                    if idx % output_ids_shape[1] == 0 :
+                        batch_of_tokens.append(tokens)
+                        tokens = []
+                all_string = []
+                for token_batch in batch_of_tokens:
+                    output_string = model.llama_tokenizer._convert_tokens_to_string(token_batch)
+                    all_string.append(output_string)
 
-    def predict(self, model, samples, metrics_name):
-        logits = model(samples)["logits"]
-        if metrics_name == "VQA_acc":
-            prediction = model.decode_llama_choice(logits)
-        else:
-            prediction = model.decode_llama_text(logits)
-        return prediction
-
-
-    def get_ground_truth(self, samples, metrics_name):
-
-        if metrics_name == "VQA_acc":
-            pass
-        else:
-            gt = {i: [text] for i, text in enumerate(samples["text_input"])}    # i stands for index within a batch
-        return gt
+                assert len(samples["correct_ans_id"]) == len(all_string), "number of label answers must equal to number of predicted answers"
+                
+                max_score = len(samples["correct_ans_id"])
+                score = 0
+                for i, correct_ans in enumerate(samples["correct_ans_id"]):
+                    if correct_ans == all_string[i]:
+                        score += 1
+                accuracy = score / max_score
+                return {"accuracy": accuracy}
+            
+            elif metrics_name == "loss":
+                return {"loss": model(samples)["loss"]}
 
 
     def before_evaluation(self, model, dataset, **kwargs):
@@ -215,38 +214,30 @@ class BaseTask:
             }
 
         elif model_name == 'video_llama':
-            m = ['CIDEr', 'ROUGE_L']
-            for item in m:
-                metric_logger.add_meter(item, SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                metric_logger_display.add_meter(item, SmoothedValue(window_size=1, fmt="{value:.4f}"))
-            for i in range(4):
-                metric_logger.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
-                metric_logger_display.add_meter("Bleu_{}".format(i), SmoothedValue(window_size=1, fmt="{value:.4f}"))
 
-            curr_iter_eval = 0
-            tot_iter_eval = len(data_loader)
+            if not hasattr(data_loader, "__next__"):
+                # convert to iterator if not already
+                data_loader = iter(data_loader)
 
-            for samples in metric_logger.log_every(data_loader, print_freq, header):
-                if curr_iter_eval >= tot_iter_eval:
+            metric_logger = MetricLogger(delimiter="  ")
+            metric_logger.add_meter('accuracy', SmoothedValue(window_size=1, fmt="{value:.4f}"))
+            metric_logger.add_meter('loss', SmoothedValue(window_size=1, fmt="{value:.4f}"))
+
+            for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
+                if i >= iters_per_epoch:
                     break
 
+                samples = next(data_loader)
                 samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
+
                 eval_output = {}
+                # metrics are loss and accuracy
                 for name in metrics:
                     eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
                     eval_output.update(eval_output_temp)
-                # update evaluation metrics
-                meter_values = []
-                for v in eval_output.values():
-                    if type(v) == list:
-                        meter_values.extend(v)
-                    else:
-                        meter_values.append(v)
+                metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
 
-                metric_logger_display.update(CIDEr=meter_values[0], ROUGE_L=meter_values[1], Bleu_0=meter_values[2], Bleu_1=meter_values[3], Bleu_2=meter_values[4], Bleu_3=meter_values[5])
-
-                curr_iter_eval += 1
-            logging_str = "Averaged stats: \n" + str(metric_logger_display.global_avg())    # getting avg over all batch size of samples in one epoch
+            logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
             logging.info(logging_str)
 
             if is_dist_avail_and_initialized():
@@ -254,10 +245,10 @@ class BaseTask:
 
             return {
                 k: "{:.3f}".format(meter.global_avg())
-                for k, meter in metric_logger_display.meters.items()
+                for k, meter in metric_logger.meters.items()
             }, {
                 k: meter.value_record
-                for k, meter in metric_logger_display.meters.items()
+                for k, meter in metric_logger.meters.items()
             }
 
 

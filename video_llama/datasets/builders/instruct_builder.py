@@ -7,6 +7,41 @@ from video_llama.datasets.builders.base_dataset_builder import BaseDatasetBuilde
 from video_llama.datasets.datasets.laion_dataset import LaionDataset
 from video_llama.datasets.datasets.llava_instruct_dataset import Instruct_Dataset
 from video_llama.datasets.datasets.video_instruct_dataset import Video_Instruct_Dataset
+from video_llama.datasets.datasets.nextQA_dataset import NextQATrainDataset, NextQAEvalDataset
+
+@registry.register_builder("nextQA")
+class NextQABuilder(BaseDatasetBuilder):
+    train_dataset_cls = NextQATrainDataset
+    eval_dataset_cls = NextQAEvalDataset
+    DATASET_CONFIG_DICT = {"default": "configs/datasets/nextQA/defaults.yaml"}
+    
+    def _download_ann(self):
+        pass
+
+    def _download_vis(self):
+        pass
+
+    def build(self):
+        self.build_processors()
+        datasets = dict()
+
+        build_info = self.config.build_info
+        dataset_cls = [self.train_dataset_cls, self.eval_dataset_cls]
+
+        splits = ["train", "eval"]
+        data_root_all = [[build_info.videos_dir, build_info.anno_dir], 
+                         [build_info.videos_dir_val, build_info.anno_dir_val]]
+
+        for i, split in enumerate(splits):
+            datasets[split] = dataset_cls[i](
+                vis_processor=self.vis_processors[split],
+                text_processor=self.text_processors[split],
+                vis_root=data_root_all[i][0],
+                ann_root=data_root_all[i][1]
+            )
+
+        return datasets
+
 
 @registry.register_builder("instruct")
 class Instruct_Builder(BaseDatasetBuilder):
