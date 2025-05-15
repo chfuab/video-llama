@@ -109,7 +109,7 @@ class BaseTask:
                         tokens = []
                 all_string = []
                 for token_batch in batch_of_tokens:
-                    output_string = model.llama_tokenizer._convert_tokens_to_string(token_batch)
+                    output_string = model.llama_tokenizer.convert_tokens_to_string(token_batch)
                     all_string.append(output_string)
 
                 assert len(samples["correct_ans_id"]) == len(all_string), "number of label answers must equal to number of predicted answers"
@@ -157,12 +157,11 @@ class BaseTask:
     
     def evaluation(self, model, data_loader, iters_per_epoch, metrics, model_name, verify_q_former_aligned, cuda_enabled=True):
         metric_logger = MetricLogger(delimiter="  ")
-        metric_logger_display = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable
         print_freq = 50
 
-        if model_name == 'q_former_aligned':
+        """ if model_name == 'q_former_aligned':
             if not hasattr(data_loader, "__next__"):
                 # convert to iterator if not already
                 data_loader = iter(data_loader)
@@ -211,45 +210,45 @@ class BaseTask:
             }, {
                 k: meter.value_record
                 for k, meter in metric_logger.meters.items()
-            }
+            } """
 
-        elif model_name == 'video_llama':
 
-            if not hasattr(data_loader, "__next__"):
-                # convert to iterator if not already
-                data_loader = iter(data_loader)
+        if not hasattr(data_loader, "__next__"):
+            # convert to iterator if not already
+            data_loader = iter(data_loader)
 
-            metric_logger = MetricLogger(delimiter="  ")
-            metric_logger.add_meter('accuracy', SmoothedValue(window_size=1, fmt="{value:.4f}"))
-            metric_logger.add_meter('loss', SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        metric_logger = MetricLogger(delimiter="  ")
+        metric_logger.add_meter('accuracy', SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        metric_logger.add_meter('loss', SmoothedValue(window_size=1, fmt="{value:.4f}"))
 
-            for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
-                if i >= iters_per_epoch:
-                    break
+        for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
+            if i >= iters_per_epoch:
+                break
 
-                samples = next(data_loader)
-                samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
+            samples = next(data_loader)
+            samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
+            
+            eval_output = {}
+            # metrics are loss and accuracy
+            for name in metrics:
+                eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
+                eval_output.update(eval_output_temp)
 
-                eval_output = {}
-                # metrics are loss and accuracy
-                for name in metrics:
-                    eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
-                    eval_output.update(eval_output_temp)
-                metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
+            metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
 
-            logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
-            logging.info(logging_str)
+        logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
+        logging.info(logging_str)
 
-            if is_dist_avail_and_initialized():
-                dist.barrier()
+        if is_dist_avail_and_initialized():
+            dist.barrier()
 
-            return {
-                k: "{:.3f}".format(meter.global_avg())
-                for k, meter in metric_logger.meters.items()
-            }, {
-                k: meter.value_record
-                for k, meter in metric_logger.meters.items()
-            }
+        return {
+            k: "{:.3f}".format(meter.global_avg())
+            for k, meter in metric_logger.meters.items()
+        }, {
+            k: meter.value_record
+            for k, meter in metric_logger.meters.items()
+        }
 
 
     def train_epoch(

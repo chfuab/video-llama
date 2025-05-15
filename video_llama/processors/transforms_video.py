@@ -9,6 +9,7 @@
 
 import numbers
 import random
+import torch
 
 from torchvision.transforms import (
     RandomCrop,
@@ -48,6 +49,45 @@ class RandomCropVideo(RandomCrop):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(size={self.size})"
+
+
+class ResizePadVideo:
+    def __init__(self, size, interpolation_mode, mode="constant", value=0):
+        # Assume clip size is (C, T, H, W)
+        self.size = size
+        self.interpolation_mode = interpolation_mode
+        self.mode = mode
+        self.value = value
+        
+
+    def __call__(self, clip, mode, value, size, interpolation_mode):
+        # calculate the padding from clip size (C, T, H, W)
+        padding = self.calculate_pad(clip)
+        result_clip = F.resize_pad(clip, 
+                              padding, 
+                              self.mode, 
+                              self.value, 
+                              self.size, 
+                              self.interpolation_mode)
+        return result_clip
+
+    def __repr__(self):
+        pass
+
+    def calculate_pad(self, clip):
+        clip_height = clip.size()[2]
+        clip_width = clip.size()[3]
+        clip_size = torch.tensor([clip_height, clip_width])
+
+        dim_pad = torch.argmin(clip_size).item()
+        pad_amount = torch.abs(torch.tensor(clip_height - clip_width)).item()
+        pad_split = torch.randint(0, pad_amount-1, (1,)).item()
+
+        if dim_pad == 0:
+            padding = (0, 0, pad_split, pad_amount - pad_split)
+        else:
+            padding = (pad_split, pad_amount - pad_split, 0, 0)
+        return padding
 
 
 class RandomResizedCropVideo(RandomResizedCrop):

@@ -22,7 +22,7 @@ import random as rnd
 MAX_INT = registry.get("MAX_INT")
 decord.bridge.set_bridge("torch")
 
-def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
+""" def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
     vlen = len(vr)
@@ -72,9 +72,9 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     # " " should be added in the start and end
     # msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
     
-    return frms, image_idx_time_pair, all_idx_time_pair
+    return frms, image_idx_time_pair, all_idx_time_pair """
 
-""" def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
+def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
 
@@ -105,7 +105,7 @@ def load_video(video_path, all_clips_timepoints_all, n_frms=MAX_INT, height=-1, 
     sec = ", ".join([str(round(f / fps, 1)) for f in indices])
     # " " should be added in the start and end
     msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
-    return frms, msg """
+    return frms, msg
 
 
 class AlproVideoBaseProcessor(BaseProcessor):
@@ -304,3 +304,92 @@ class AlproVideoEvalProcessor(AlproVideoBaseProcessor):
         n_frms = cfg.get("n_frms", MAX_INT)
 
         return cls(image_size=image_size, mean=mean, std=std, n_frms=n_frms)
+
+
+
+@registry.register_processor("nextQA_video_train")
+class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
+    def __init__(
+        self,
+        image_size=384,
+        mean=None,
+        std=None,
+        n_frms=MAX_INT,
+    ):
+        super().__init__(mean=mean, std=std, n_frms=n_frms)
+
+        self.image_size = image_size
+
+        self.transform = transforms.Compose(
+            [
+                # Video size is (C, T, H, W)
+                transforms_video.ResizePadVideo(
+                    size=image_size,
+                    value=0,
+                    mode="constant",
+                    interpolation_mode="bicubic",
+                ),
+                ToTHWC(),  # C, T, H, W -> T, H, W, C
+                ToUint8(),
+                transforms_video.ToTensorVideo(),  # T, H, W, C -> C, T, H, W
+                self.normalize,
+            ]
+        )
+
+    """ def __call__(self, vpath):
+        
+        # Args:
+        #     clip (torch.tensor): Video clip to be cropped. Size is (C, T, H, W)
+        # Returns:
+        #     torch.tensor: video clip after transforms. Size is (C, T, size, size).
+        
+        clip = load_video(
+            video_path=vpath,
+            n_frms=self.n_frms,
+            height=self.image_size,
+            width=self.image_size,
+            sampling="headtail",
+        )
+
+        return self.transform(clip) """
+
+    def __call__(self, vpath, all_clips_timepoints_all):
+        """
+        Args:
+            clip (torch.tensor): Video clip to be cropped. Size is (C, T, H, W)
+        Returns:
+            torch.tensor: video clip after transforms. Size is (C, T, size, size).
+        """
+
+        clip = load_video(
+            video_path=vpath,
+            n_frms=self.n_frms,
+            height=self.image_size,
+            width=self.image_size,
+            sampling="uniform",
+        )
+        return self.transform(clip)
+
+    @classmethod
+    def from_config(cls, cfg=None):
+        if cfg is None:
+            cfg = OmegaConf.create()
+
+        image_size = cfg.get("image_size", 256)
+
+        mean = cfg.get("mean", None)
+        std = cfg.get("std", None)
+
+        min_scale = cfg.get("min_scale", 0.5)
+        max_scale = cfg.get("max_scale", 1.0)
+
+        n_frms = cfg.get("n_frms", MAX_INT)
+
+        return cls(
+            image_size=image_size,
+            mean=mean,
+            std=std,
+            min_scale=min_scale,
+            max_scale=max_scale,
+            n_frms=n_frms,
+        )
