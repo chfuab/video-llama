@@ -2,7 +2,7 @@ datasets:
   nextQA:
     data_type: video
     build_info:
-      anno_dir: path/nextQA/nextQA_train_data/annotations/
+      anno_dir: path/nextQA/nextQA_train_data/filter_annotations/
       videos_dir: path/nextQA/nextQA_train_data/videos/
+      anno_dir_val: path/nextQA/nextQA_eval_data/filter_annotations/
       videos_dir_val: path/nextQA/nextQA_eval_data/videos/
-      anno_dir_val: path/nextQA/nextQA_eval_data/annotations/

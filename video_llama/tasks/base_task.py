@@ -155,7 +155,7 @@ class BaseTask:
         return results """
 
     
-    def evaluation(self, model, data_loader, iters_per_epoch, metrics, model_name, verify_q_former_aligned, cuda_enabled=True):
+    def evaluation(self, model, data_loader, iters_per_epoch, metrics, model_name, cuda_enabled=True):
         metric_logger = MetricLogger(delimiter="  ")
         header = "Evaluation"
         # TODO make it configurable

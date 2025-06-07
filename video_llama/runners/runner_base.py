@@ -437,7 +437,6 @@ class RunnerBase:
         logging.info("Training time {}".format(total_time_str)) """
     
     def train(self):
-        start_time = time.time()
         best_agg_metric = 0
         best_epoch = 0
 
@@ -480,7 +479,7 @@ class RunnerBase:
                         if len(window) < window_size:
                             continue
                         cnt = 0
-                        if agg_mode == max:
+                        if agg_mode == "max":
                             for i in range(0, len(window)-1):
                                 if (window[i+1] - window[i] > allowed_metrics_delta) or \
                                 (window[i+1] - window[0] > allowed_metrics_delta):
@@ -489,7 +488,7 @@ class RunnerBase:
                                 if (window[i+1] - window[i] < -1 * allowed_metrics_delta) or \
                                     (window[i+1] - window[0] < -1 * allowed_metrics_delta):
                                     cnt -= 1
-                        elif agg_mode == min:
+                        elif agg_mode == "min":
                             for i in range(0, len(window)-1):
                                 if (window[i+1] - window[i] < allowed_metrics_delta * -1) or \
                                 (window[i+1] - window[0] < allowed_metrics_delta * -1):
@@ -644,9 +643,8 @@ class RunnerBase:
         # if self.config.model_cfg.arch == "q_former_aligned":
         model_name = self.config.model_cfg.arch
         iters_per_epoch = self.config.run_cfg.get("iters_per_epoch_eval", None)
-        verify_q_former_aligned = self.config.run_cfg.get("verify_q_former_aligned", False)
         
-        results, records = self.task.evaluation(model, data_loader, iters_per_epoch, metrics, model_name, verify_q_former_aligned)
+        results, records = self.task.evaluation(model, data_loader, iters_per_epoch, metrics, model_name)
         ###
 
         return results, records
