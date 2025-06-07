@@ -467,6 +467,8 @@ class RunnerBase:
                 val_log , record_log = self.eval_epoch(
                     split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch
                 )
+                if cur_epoch % 5 == 0:
+                    self._save_checkpoint(cur_epoch, is_best=False)
                 if val_log is not None:
                     self.log_stats(stats=val_log, split_name='eval')
                     if is_main_process():
