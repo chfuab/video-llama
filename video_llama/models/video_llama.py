@@ -79,10 +79,9 @@ class VideoLLAMA(Blip2Base):
         num_video_query_token = 32,
         num_audio_query_token = 8,
         imagebind_ckpt_path = '/mnt/workspace/ckpt',
-        equip_audio_branch = True,
+        equip_audio_branch = False,
         equip_QFormerAligned = False,
         # to-do: define qa_ckpt_path
-        qa_ckpt_path = "/home/chfuab/LLM/video-llama/Video-LLaMA/ckpt",
         llama_type = "causalLM",
         use_lora_in_Qformer = True,
         use_lora_in_video_Qformer=True,
@@ -117,6 +116,9 @@ class VideoLLAMA(Blip2Base):
         for layer in self.Qformer.bert.encoder.layer:
             layer.output = None
             layer.intermediate = None
+            layer.output_query = None
+            layer.intermediate_query = None
+
         self.load_from_pretrained(url_or_filename=q_former_model)
 
         # concat data of self.query_tokens together and form a new nn.Parameter object so their data can be updated together after communicating with each other.
@@ -134,7 +136,6 @@ class VideoLLAMA(Blip2Base):
             self.all_query_tokens.requires_grad = False
             logging.info("freeze Qformer")
         if use_lora_in_Qformer:
-            self.all_query_tokens.requires_grad = True
             for layer in self.Qformer.bert.encoder.layer:
                 for name, param in layer.intermediate_query.lora.named_parameters():
                     param.requires_grad = True
@@ -196,6 +197,7 @@ class VideoLLAMA(Blip2Base):
         self.AUDIO_PATCH_TOKEN_ID = self.llama_tokenizer.get_vocab()[DEFAULT_AUDIO_PATCH_TOKEN]
 
         self.llama_type = llama_type
+
         logging.info('Loading LLAMA Model')
         if self.low_resource:
             print('low_resource')
@@ -263,6 +265,8 @@ class VideoLLAMA(Blip2Base):
         for layer in self.video_Qformer.bert.encoder.layer:
             layer.output = None
             layer.intermediate = None
+            layer.output_query = None
+            layer.intermediate_query = None
 
 
         if frozen_video_Qformer:
@@ -277,9 +281,9 @@ class VideoLLAMA(Blip2Base):
         if use_lora_in_video_Qformer:
             self.video_query_tokens.requires_grad = True
             for layer in self.video_Qformer.bert.encoder.layer:
-                for name, param in layer.intermediate_query.lora.named_parameters():
+                for name, param in layer.intermediate.lora.named_parameters():
                     param.requires_grad = True
-                for name, param in layer.output_query.lora.named_parameters():
+                for name, param in layer.output.lora.named_parameters():
                     param.requires_grad = True
 
         if frozen_video_Qformer and (not frozen_audio_Qformer):
@@ -877,12 +881,12 @@ class VideoLLAMA(Blip2Base):
         fusion_head_layers = cfg.get("fusion_head_layers", 2)
         num_video_query_token =  cfg.get("num_video_query_token", 32)
 
-        equip_audio_branch= cfg.get("equip_audio_branch", True)
+        equip_audio_branch= cfg.get("equip_audio_branch", False)
         num_audio_query_token =  cfg.get("num_audio_query_token", 8)
         imagebind_ckpt_path = cfg.get("imagebind_ckpt_path", '/mnt/workspace/ckpt')
 
-        use_lora_in_Qformer = cfg.get("use_lora_in_Qformer", True)
-        use_lora_in_video_Qformer = cfg.get("use_lora_in_video_Qformer", True)
+        use_lora_in_Qformer = cfg.get("use_lora_in_Qformer", True)                                      
+        use_lora_in_video_Qformer = cfg.get("use_lora_in_video_Qformer", True)                          
 
         model = cls(
             vit_model=vit_model,
@@ -913,8 +917,8 @@ class VideoLLAMA(Blip2Base):
             imagebind_ckpt_path = imagebind_ckpt_path,
             equip_audio_branch = equip_audio_branch,
             llama_proj_model = llama_proj_model,
-            use_lora_in_Qformer = True,
-            use_lora_in_video_Qformer=True,
+            use_lora_in_Qformer = use_lora_in_Qformer,
+            use_lora_in_video_Qformer=use_lora_in_video_Qformer,
         )
 
         ckpt_path = cfg.get("ckpt", "")  # load weights of MiniGPT-4
