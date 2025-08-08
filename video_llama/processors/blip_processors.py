@@ -42,7 +42,7 @@ class BlipCaptionProcessor(BaseProcessor):
             cfg = OmegaConf.create()
 
         prompt = cfg.get("prompt", "")
-        max_words = cfg.get("max_words", 50)
+        max_words = cfg.get("max_words", 500)
 
         return cls(prompt=prompt, max_words=max_words)
 

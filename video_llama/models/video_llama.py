@@ -292,6 +292,8 @@ class VideoLLAMA(Blip2Base):
             self.train_flag = 0 # 训练video_Qformer
         elif not(frozen_video_Qformer) and not(frozen_audio_Qformer):
             self.train_flag = 2 # video_Qformer and AL trained
+        elif frozen_video_Qformer and frozen_audio_Qformer and use_lora_in_Qformer and use_lora_in_video_Qformer:
+            self.train_flag = 4 # finetune LoRA adaptor in Qformer and video-Qformer
         else:
             self.train_flag = 3
         
@@ -613,6 +615,12 @@ class VideoLLAMA(Blip2Base):
             text_sys = samples["text_sys"]
             text_a = samples["text_a"]
             text_b = samples["text_b"]
+            text_e1 = samples["text_e1"]
+            text_e2 = samples["text_e2"]
+            text_e3 = samples["text_e3"]
+            video_e1 = samples["video_e1"]
+            video_e2 = samples["video_e2"]
+            video_e3 = samples["video_e3"]
             correct_ans = samples["correct_ans"]
 
             if len(image.size()) != 5:
@@ -623,29 +631,61 @@ class VideoLLAMA(Blip2Base):
                 image = einops.rearrange(image, 'b c t h w -> b t c h w')
                 img_embeds, atts_img = self.encode_audioQformer(image, modality_type=ModalityType.VISION)
                 
-            elif self.train_flag == 0:
+            elif self.train_flag == 4:
                 img_embeds, atts_img = self.encode_videoQformer_visual(image)
+                vid_embeds_e1, att_vid_e1 = self.encode_videoQformer_visual(video_e1)
+                vid_embeds_e2, att_vid_e2 = self.encode_videoQformer_visual(video_e2)
+                vid_embeds_e3, att_vid_e3 = self.encode_videoQformer_visual(video_e3)
 
             self.llama_tokenizer.padding_side = "right"
+
+            all_text = [text_sys, text_a, text_b, text_e1, text_e2, text_e3]
+            for text in all_text:
+                text = [t + self.end_sym for t in text]
 
             text_sys_tokens = self.tokenization(text_sys, image)
             text_a_tokens = self.tokenization(text_a, image)
             text_b_tokens = self.tokenization(text_b, image)
+            text_e1_tokens = self.tokenization(text_e1, image)
+            text_e2_tokens = self.tokenization(text_e2, image)
+            text_e3_tokens = self.tokenization(text_e3, image)
 
             text_sys_ids = text_sys_tokens.input_ids
             text_a_ids = text_a_tokens.input_ids
             text_b_ids = text_b_tokens.input_ids
+            text_e1_ids = text_e1_tokens.input_ids
+            text_e2_ids = text_e2_tokens.input_ids
+            text_e3_ids = text_e3_tokens.input_ids
 
             text_sys_mask = text_sys_tokens.attention_mask
             text_a_mask = text_a_tokens.attention_mask
             text_b_mask = text_b_tokens.attention_mask
+            text_e1_mask = text_e1_tokens.attention_mask
+            text_e2_mask = text_e2_tokens.attention_mask
+            text_e3_mask = text_e3_tokens.attention_mask
 
             sys_embeds = self.llama_model.model.embed_tokens(text_sys_ids)
             a_embeds = self.llama_model.model.embed_tokens(text_a_ids)
             b_embeds = self.llama_model.model.embed_tokens(text_b_ids)
+            text_e1_embeds = self.llama_model.model.embed_tokens(text_e1_ids)
+            text_e2_embeds = self.llama_model.model.embed_tokens(text_e2_ids)
+            text_e3_embeds = self.llama_model.model.embed_tokens(text_e3_ids)
 
-            full_embeds = torch.cat([sys_embeds, a_embeds, img_embeds, b_embeds], dim=1)
-            full_att_mask = torch.cat([text_sys_mask, text_a_mask, atts_img, text_b_mask], dim=1)
+            batch_size = img_embeds.shape[0]
+            bos = torch.ones([batch_size, 1]) * self.llama_tokenizer.bos_token_id
+            bos_embeds = self.llama_model.model.embed_tokens(bos)
+            atts_bos = atts_img[:, :1]
+
+            full_embeds = torch.cat([bos_embeds, sys_embeds, 
+                                     a_embeds, vid_embeds_e1, text_e1_embeds, 
+                                     a_embeds, vid_embeds_e2, text_e2_embeds, 
+                                     a_embeds, vid_embeds_e3, text_e3_embeds, 
+                                     a_embeds, img_embeds, b_embeds], dim=1)
+            full_att_mask = torch.cat([atts_bos, text_sys_mask, 
+                                       text_a_mask, att_vid_e1, text_e1_mask, 
+                                       text_a_mask, att_vid_e2, text_e2_mask, 
+                                       text_a_mask, att_vid_e3, text_e3_mask, 
+                                       text_a_mask, atts_img, text_b_mask], dim=1)
 
             targets = self.tokenization(correct_ans, image).input_ids
 

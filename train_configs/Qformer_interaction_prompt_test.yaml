@@ -19,7 +19,7 @@ model:
   # only train vision branch
   equip_audio_branch: False  # whether equips the audio branch
   frozen_llama_proj: False
-  frozen_video_Qformer: True
+  frozen_video_Qformer: False
   frozen_audio_Qformer: True
   use_lora_in_Qformer: True
   use_lora_in_video_Qformer: True
@@ -33,10 +33,10 @@ datasets:
   nextQA:
     data_type: video
     build_info:
-      anno_dir: /mnt/disks/chfuab/nextqa/anno_dir_train/
-      videos_dir: /mnt/disks/chfuab/nextqa/videos_dir_train/
-      anno_dir_val: /mnt/disks/chfuab/nextqa/anno_dir_val/
-      videos_dir_val: /mnt/disks/chfuab/nextqa/videos_dir_val/
+      anno_dir: path/nextQA/nextQA_train_data/filter_annotations/
+      videos_dir: path/nextQA/nextQA_train_data/videos/
+      anno_dir_val: path/nextQA/nextQA_eval_data/filter_annotations/
+      videos_dir_val: path/nextQA/nextQA_eval_data/videos/
 
     vis_processor:
       train:
@@ -44,13 +44,11 @@ datasets:
         n_frms: 8
         image_size: 224
       eval:
-        name: "nextQA_video_train"
+        name: "nextQA_video_eval"
         n_frms: 8
         image_size: 224      
     text_processor:
       train:
-        name: "blip_caption"
-      eval:
         name: "blip_caption"
     sample_ratio: 100
 
@@ -64,11 +62,11 @@ run:
 
   weight_decay: 0.05
   max_epoch: 5
-  batch_size_train: 2 #32
-  batch_size_eval: 2 #32
-  num_workers: 1 #8
+  batch_size_train: 32
+  batch_size_eval: 32
+  num_workers: 8
   warmup_steps: 2500
-  iters_per_epoch: 2 #2500
+  iters_per_epoch: 2500
 
   seed: 42
   output_dir: "output/videollama_stage1_pretrain"
@@ -85,10 +83,7 @@ run:
   distributed: True
 
   # newly added items:
-  allowed_metrics_delta: 0.1
-  agg_metrics: "loss"
-  agg_mode: "min"
   valid_splits: ["eval"]
   test_splits: ["eval"]
   evaluate_metrics: ["loss", "accuracy"]
-  iters_per_epoch_eval: 2
+  iters_per_epoch_eval: 100
