@@ -12,7 +12,7 @@ from video_llama.datasets.datasets.nextQA_dataset import NextQATrainDataset, Nex
 @registry.register_builder("nextQA")
 class NextQABuilder(BaseDatasetBuilder):
     train_dataset_cls = NextQATrainDataset
-    eval_dataset_cls = NextQAEvalDataset
+    eval_dataset_cls = NextQATrainDataset       # eval dataset is the same as train dataset
     DATASET_CONFIG_DICT = {"default": "configs/datasets/nextQA/defaults.yaml"}
     
     def _download_ann(self):

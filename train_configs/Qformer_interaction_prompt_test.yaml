@@ -19,7 +19,7 @@ model:
   # only train vision branch
   equip_audio_branch: False  # whether equips the audio branch
   frozen_llama_proj: False
-  frozen_video_Qformer: True
+  frozen_video_Qformer: False
   frozen_audio_Qformer: True
   use_lora_in_Qformer: True
   use_lora_in_video_Qformer: True
@@ -44,13 +44,11 @@ datasets:
         n_frms: 8
         image_size: 224
       eval:
-        name: "nextQA_video_train"
+        name: "nextQA_video_eval"
         n_frms: 8
         image_size: 224      
     text_processor:
       train:
-        name: "blip_caption"
-      eval:
         name: "blip_caption"
     sample_ratio: 100
 
@@ -85,9 +83,6 @@ run:
   distributed: True
 
   # newly added items:
-  allowed_metrics_delta: 0.1
-  agg_metrics: "loss"
-  agg_mode: "min"
   valid_splits: ["eval"]
   test_splits: ["eval"]
   evaluate_metrics: ["loss", "accuracy"]
