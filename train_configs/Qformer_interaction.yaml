@@ -33,10 +33,10 @@ datasets:
   nextQA:
     data_type: video
     build_info:
-      anno_dir: path/nextQA/nextQA_train_data/filter_annotations/
-      videos_dir: path/nextQA/nextQA_train_data/videos/
-      anno_dir_val: path/nextQA/nextQA_eval_data/filter_annotations/
-      videos_dir_val: path/nextQA/nextQA_eval_data/videos/
+      anno_dir: /mnt/disks/chfuab/nextqa/anno_dir_train/
+      videos_dir: /mnt/disks/chfuab/nextqa/videos_dir_train/
+      anno_dir_val: /mnt/disks/chfuab/nextqa/anno_dir_val/
+      videos_dir_val: /mnt/disks/chfuab/nextqa/videos_dir_val/
 
     vis_processor:
       train:
@@ -64,11 +64,11 @@ run:
 
   weight_decay: 0.05
   max_epoch: 5
-  batch_size_train: 32
-  batch_size_eval: 32
-  num_workers: 8
+  batch_size_train: 2 #32
+  batch_size_eval: 2 #32
+  num_workers: 1 #8
   warmup_steps: 2500
-  iters_per_epoch: 2500
+  iters_per_epoch: 2 #2500
 
   seed: 42
   output_dir: "output/videollama_stage1_pretrain"
@@ -91,4 +91,4 @@ run:
   valid_splits: ["eval"]
   test_splits: ["eval"]
   evaluate_metrics: ["loss", "accuracy"]
-  iters_per_epoch_eval: 100
+  iters_per_epoch_eval: 2

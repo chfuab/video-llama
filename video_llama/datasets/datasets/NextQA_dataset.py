@@ -51,7 +51,8 @@ class NextQATrainDataset(BaseDataset):
 
         # 读取一个路径下所有的
 
-        df = pd.read_csv(os.path.join(ann_root, "train.csv"))
+        df = pd.read_csv(os.path.join(ann_root, "text_data.csv"))
+        df_example = pd.read_csv(os.path.join(ann_root, "text_data_examples.csv"))
         video_src_folder = os.path.join(vis_root, "nextqa-video")
         video_des_folder = os.path.join(vis_root, "nextqa-video-extracted")
 
@@ -68,11 +69,12 @@ class NextQATrainDataset(BaseDataset):
                 shutil.move(file_path, des_file_path)
 
         self.annotation = df
+        self.annotation_examples = df_example
         self.vis_root = vis_root
         self.num_frm = 8
-        self.example_1_idx = 1
-        self.example_2_idx = 3
-        self.example_3_idx = 5
+        self.example_1_idx = 0
+        self.example_2_idx = 1
+        self.example_3_idx = 2
 
         self.example_question_prompt_1 = f'''{self._vqa_question(self.example_1_idx, is_example=True)}'''
         self.example_question_prompt_2 = f'''{self._vqa_question(self.example_2_idx, is_example=True)}'''
@@ -82,8 +84,11 @@ class NextQATrainDataset(BaseDataset):
         self.video_example_3 = self._get_video_examples(self.example_3_idx)
 
 
-    def _get_video_path(self, idx):
-        sample = self.annotation.iloc[idx]
+    def _get_video_path(self, idx, is_example):
+        if is_example:
+            sample = self.annotation_examples.iloc[idx]
+        else:    
+            sample = self.annotation.iloc[idx]
         sample_dict = sample.to_dict()        
         rel_video_fp = str(sample_dict['video']) + '.mp4'
         full_video_fp = os.path.join(self.video_des_folder,  rel_video_fp)
@@ -103,7 +108,7 @@ class NextQATrainDataset(BaseDataset):
             question_prompt_b = f'''{question_prompt}[/INST]'''
 
             # fetch video
-            video_path = self._get_video_path(index) 
+            video_path = self._get_video_path(index, is_example=False) 
             # if os.path.exists(video_path):
             try:
                 video = self.vis_processor(video_path)
@@ -148,7 +153,11 @@ class NextQATrainDataset(BaseDataset):
 
 
     def _vqa_question(self, idx, is_example=False):
-        sample = self.annotation.iloc[idx]
+        if is_example:
+            sample = self.annotation_examples.iloc[idx]
+        else:
+            sample = self.annotation.iloc[idx]
+        
         sample_dict = sample.to_dict()
         question = sample_dict['question']
         answer_choices = []
@@ -169,7 +178,7 @@ class NextQATrainDataset(BaseDataset):
             return question_prompt, correct_answer
         
     def _get_video_examples(self, idx):
-        video_path = self._get_video_path(idx) 
+        video_path = self._get_video_path(idx, is_example=True) 
         # if os.path.exists(video_path):
         try:
             video = self.vis_processor(video_path)
