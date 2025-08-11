@@ -40,13 +40,13 @@ class NextQATrainDataset(BaseDataset):
         self.num_frm = 8
         self.frm_sampling_strategy = 'headtail' """
 
-    def __init__(self, vis_processor, text_processor, audio_processor, vis_root, ann_root):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_root):
         
         # vis_root (string): Root directory of video (e.g. webvid_eval/video/)
         # ann_root (string): Root directory of video (e.g. webvid_eval/annotations/)
         # split (string): val or test
         
-        super().__init__(vis_processor=vis_processor, audio_processor=audio_processor, text_processor=text_processor)
+        super().__init__(vis_processor=vis_processor, text_processor=text_processor)
 
 
         # 读取一个路径下所有的
