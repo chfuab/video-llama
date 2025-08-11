@@ -36,6 +36,7 @@ class NextQABuilder(BaseDatasetBuilder):
             datasets[split] = dataset_cls[i](
                 vis_processor=self.vis_processors[split],
                 text_processor=self.text_processors[split],
+                audio_processor = None,
                 vis_root=data_root_all[i][0],
                 ann_root=data_root_all[i][1]
             )
