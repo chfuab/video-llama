@@ -389,8 +389,8 @@ class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
             image_size=image_size,
             mean=mean,
             std=std,
-            min_scale=min_scale,
-            max_scale=max_scale,
+            # min_scale=min_scale,
+            # max_scale=max_scale,
             n_frms=n_frms,
         )
     
