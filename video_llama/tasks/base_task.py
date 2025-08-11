@@ -112,15 +112,17 @@ class BaseTask:
                     output_string = model.llama_tokenizer.convert_tokens_to_string(token_batch)
                     all_string.append(output_string)
 
-                assert len(samples["correct_ans_id"]) == len(all_string), "number of label answers must equal to number of predicted answers"
+                assert len(samples["correct_ans"]) == len(all_string), "number of label answers must equal to number of predicted answers"
                 
-                max_score = len(samples["correct_ans_id"])
+                """ max_score = len(samples["correct_ans"])
                 score = 0
-                for i, correct_ans in enumerate(samples["correct_ans_id"]):
+                for i, correct_ans in enumerate(samples["correct_ans"]):
                     if correct_ans == all_string[i]:
                         score += 1
-                accuracy = score / max_score
-                return {"accuracy": accuracy}
+                accuracy = score / max_score """
+
+
+                return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
                 return {"loss": model(samples)["loss"]}
