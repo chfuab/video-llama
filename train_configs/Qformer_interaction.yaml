@@ -71,7 +71,7 @@ run:
   iters_per_epoch: 2 #2500
 
   seed: 42
-  output_dir: "output/videollama_stage1_pretrain"
+  output_dir: "output/videollama_interaction"
 
   amp: True
   resume_ckpt_path: "/mnt/disks/chfuab/"
