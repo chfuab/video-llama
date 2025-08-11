@@ -7,7 +7,7 @@ from video_llama.datasets.builders.base_dataset_builder import BaseDatasetBuilde
 from video_llama.datasets.datasets.laion_dataset import LaionDataset
 from video_llama.datasets.datasets.llava_instruct_dataset import Instruct_Dataset
 from video_llama.datasets.datasets.video_instruct_dataset import Video_Instruct_Dataset
-from video_llama.datasets.datasets.nextQA_dataset import NextQATrainDataset, NextQAEvalDataset
+from video_llama.datasets.datasets.nextQA_dataset import NextQATrainDataset
 
 @registry.register_builder("nextQA")
 class NextQABuilder(BaseDatasetBuilder):
