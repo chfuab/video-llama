@@ -99,7 +99,6 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
 
     if not return_msg:
-        print(f"\n\n\n {frms.size()} \n\n\n")
         return frms
 
     fps = float(vr.get_avg_fps())
@@ -369,6 +368,7 @@ class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
             width=self.image_size,
             sampling="uniform",
         )
+        print(f"\n\n\n clip size is {clip.size()} \n\n\n")
         return self.transform(clip)
 
     @classmethod
