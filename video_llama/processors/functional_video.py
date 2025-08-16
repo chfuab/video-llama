@@ -28,19 +28,19 @@ def crop(clip, i, j, h, w):
         raise ValueError("clip should be a 4D tensor")
     return clip[..., i : i + h, j : j + w]
 
-def pad(clip, pad, mode, value=0):
-    if len(clip.size()) != 4:
-        raise ValueError("clip should be a 4D tensor")
-    assert type(pad) == "tuple", "pad must be a tuple"
-    assert (len(pad) % 2 == 0) and (len(pad) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
-    
-    return torch.nn.functional.pad(clip, pad, mode, value)
+def pad(clip, padding, mode, value=0):
+    #if len(clip.size()) != 4:
+    #    raise ValueError("clip should be a 4D tensor")
+    #assert type(padding) == "tuple", "pad must be a tuple"
+    #assert (len(padding) % 2 == 0) and (len(padding) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
+
+    return torch.nn.functional.pad(clip, padding, mode, value)
 
 def resize(clip, target_size, interpolation_mode):
-    if len(target_size) != 2:
-        raise ValueError(
-            f"target size should be tuple (height, width), instead got {target_size}"
-        )
+    #if len(target_size) != 2:
+    #    raise ValueError(
+    #        f"target size should be tuple (height, width), instead got {target_size}"
+    #    )
     return torch.nn.functional.interpolate(
         clip, size=target_size, mode=interpolation_mode, align_corners=False
     )
@@ -69,8 +69,9 @@ def resized_crop(clip, i, j, h, w, size, interpolation_mode="bilinear"):
 def resize_pad(clip, padding, mode, value, size, interpolation_mode="bilinear"):
     if not _is_tensor_video_clip(clip):
         raise ValueError("clip should be a 4D torch.tensor")
-    clip = pad(clip, pad=padding, mode=mode, value=value)
+    clip = pad(clip, padding=padding, mode=mode, value=value)
     clip = resize(clip, size, interpolation_mode)
+    print(f"after resize, clip size: {clip.size()}, target_size: {size}")
     return clip
 #
 

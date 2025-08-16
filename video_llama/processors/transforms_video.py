@@ -60,7 +60,7 @@ class ResizePadVideo:
         self.value = value
         
 
-    def __call__(self, clip, mode, value, size, interpolation_mode):
+    def __call__(self, clip):
         # calculate the padding from clip size (C, T, H, W)
         padding = self.calculate_pad(clip)
         result_clip = F.resize_pad(clip, 
@@ -80,8 +80,11 @@ class ResizePadVideo:
         clip_size = torch.tensor([clip_height, clip_width])
 
         dim_pad = torch.argmin(clip_size).item()
-        pad_amount = torch.abs(torch.tensor(clip_height - clip_width)).item()
-        pad_split = torch.randint(0, pad_amount-1, (1,)).item()
+        pad_amount = torch.abs(torch.tensor(clip_height - clip_width)).item()    
+        if pad_amount > 0:
+            pad_split = torch.randint(0, pad_amount, (1,)).item()
+        else:
+            pad_split = 0
 
         if dim_pad == 0:
             padding = (0, 0, pad_split, pad_amount - pad_split)
