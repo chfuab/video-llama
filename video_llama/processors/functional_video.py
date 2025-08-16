@@ -70,7 +70,9 @@ def resize_pad(clip, padding, mode, value, size, interpolation_mode="bilinear"):
     if not _is_tensor_video_clip(clip):
         raise ValueError("clip should be a 4D torch.tensor")
     clip = pad(clip, pad=padding, mode=mode, value=value)
+    print(f"after pad: {clip}")
     clip = resize(clip, size, interpolation_mode)
+    print(f"after resize: {clip}")
     return clip
 #
 
