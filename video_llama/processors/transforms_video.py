@@ -75,10 +75,10 @@ class ResizePadVideo:
         pass
 
     def calculate_pad(self, clip):
-        print(f"fuck you")
         clip_height = clip.size()[2]
         clip_width = clip.size()[3]
         clip_size = torch.tensor([clip_height, clip_width])
+        print(f"\n\n {clip_size}")
 
         dim_pad = torch.argmin(clip_size).item()
         pad_amount = torch.abs(torch.tensor(clip_height - clip_width)).item()
