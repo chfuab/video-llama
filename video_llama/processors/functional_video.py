@@ -28,14 +28,14 @@ def crop(clip, i, j, h, w):
         raise ValueError("clip should be a 4D tensor")
     return clip[..., i : i + h, j : j + w]
 
-def pad(clip, pad, mode, value=0):
+def pad(clip, padding, mode, value=0):
     if len(clip.size()) != 4:
         raise ValueError("clip should be a 4D tensor")
-    assert type(pad) == "tuple", "pad must be a tuple"
-    assert (len(pad) % 2 == 0) and (len(pad) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
+    assert type(padding) == "tuple", "pad must be a tuple"
+    assert (len(padding) % 2 == 0) and (len(padding) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
     
-    pad = (1,1,1,1)
-    return torch.nn.functional.pad(clip, pad, mode, value)
+    padding = (1,1,1,1)
+    return torch.nn.functional.pad(clip, padding, mode, value)
 
 def resize(clip, target_size, interpolation_mode):
     if len(target_size) != 2:
