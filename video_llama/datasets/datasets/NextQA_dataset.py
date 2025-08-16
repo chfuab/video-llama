@@ -51,7 +51,7 @@ class NextQATrainDataset(BaseDataset):
 
         # 读取一个路径下所有的
 
-        df = pd.read_csv(os.path.join(ann_root, "text_data.csvv"))
+        df = pd.read_csv(os.path.join(ann_root, "text_data.csv"))
         df_example = pd.read_csv(os.path.join(ann_root, "text_data_examples.csv"))
         video_src_folder = os.path.join(vis_root, "nextqa-video")
         video_des_folder = os.path.join(vis_root, "nextqa-video-extracted")
