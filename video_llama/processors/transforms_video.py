@@ -75,6 +75,7 @@ class ResizePadVideo:
         pass
 
     def calculate_pad(self, clip):
+        print(f"fuck you")
         clip_height = clip.size()[2]
         clip_width = clip.size()[3]
         clip_size = torch.tensor([clip_height, clip_width])
@@ -82,8 +83,6 @@ class ResizePadVideo:
         dim_pad = torch.argmin(clip_size).item()
         pad_amount = torch.abs(torch.tensor(clip_height - clip_width)).item()
         pad_split = torch.randint(0, pad_amount-1, (1,)).item()
-
-        print(f"\n\n\n cal pad: {dim_pad}, {pad_amount}, {pad_split} \n\n\n")
 
         if dim_pad == 0:
             padding = (0, 0, pad_split, pad_amount - pad_split)
