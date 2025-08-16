@@ -29,7 +29,6 @@ def crop(clip, i, j, h, w):
     return clip[..., i : i + h, j : j + w]
 
 def pad(clip, padding, mode, value=0):
-    print("\n\n fuck your mother")
     #if len(clip.size()) != 4:
     #    raise ValueError("clip should be a 4D tensor")
     #assert type(padding) == "tuple", "pad must be a tuple"
@@ -38,10 +37,11 @@ def pad(clip, padding, mode, value=0):
     return torch.nn.functional.pad(clip, padding, mode, value)
 
 def resize(clip, target_size, interpolation_mode):
-    if len(target_size) != 2:
-        raise ValueError(
-            f"target size should be tuple (height, width), instead got {target_size}"
-        )
+    #if len(target_size) != 2:
+    #    raise ValueError(
+    #        f"target size should be tuple (height, width), instead got {target_size}"
+    #    )
+    print("\n\nresize activated")
     return torch.nn.functional.interpolate(
         clip, size=target_size, mode=interpolation_mode, align_corners=False
     )
