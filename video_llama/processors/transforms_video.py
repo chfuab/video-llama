@@ -80,8 +80,8 @@ class ResizePadVideo:
         clip_size = torch.tensor([clip_height, clip_width])
 
         dim_pad = torch.argmin(clip_size).item()
-        print(f"\n\n {dim_pad}")
         pad_amount = torch.abs(torch.tensor(clip_height - clip_width)).item()
+        print(f"\n\n {pad_amount}")        
         pad_split = torch.randint(0, pad_amount-1, (1,)).item()
 
 
