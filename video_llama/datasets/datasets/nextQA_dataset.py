@@ -179,6 +179,7 @@ class NextQATrainDataset(BaseDataset):
         
     def _get_video_examples(self, idx):
         video_path = self._get_video_path(idx, is_example=True) 
+        print(f"/n/n/n {video_path}\n\n\n")
         # if os.path.exists(video_path):
         try:
             video = self.vis_processor(video_path)
