@@ -113,11 +113,11 @@ class VideoLLAMA(Blip2Base):
         self.Qformer.cls = None
         self.Qformer.bert.embeddings.word_embeddings = None
         self.Qformer.bert.embeddings.position_embeddings = None
-        for layer in self.Qformer.bert.encoder.layer:
-            layer.output = None
-            layer.intermediate = None
-            layer.output_query = None
-            layer.intermediate_query = None
+        # for layer in self.Qformer.bert.encoder.layer:
+        #     layer.output = None
+        #     layer.intermediate = None
+        #     layer.output_query = None
+        #     layer.intermediate_query = None
 
         self.load_from_pretrained(url_or_filename=q_former_model)
 
@@ -262,11 +262,11 @@ class VideoLLAMA(Blip2Base):
         self.video_Qformer.cls = None
         self.video_Qformer.bert.embeddings.word_embeddings = None
         self.video_Qformer.bert.embeddings.position_embeddings = None
-        for layer in self.video_Qformer.bert.encoder.layer:
-            layer.output = None
-            layer.intermediate = None
-            layer.output_query = None
-            layer.intermediate_query = None
+        # for layer in self.video_Qformer.bert.encoder.layer:
+        #     layer.output = None
+        #     layer.intermediate = None
+        #     layer.output_query = None
+        #     layer.intermediate_query = None
 
 
         if frozen_video_Qformer:
