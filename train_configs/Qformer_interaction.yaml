@@ -82,7 +82,7 @@ run:
   device: "cuda"
   world_size: 1
   dist_url: "env://"
-  distributed: True
+  distributed: False # True
 
   # newly added items:
   allowed_metrics_delta: 0.1
