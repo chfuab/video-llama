@@ -30,10 +30,10 @@ def crop(clip, i, j, h, w):
 
 def pad(clip, padding, mode, value=0):
     print("\n\n fuck your mother")
-    if len(clip.size()) != 4:
-        raise ValueError("clip should be a 4D tensor")
-    assert type(padding) == "tuple", "pad must be a tuple"
-    assert (len(padding) % 2 == 0) and (len(padding) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
+    #if len(clip.size()) != 4:
+    #    raise ValueError("clip should be a 4D tensor")
+    #assert type(padding) == "tuple", "pad must be a tuple"
+    #assert (len(padding) % 2 == 0) and (len(padding) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
 
     return torch.nn.functional.pad(clip, padding, mode, value)
 
