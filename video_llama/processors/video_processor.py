@@ -324,12 +324,12 @@ class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
         self.transform = transforms.Compose(
             [
                 # Video size is (C, T, H, W)
-                transforms_video.ResizePadVideo(
-                    size=image_size,
-                    value=0,
-                    mode="constant",
-                    interpolation_mode="bicubic",
-                ),
+                #transforms_video.ResizePadVideo(
+                #    size=image_size,
+                #    value=0,
+                #    mode="constant",
+                #    interpolation_mode="bicubic",
+                #),
                 ToTHWC(),  # C, T, H, W -> T, H, W, C
                 ToUint8(),
                 transforms_video.ToTensorVideo(),  # T, H, W, C -> C, T, H, W
