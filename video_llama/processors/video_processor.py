@@ -353,14 +353,14 @@ class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
 
         return self.transform(clip) """
 
-    def __call__(self, vpath, all_clips_timepoints_all):
+    def __call__(self, vpath):
         """
         Args:
             clip (torch.tensor): Video clip to be cropped. Size is (C, T, H, W)
         Returns:
             torch.tensor: video clip after transforms. Size is (C, T, size, size).
         """
-
+        print(f"\n\n\n ready to load\n\n\n")
         clip = load_video(
             video_path=vpath,
             n_frms=self.n_frms,
