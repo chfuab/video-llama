@@ -41,7 +41,6 @@ def resize(clip, target_size, interpolation_mode):
     #    raise ValueError(
     #        f"target size should be tuple (height, width), instead got {target_size}"
     #    )
-    print("\n\nresize activated")
     return torch.nn.functional.interpolate(
         clip, size=target_size, mode=interpolation_mode, align_corners=False
     )
@@ -71,9 +70,8 @@ def resize_pad(clip, padding, mode, value, size, interpolation_mode="bilinear"):
     if not _is_tensor_video_clip(clip):
         raise ValueError("clip should be a 4D torch.tensor")
     clip = pad(clip, padding=padding, mode=mode, value=value)
-    print(f"after pad: {clip}")
     clip = resize(clip, size, interpolation_mode)
-    print(f"after resize: {clip}")
+    print(f"after resize, clip size: {clip.size()}, target_size: {size}")
     return clip
 #
 
