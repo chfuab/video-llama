@@ -105,6 +105,7 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     sec = ", ".join([str(round(f / fps, 1)) for f in indices])
     # " " should be added in the start and end
     msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
+    print(f"\n\n\n {frms.size()} \n\n\n")
     return frms, msg
 
 
@@ -360,7 +361,6 @@ class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
         Returns:
             torch.tensor: video clip after transforms. Size is (C, T, size, size).
         """
-        print(f"\n\n\n ready to load\n\n\n")
         clip = load_video(
             video_path=vpath,
             n_frms=self.n_frms,
