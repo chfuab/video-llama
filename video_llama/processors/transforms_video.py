@@ -63,6 +63,7 @@ class ResizePadVideo:
     def __call__(self, clip, mode, value, size, interpolation_mode):
         # calculate the padding from clip size (C, T, H, W)
         padding = self.calculate_pad(clip)
+        print(f"\n\n\npadding is: {padding}\n\n\n")
         result_clip = F.resize_pad(clip, 
                               padding, 
                               self.mode, 
