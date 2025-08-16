@@ -182,6 +182,7 @@ class NextQATrainDataset(BaseDataset):
         # if os.path.exists(video_path):
         try:
             video = self.vis_processor(video_path)
+            print("\n\n\n fuck your mothers \n\n\n")
         except:
             print(f"Failed to load examples with video: {video_path}.")
         return video
