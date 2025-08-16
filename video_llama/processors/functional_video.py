@@ -34,7 +34,7 @@ def pad(clip, padding, mode, value=0):
     assert type(padding) == "tuple", "pad must be a tuple"
     assert (len(padding) % 2 == 0) and (len(padding) <= 2 * len(clip.size())), "length of pad tuple should be even and less than 2 times the length of clip.size()"
     
-    padding = (1,1,1,1)
+    print("\n\n fuck your mother")
     return torch.nn.functional.pad(clip, padding, mode, value)
 
 def resize(clip, target_size, interpolation_mode):
