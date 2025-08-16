@@ -74,7 +74,7 @@ run:
   output_dir: "output/videollama_interaction"
 
   amp: True
-  resume_ckpt_path: "/mnt/disks/chfuab/"
+  # resume_ckpt_path: "/mnt/disks/chfuab/"
 
   evaluate: False 
   train_splits: ["train"]
