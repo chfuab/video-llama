@@ -368,7 +368,7 @@ class NextQAVideoTrainProcessor(AlproVideoBaseProcessor):
             width=self.image_size,
             sampling="uniform",
         )
-        print(f"\n\n\n clip size is {clip.size()} \n\n\n")
+        print(f"\n\n\n{self.transform(clip).size()}\n\n\n")
         return self.transform(clip)
 
     @classmethod
