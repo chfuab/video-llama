@@ -99,13 +99,14 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
 
     if not return_msg:
+        print(f"\n\n\n {frms.size()} \n\n\n")
         return frms
 
     fps = float(vr.get_avg_fps())
     sec = ", ".join([str(round(f / fps, 1)) for f in indices])
     # " " should be added in the start and end
     msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
-    print(f"\n\n\n {frms.size()} \n\n\n")
+
     return frms, msg
 
 
