@@ -369,7 +369,7 @@ class VideoLLAMA(Blip2Base):
             image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
             # image_embeds.size() is torch.Size([16, 257, 1408])
             # change image_embeds shape into b (t q) h:
-            image_embeds = einops.rearrange(image_embeds, 'B q h -> b t q h', b=2, t=8)
+            image_embeds = einops.rearrange(image_embeds, 'B q h -> b t q h', B=16, b=2, t=8)
             image_embeds = einops.rearrange(image_embeds, 'b t q h -> b (t q) h')
             
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
