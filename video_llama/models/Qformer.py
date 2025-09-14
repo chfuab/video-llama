@@ -550,7 +550,8 @@ class BertLayer(nn.Module):
             attention_mask,
             head_mask,
             output_attentions=output_attentions,
-            past_key_value=self_attn_past_key_value,
+            # past_key_value=self_attn_past_key_value,
+            past_key_value=None,
         )
         attention_output = self_attention_outputs[0]
         outputs = self_attention_outputs[1:-1]
