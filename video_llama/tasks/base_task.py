@@ -87,7 +87,7 @@ class BaseTask:
     """
     """ def valid_step(self, model, samples):
         raise NotImplementedError """
-    def valid_step(self, model, samples, metrics_name, model_name, verify_q_former_aligned):
+    def valid_step(self, model, samples, metrics_name, model_name):
         if model_name == 'video_llama':
             if metrics_name == "accuracy":
                 logits = model(samples)["logits"]
