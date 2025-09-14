@@ -171,13 +171,13 @@ class BertSelfAttention(nn.Module):
     def get_att_mask(self, attn_scores):
         query_length = 32
 
-        mask = torch.ones(attn_scores.size()) * -10000
+        mask = torch.ones(attn_scores.size(), device=attn_scores.device) * -10000
         for i in range(attn_scores.size()[2]):
             block_num = i // query_length
             mask[:, :, i, :((block_num + 1) * query_length)] = 1
 
-            mask_diag = torch.ones(attn_scores.size()[2]) * -10000
-            mask_diag = torch.diag(mask_diag)
+            mask_diag = torch.ones(attn_scores.size()[2], device=attn_scores.device) * -10000
+            mask_diag = torch.diag(mask_diag, device=attn_scores.device)
 
             mask = mask + mask_diag
 
