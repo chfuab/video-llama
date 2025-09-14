@@ -542,16 +542,16 @@ class BertLayer(nn.Module):
         is_video_Q_former=False,
     ):
         # decoder uni-directional self-attention cached key/values tuple is at positions 1,2
-        self_attn_past_key_value = (
+        """ self_attn_past_key_value = (
             past_key_value[:2] if past_key_value is not None else None
-        )
+        ) """
+        self_attn_past_key_value = None
         self_attention_outputs = self.attention(
             hidden_states,
             attention_mask,
             head_mask,
             output_attentions=output_attentions,
-            # past_key_value=self_attn_past_key_value,
-            past_key_value=None,
+            past_key_value=self_attn_past_key_value,
         )
         attention_output = self_attention_outputs[0]
         outputs = self_attention_outputs[1:-1]
