@@ -177,7 +177,7 @@ class BertSelfAttention(nn.Module):
             mask[:, :, i, :((block_num + 1) * query_length)] = 1
 
             mask_diag = torch.ones(attn_scores.size()[2], device=attn_scores.device) * -10000
-            mask_diag = torch.diag(mask_diag, device=attn_scores.device)
+            mask_diag = torch.diag(mask_diag)
 
             mask = mask + mask_diag
 
