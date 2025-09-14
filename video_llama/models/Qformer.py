@@ -283,6 +283,7 @@ class BertSelfAttention(nn.Module):
 
         # Mask heads if we want to
         if head_mask is not None:
+            print(f"\n\n\nattention_probs_dropped: {attention_probs_dropped.size()}, head_mask: {head_mask.size()}\n\n\n")
             attention_probs_dropped = attention_probs_dropped * head_mask
         context_layer = torch.matmul(attention_probs_dropped, value_layer)
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
