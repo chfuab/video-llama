@@ -368,6 +368,7 @@ class VideoLLAMA(Blip2Base):
             # embed image features with blip2, out: (b t) q h
             image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
 
+            print(f"\n\n\nimage_embeds.size is: {image_embeds.size()}\n\n\n")
             # change image_embeds shape into b (t q) h:
             image_embeds = einops.rearrange(image_embeds, '(b t) q h -> b (t q) h')
             
