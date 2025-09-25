@@ -282,6 +282,7 @@ class BertSelfAttention(nn.Module):
         attention_probs_dropped = self.dropout(attention_probs)
 
         # Mask heads if we want to
+        head_mask = None
         if head_mask is not None:
             # attention_probs_dropped: torch.Size([2, 12, 256, 256]), head_mask: torch.Size([2, 2056, 1408])
             attention_probs_dropped = attention_probs_dropped * head_mask
