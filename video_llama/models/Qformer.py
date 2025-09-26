@@ -128,7 +128,7 @@ class BertSelfAttention(nn.Module):
 
         self.query = nn.Linear(config.hidden_size, self.all_head_size)
         if is_cross_attention:
-            print(f"\n\n\nencoder_width: {config.encoder_width}, all_head_size{self.all_head_size}\n\n\n")
+            # encoder_width: 768, all_head_size768
             self.key = nn.Linear(config.encoder_width, self.all_head_size)
             self.value = nn.Linear(config.encoder_width, self.all_head_size)
         else:
@@ -201,7 +201,7 @@ class BertSelfAttention(nn.Module):
         is_cross_attention = encoder_hidden_states is not None
 
         if is_cross_attention:
-            print(f"\n\n\nencoder_hidden_states{encoder_hidden_states.size()}\n\n\n")
+            # encoder_hidden_states: torch.Size([2, 1, 1, 256]) 
             key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))
             value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))
             attention_mask = encoder_attention_mask
@@ -355,6 +355,7 @@ class BertAttention(nn.Module):
         past_key_value=None,
         output_attentions=False,
     ):
+        print(f"\n\n\nBertAttention: {encoder_hidden_states.size()}\n\n\n")
         self_outputs = self.self(
             hidden_states,
             attention_mask,
@@ -574,7 +575,9 @@ class BertLayer(nn.Module):
                     assert(
                         query_length % num_query_part == 0
                         ), "query_length % num_query_part must be == 0"
+                    print(f"\n\n\n BertLayer encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
                     query_attention_output_tuple = query_attention_output.chunk(num_query_part, dim=1)
+                    print(f"\n\n\n BertLayer encoder_hidden_states_tuple: {encoder_hidden_states_tuple.size()}\n\n\n")
                     encoder_hidden_states_tuple = encoder_hidden_states.chunk(num_query_part, dim=1)
                     output_lst = []
                     query_attn_output_pt_lst = []
@@ -731,6 +734,7 @@ class BertEncoder(nn.Module):
                     encoder_attention_mask,
                 )
             else:
+                print(f"\n\n\n BertEncoder encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
                 layer_outputs = layer_module(
                     hidden_states,
                     attention_mask,
@@ -1123,6 +1127,7 @@ class BertModel(BertPreTrainedModel):
         # and head_mask is converted to shape [num_hidden_layers x batch x num_heads x seq_length x seq_length]
         head_mask = self.get_head_mask(head_mask, self.config.num_hidden_layers)
 
+        print(f"\n\n\n BertModel encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
         encoder_outputs = self.encoder(
             embedding_output,
             num_query_part,
@@ -1236,6 +1241,7 @@ class BertLMHeadModel(BertPreTrainedModel):
         if past_key_values is not None:
             query_embeds = None
 
+        print(f"\n\n\n BertLMHeadModel encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
         outputs = self.bert(
             input_ids,
             num_query_part,
