@@ -349,7 +349,8 @@ class VideoLLAMA(Blip2Base):
                 for name, param in self.audio_position_embedding.named_parameters():
                     param.requires_grad = True
                 logging.info('audio_Qformer is not frozen')
-            
+        ###
+        self.num_frames = num_frames    
 
         #  self.audio_hidden_size
     def vit_to_cpu(self):
@@ -383,6 +384,7 @@ class VideoLLAMA(Blip2Base):
                 encoder_attention_mask=image_atts,
                 return_dict=True,
                 is_video_Q_former=False,
+                num_query_part=1,
             )
 
             # add frame_pos embedding
@@ -407,6 +409,7 @@ class VideoLLAMA(Blip2Base):
                 encoder_attention_mask=frame_atts,
                 return_dict=True,
                 is_video_Q_former=True,
+                num_query_part=self.num_frames,
                 )
             video_hidden = video_query_output.last_hidden_state
 

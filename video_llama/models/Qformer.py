@@ -128,6 +128,7 @@ class BertSelfAttention(nn.Module):
 
         self.query = nn.Linear(config.hidden_size, self.all_head_size)
         if is_cross_attention:
+            print(f"\n\n\nencoder_width: {config.encoder_width}, all_head_size{self.all_head_size}\n\n\n")
             self.key = nn.Linear(config.encoder_width, self.all_head_size)
             self.value = nn.Linear(config.encoder_width, self.all_head_size)
         else:
@@ -200,6 +201,7 @@ class BertSelfAttention(nn.Module):
         is_cross_attention = encoder_hidden_states is not None
 
         if is_cross_attention:
+            print(f"\n\n\nencoder_hidden_states{encoder_hidden_states}\n\n\n")
             key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))
             value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))
             attention_mask = encoder_attention_mask
@@ -675,6 +677,7 @@ class BertEncoder(nn.Module):
     def forward(
         self,
         hidden_states,
+        num_query_part,
         attention_mask=None,
         head_mask=None,
         encoder_hidden_states=None,
@@ -738,6 +741,7 @@ class BertEncoder(nn.Module):
                     output_attentions,
                     query_length,
                     is_video_Q_former,
+                    num_query_part,
                 )
 
             hidden_states = layer_outputs[0]
@@ -985,6 +989,7 @@ class BertModel(BertPreTrainedModel):
 
     def forward(
         self,
+        num_query_part,
         input_ids=None,
         attention_mask=None,
         position_ids=None,
@@ -1120,6 +1125,7 @@ class BertModel(BertPreTrainedModel):
 
         encoder_outputs = self.encoder(
             embedding_output,
+            num_query_part,
             attention_mask=extended_attention_mask,
             head_mask=head_mask,
             encoder_hidden_states=encoder_hidden_states,
@@ -1171,6 +1177,7 @@ class BertLMHeadModel(BertPreTrainedModel):
 
     def forward(
         self,
+        num_query_part,
         input_ids=None,
         attention_mask=None,
         position_ids=None,
@@ -1231,6 +1238,7 @@ class BertLMHeadModel(BertPreTrainedModel):
 
         outputs = self.bert(
             input_ids,
+            num_query_part,
             attention_mask=attention_mask,
             position_ids=position_ids,
             head_mask=head_mask,
