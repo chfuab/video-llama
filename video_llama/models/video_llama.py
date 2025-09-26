@@ -384,6 +384,7 @@ class VideoLLAMA(Blip2Base):
                 encoder_attention_mask=image_atts,
                 return_dict=True,
                 is_video_Q_former=False,
+                num_query_part=1,
             )
 
             # add frame_pos embedding
