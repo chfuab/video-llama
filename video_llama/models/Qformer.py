@@ -675,6 +675,7 @@ class BertEncoder(nn.Module):
     def forward(
         self,
         hidden_states,
+        num_query_part,
         attention_mask=None,
         head_mask=None,
         encoder_hidden_states=None,
@@ -738,6 +739,7 @@ class BertEncoder(nn.Module):
                     output_attentions,
                     query_length,
                     is_video_Q_former,
+                    num_query_part,
                 )
 
             hidden_states = layer_outputs[0]
@@ -985,6 +987,7 @@ class BertModel(BertPreTrainedModel):
 
     def forward(
         self,
+        num_query_part,
         input_ids=None,
         attention_mask=None,
         position_ids=None,
@@ -1120,6 +1123,7 @@ class BertModel(BertPreTrainedModel):
 
         encoder_outputs = self.encoder(
             embedding_output,
+            num_query_part,
             attention_mask=extended_attention_mask,
             head_mask=head_mask,
             encoder_hidden_states=encoder_hidden_states,
@@ -1171,6 +1175,7 @@ class BertLMHeadModel(BertPreTrainedModel):
 
     def forward(
         self,
+        num_query_part,
         input_ids=None,
         attention_mask=None,
         position_ids=None,
@@ -1231,6 +1236,7 @@ class BertLMHeadModel(BertPreTrainedModel):
 
         outputs = self.bert(
             input_ids,
+            num_query_part,
             attention_mask=attention_mask,
             position_ids=position_ids,
             head_mask=head_mask,
