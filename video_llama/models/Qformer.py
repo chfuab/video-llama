@@ -740,6 +740,7 @@ class BertEncoder(nn.Module):
                 print(f"\nBertEncoder layer_module forward: {encoder_hidden_states.size()}\n")
                 layer_outputs = layer_module(
                     hidden_states,
+                    num_query_part,
                     attention_mask,
                     layer_head_mask,
                     encoder_hidden_states,
@@ -748,7 +749,6 @@ class BertEncoder(nn.Module):
                     output_attentions,
                     query_length,
                     is_video_Q_former,
-                    num_query_part,
                 )
 
             hidden_states = layer_outputs[0]
