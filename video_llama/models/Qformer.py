@@ -174,6 +174,7 @@ class BertSelfAttention(nn.Module):
 
         mask = torch.ones(attn_scores.size(), device=attn_scores.device) * -10000
         print(f"\nattn_scores size: {attn_scores.size()}\n")
+        # attn_scores size: torch.Size([2, 12, 256, 2056]) 
         for i in range(attn_scores.size()[2]):
             block_num = i // query_length
             mask[:, :, i, :((block_num + 1) * query_length)] = 1
@@ -202,7 +203,6 @@ class BertSelfAttention(nn.Module):
         is_cross_attention = encoder_hidden_states is not None
 
         if is_cross_attention:
-            # encoder_hidden_states: torch.Size([2, 1, 1, 256]) 
             print(f"\n\n\nself.keys: {self.config.encoder_width}x{self.all_head_size}, encoder_hidden_states: {encoder_hidden_states.size()}")
             key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))
             value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))
@@ -223,7 +223,7 @@ class BertSelfAttention(nn.Module):
         past_key_value = (key_layer, value_layer)
 
         # Take the dot product between "query" and "key" to get the raw attention scores.
-
+        print(f"\nquery_layer: {query_layer.size()}, key_layer.transpose: {key_layer.transpose(-1, -2).size()}\n")
         attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
 
         if (
