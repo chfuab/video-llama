@@ -552,6 +552,7 @@ class BertLayer(nn.Module):
         """ self_attn_past_key_value = (
             past_key_value[:2] if past_key_value is not None else None
         ) """
+        print(f"\nencoder_hidden_states at beginning: {encoder_hidden_states.size()}\n")
         self_attn_past_key_value = None
         self_attention_outputs = self.attention(
             hidden_states,
@@ -577,9 +578,7 @@ class BertLayer(nn.Module):
                     assert(
                         query_length % num_query_part == 0
                         ), "query_length % num_query_part must be == 0"
-                    print(f"\n\n\n BertLayer encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
                     query_attention_output_tuple = query_attention_output.chunk(num_query_part, dim=1)
-                    print(f"\n\n\n BertLayer encoder_hidden_states_tuple: {encoder_hidden_states_tuple.size()}\n\n\n")
                     encoder_hidden_states_tuple = encoder_hidden_states.chunk(num_query_part, dim=1)
                     output_lst = []
                     query_attn_output_pt_lst = []
