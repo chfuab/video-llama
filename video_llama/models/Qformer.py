@@ -202,6 +202,7 @@ class BertSelfAttention(nn.Module):
 
         if is_cross_attention:
             # encoder_hidden_states: torch.Size([2, 1, 1, 256]) 
+            print(f"\n\n\nself.keys: {self.key.size()}, encoder_hidden_states: {encoder_hidden_states.size()}")
             key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))
             value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))
             attention_mask = encoder_attention_mask
