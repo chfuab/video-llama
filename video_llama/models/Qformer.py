@@ -355,7 +355,6 @@ class BertAttention(nn.Module):
         past_key_value=None,
         output_attentions=False,
     ):
-        print(f"\n\n\nBertAttention: {encoder_hidden_states.size()}\n\n\n")
         self_outputs = self.self(
             hidden_states,
             attention_mask,
