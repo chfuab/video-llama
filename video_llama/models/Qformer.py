@@ -356,7 +356,8 @@ class BertAttention(nn.Module):
         past_key_value=None,
         output_attentions=False,
     ):
-        print(f"\nBertAttention self.self forward: {encoder_hidden_states.size()}\n")
+        if encoder_hidden_states is not None:
+            print(f"\nBertAttention self.self forward: {encoder_hidden_states.size()}\n")
         self_outputs = self.self(
             hidden_states,
             attention_mask,
