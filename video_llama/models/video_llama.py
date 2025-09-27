@@ -378,7 +378,7 @@ class VideoLLAMA(Blip2Base):
             query_tokens = self.all_query_tokens.expand(image_embeds.shape[0], -1, -1)
             # the num_of_frame of query tokens can communicate with each other in Q-former self-attention layer
 
-            print(f"\n\n\nencode_videoQformer_visual encoder_hidden_states: {image_embeds.size()}\n\n\n")
+            # encode_videoQformer_visual encoder_hidden_states: torch.Size([2, 2056, 1408])
             query_output = self.Qformer.bert(
                 query_embeds=query_tokens,
                 encoder_hidden_states=image_embeds,

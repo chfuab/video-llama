@@ -733,7 +733,8 @@ class BertEncoder(nn.Module):
                     encoder_attention_mask,
                 )
             else:
-                print(f"\n\n\n BertEncoder encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
+                # BertEncoder encoder_hidden_states: torch.Size([2, 2056, 1408])
+                 # BertEncoder encoder_hidden_states: torch.Size([2, 256, 768])
                 layer_outputs = layer_module(
                     hidden_states,
                     attention_mask,
@@ -1126,7 +1127,8 @@ class BertModel(BertPreTrainedModel):
         # and head_mask is converted to shape [num_hidden_layers x batch x num_heads x seq_length x seq_length]
         head_mask = self.get_head_mask(head_mask, self.config.num_hidden_layers)
 
-        print(f"\n\n\n BertModel encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
+        # BertModel encoder_hidden_states: torch.Size([2, 2056, 1408]) 
+        # BertModel encoder_hidden_states: torch.Size([2, 256, 768])
         encoder_outputs = self.encoder(
             embedding_output,
             num_query_part,
