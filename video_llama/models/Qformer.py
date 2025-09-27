@@ -173,6 +173,7 @@ class BertSelfAttention(nn.Module):
         query_length = 32
 
         mask = torch.ones(attn_scores.size(), device=attn_scores.device) * -10000
+        print(f"\nattn_scores size: {attn_scores.size()}\n")
         for i in range(attn_scores.size()[2]):
             block_num = i // query_length
             mask[:, :, i, :((block_num + 1) * query_length)] = 1
