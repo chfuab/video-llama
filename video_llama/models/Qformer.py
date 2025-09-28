@@ -174,7 +174,7 @@ class BertSelfAttention(nn.Module):
 
         mask = torch.ones(attn_scores.size(), device=attn_scores.device) * -10000
         print(f"\nattn_scores size: {attn_scores.size()}\n")
-        # attn_scores size: torch.Size([2, 12, 256, 2056]) 
+        # attn_scores size: torch.Size([2, 12, 256, 2056]) for cross attention layer
         for i in range(attn_scores.size()[2]):
             block_num = i // query_length
             mask[:, :, i, :((block_num + 1) * query_length)] = 1
@@ -272,7 +272,8 @@ class BertSelfAttention(nn.Module):
         att_mask = self.get_att_mask(attention_scores)
         if att_mask is not None:
             # Apply the attention mask is (precomputed for all layers in BertModel forward() function)
-            attention_scores = attention_scores + att_mask
+            if not is_cross_attention:
+                attention_scores = attention_scores + att_mask
 
         # Normalize the attention scores to probabilities.
         attention_probs = nn.Softmax(dim=-1)(attention_scores)
