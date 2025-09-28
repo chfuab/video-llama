@@ -369,6 +369,7 @@ class VideoLLAMA(Blip2Base):
         with self.maybe_autocast():
             # embed image features with blip2, out: (b t) q h
             image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
+            print(f"\nencode_videoQformer_visual self.visual_encoder: {self.visual_encoder(image).size()}\n")
             # image_embeds.size() is torch.Size([16, 257, 1408])
             # change image_embeds shape into b (t q) h:
             image_embeds = einops.rearrange(image_embeds, '(b t) q h -> b t q h', b=2, t=8)
