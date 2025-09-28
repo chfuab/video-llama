@@ -269,6 +269,7 @@ class BertSelfAttention(nn.Module):
             attention_scores = attention_scores + attention_mask """
         attention_scores = attention_scores / math.sqrt(self.attention_head_size)
         # causal mask 
+        att_mask = None
         if not is_cross_attention:
             att_mask = self.get_att_mask(attention_scores)
         if att_mask is not None:
