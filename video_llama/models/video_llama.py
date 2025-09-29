@@ -681,7 +681,7 @@ class VideoLLAMA(Blip2Base):
             text_e3_embeds = self.llama_model.model.embed_tokens(text_e3_ids)
 
             batch_size = img_embeds.shape[0]
-            bos = torch.ones([batch_size, 1], dtype=torch.long) * self.llama_tokenizer.bos_token_id
+            bos = torch.ones([batch_size, 1], dtype=torch.long, device=torch.device("cuda:0")) * self.llama_tokenizer.bos_token_id
             bos_embeds = self.llama_model.model.embed_tokens(bos)
             atts_bos = atts_img[:, :1]
 
