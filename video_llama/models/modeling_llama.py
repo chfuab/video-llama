@@ -672,6 +672,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         )
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
+        print(f"\ninput_embeds: {inputs_embeds.size()}\n")
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
         outputs = self.model(
             input_ids=input_ids,
@@ -688,10 +689,12 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
+        print(f"\nhidden_states: {hidden_states.size()}\n")
 
         loss = None
         if labels is not None:
             # Shift so that tokens < n predict n
+            print(f"\nlogits: {logits.size()}, labels: {labels.size()}\n")
             shift_logits = logits[..., :-1, :].contiguous()
             shift_labels = labels[..., 1:].contiguous()
             # Flatten the tokens
@@ -700,6 +703,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             shift_labels = shift_labels.view(-1)
             # Enable model parallelism
             shift_labels = shift_labels.to(shift_logits.device)
+            print(f"\nshift_logits: {shift_logits.size()}, shift_labels: {shift_labels.size()}\n")
             loss = loss_fct(shift_logits, shift_labels)
 
         if not return_dict:

@@ -173,7 +173,6 @@ class BertSelfAttention(nn.Module):
         query_length = 32
 
         mask = torch.ones(attn_scores.size(), device=attn_scores.device) * -10000
-        print(f"\nattn_scores size: {attn_scores.size()}\n")
         # attn_scores size: torch.Size([2, 12, 256, 2056]) for cross attention layer
         for i in range(attn_scores.size()[2]):
             block_num = i // query_length
@@ -203,7 +202,6 @@ class BertSelfAttention(nn.Module):
         is_cross_attention = encoder_hidden_states is not None
 
         if is_cross_attention:
-            print(f"\n\n\nself.keys: {self.config.encoder_width}x{self.all_head_size}, encoder_hidden_states: {encoder_hidden_states.size()}")
             key_layer = self.transpose_for_scores(self.key(encoder_hidden_states))
             value_layer = self.transpose_for_scores(self.value(encoder_hidden_states))
             attention_mask = encoder_attention_mask
@@ -223,7 +221,6 @@ class BertSelfAttention(nn.Module):
         past_key_value = (key_layer, value_layer)
 
         # Take the dot product between "query" and "key" to get the raw attention scores.
-        print(f"\nquery_layer: {query_layer.size()}, key_layer.transpose: {key_layer.transpose(-1, -2).size()}\n")
         attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
 
         if (
@@ -360,8 +357,6 @@ class BertAttention(nn.Module):
         past_key_value=None,
         output_attentions=False,
     ):
-        if encoder_hidden_states is not None:
-            print(f"\nBertAttention self.self forward: {encoder_hidden_states.size()}\n")
         self_outputs = self.self(
             hidden_states,
             attention_mask,
@@ -556,7 +551,6 @@ class BertLayer(nn.Module):
         """ self_attn_past_key_value = (
             past_key_value[:2] if past_key_value is not None else None
         ) """
-        print(f"\nencoder_hidden_states at beginning: {encoder_hidden_states.size()}\n")
         self_attn_past_key_value = None
         self_attention_outputs = self.attention(
             hidden_states,
@@ -621,7 +615,6 @@ class BertLayer(nn.Module):
                     assert (
                         encoder_hidden_states is not None
                     ), "encoder_hidden_states must be given for cross-attention layers"
-                    print(f"\nBertLayer self.crossattention forward: {encoder_hidden_states.size()}\n")
                     cross_attention_outputs = self.crossattention(
                         query_attention_output,
                         attention_mask,
@@ -755,7 +748,6 @@ class BertEncoder(nn.Module):
             else:
                 # BertEncoder encoder_hidden_states: torch.Size([2, 2056, 1408])
                  # BertEncoder encoder_hidden_states: torch.Size([2, 256, 768])
-                print(f"\nBertEncoder layer_module forward: {encoder_hidden_states.size()}\n")
                 layer_outputs = layer_module(
                     hidden_states,
                     num_query_part,
@@ -1150,7 +1142,6 @@ class BertModel(BertPreTrainedModel):
 
         # BertModel encoder_hidden_states: torch.Size([2, 2056, 1408]) 
         # BertModel encoder_hidden_states: torch.Size([2, 256, 768])
-        print(f"\nBertModel self.encoder forward: {encoder_hidden_states.size()}\n")
         encoder_outputs = self.encoder(
             embedding_output,
             num_query_part,
@@ -1264,7 +1255,6 @@ class BertLMHeadModel(BertPreTrainedModel):
         if past_key_values is not None:
             query_embeds = None
 
-        print(f"\n\n\n BertLMHeadModel encoder_hidden_states: {encoder_hidden_states.size()}\n\n\n")
         outputs = self.bert(
             input_ids,
             num_query_part,
