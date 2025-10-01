@@ -370,7 +370,6 @@ class VideoLLAMA(Blip2Base):
             # embed image features with blip2, out: (b t) q h
             image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
             # encode_videoQformer_visual self.visual_encoder: torch.Size([16, 257, 1408]) 
-            print(f"\nencode_videoQformer_visual self.visual_encoder: {self.visual_encoder(image).size()}\n")
             # image_embeds.size() is torch.Size([16, 257, 1408])
             # change image_embeds shape into b (t q) h:
             image_embeds = einops.rearrange(image_embeds, '(b t) q h -> b t q h', b=2, t=8)
@@ -665,6 +664,7 @@ class VideoLLAMA(Blip2Base):
             text_e1_ids = text_e1_tokens.input_ids
             text_e2_ids = text_e2_tokens.input_ids
             text_e3_ids = text_e3_tokens.input_ids
+            ans_ids = self.tokenization(correct_ans, image).input_ids
 
             text_sys_mask = text_sys_tokens.attention_mask
             text_a_mask = text_a_tokens.attention_mask
@@ -672,6 +672,7 @@ class VideoLLAMA(Blip2Base):
             text_e1_mask = text_e1_tokens.attention_mask
             text_e2_mask = text_e2_tokens.attention_mask
             text_e3_mask = text_e3_tokens.attention_mask
+            ans_mask = self.tokenization(correct_ans, image).attention_mask
 
             sys_embeds = self.llama_model.model.embed_tokens(text_sys_ids)
             a_embeds = self.llama_model.model.embed_tokens(text_a_ids)
@@ -679,6 +680,7 @@ class VideoLLAMA(Blip2Base):
             text_e1_embeds = self.llama_model.model.embed_tokens(text_e1_ids)
             text_e2_embeds = self.llama_model.model.embed_tokens(text_e2_ids)
             text_e3_embeds = self.llama_model.model.embed_tokens(text_e3_ids)
+            ans_embeds = self.llama_model.model.embed_tokens(ans_ids)
 
             batch_size = img_embeds.shape[0]
             bos = torch.ones([batch_size, 1], dtype=torch.long, device=torch.device("cuda:0")) * self.llama_tokenizer.bos_token_id
@@ -689,14 +691,23 @@ class VideoLLAMA(Blip2Base):
                                      a_embeds, vid_embeds_e1, text_e1_embeds, 
                                      a_embeds, vid_embeds_e2, text_e2_embeds, 
                                      a_embeds, vid_embeds_e3, text_e3_embeds, 
-                                     a_embeds, img_embeds, b_embeds], dim=1)
+                                     a_embeds, img_embeds, b_embeds, ans_embeds], dim=1)
             full_att_mask = torch.cat([atts_bos, text_sys_mask, 
                                        text_a_mask, att_vid_e1, text_e1_mask, 
                                        text_a_mask, att_vid_e2, text_e2_mask, 
                                        text_a_mask, att_vid_e3, text_e3_mask, 
-                                       text_a_mask, atts_img, text_b_mask], dim=1)
+                                       text_a_mask, atts_img, text_b_mask, ans_mask], dim=1)
 
-            targets = self.tokenization(correct_ans, image).input_ids
+            empty = torch.ones([atts_bos.shape[0], 
+                                atts_bos[1] + text_sys_mask[1] + 
+                                text_a_mask[1] + att_vid_e1[1] + text_e1_mask[1] + 
+                                text_a_mask[1] + att_vid_e2[1] + text_e2_mask[1] + 
+                                text_a_mask[1] + att_vid_e3[1] + text_e3_mask[1] + 
+                                text_a_mask[1] + atts_img[1] + text_b_mask[1]], dtype=torch.long).to(image.device).fill_(-100)
+            real_target = ans_ids.masked_fill(
+                ans_ids == self.llama_tokenizer.pad_token_id, -100
+            )
+            targets = empty + real_target
 
             with self.maybe_autocast():
                 outputs = self.llama_model(
