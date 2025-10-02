@@ -698,9 +698,6 @@ class VideoLLAMA(Blip2Base):
                                        text_a_mask, att_vid_e3, text_e3_mask, 
                                        text_a_mask, atts_img, text_b_mask, ans_mask], dim=1)
 
-            print(f"\ntext_sys_mask: {text_sys_mask[1]}\n")
-            print(f"\natt_vid_e1: {att_vid_e1[1]}\n")
-            print(f"\natts_img: {atts_img[1]}\n")
             empty = torch.ones([atts_bos.shape[0], 
                                 1 + text_sys_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e1[1].size(0) + text_e1_mask[1].size(0) + 
@@ -710,6 +707,7 @@ class VideoLLAMA(Blip2Base):
             real_target = ans_ids.masked_fill(
                 ans_ids == self.llama_tokenizer.pad_token_id, -100
             )
+            print(f"\nempty: {empty.size()}\nreal_target: {real_target.size()}\n")
             targets = empty + real_target
 
             with self.maybe_autocast():
