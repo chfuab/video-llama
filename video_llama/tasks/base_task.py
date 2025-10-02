@@ -245,7 +245,7 @@ class BaseTask:
             dist.barrier()
 
         return {
-            k: "{:.3f}".format(meter.global_avg())
+            k: meter.global_avg_1()
             for k, meter in metric_logger.meters.items()
         }, {
             k: meter.value_record

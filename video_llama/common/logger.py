@@ -28,11 +28,15 @@ class SmoothedValue(object):
         self.total = 0.0
         self.count = 0
         self.fmt = fmt
+        self.str_record = []
 
     def update(self, value, n=1):
-        self.deque.append(value)
-        self.count += n
-        self.total += value * n
+        if isinstance(value, (int, float)):
+            self.deque.append(value)
+            self.count += n
+            self.total = self.total + value * n
+        elif isinstance(value, str):
+            self.str_record.append(value)
 
     def synchronize_between_processes(self):
         """
@@ -64,8 +68,16 @@ class SmoothedValue(object):
     """ @property
     def global_avg(self):
         return self.total / self.count """
+    def global_avg_1(self):
+        if len(self.str_record) > 0:
+            return str(self.str_record)
+        elif self.total > 0.0:
+            return "{:.3f}".format(self.total / self.count)
     def global_avg(self):
-        return self.total / self.count
+        if len(self.str_record) > 0:
+            return str(self.str_record)
+        elif self.total > 0.0:
+            return self.total / self.count
 
     @property
     def max(self):
@@ -94,8 +106,9 @@ class MetricLogger(object):
         for k, v in kwargs.items():
             if isinstance(v, torch.Tensor):
                 v = v.item()
-            assert isinstance(v, (float, int, str, list, dict, tuple))
-            self.meters[k].update(v)
+            if isinstance(v, (float, int, str, list, dict, tuple)):
+                self.meters[k].update(v)
+
             # print(f"\n\n\n self.meter.count: {self.meters[k].count} \n\n\n self.meter.total: {self.meters[k].total}")
             # print(f"\n\n\n self.meters[k].global_avg: {self.meters[k].global_avg} \n\n\n")
         # print(f"\n\n\n CIDEr: {self.meters['CIDEr'].total}, {self.meters['CIDEr'].count} \n\n\n")
@@ -118,9 +131,14 @@ class MetricLogger(object):
 
     def global_avg(self):
         loss_str = []
+        output_string = []
         for name, meter in self.meters.items():
-            loss_str.append("{}: {:.4f}".format(name, meter.global_avg()))
-        return self.delimiter.join(loss_str)
+            if name == "loss":
+                loss_str.append("{}: {:.4f}".format(name, meter.global_avg()))
+                return self.delimiter.join(loss_str)
+            elif name == "accuracy":
+                output_string.append(meter.str_record)
+                return "".join(str(output_string))
 
     def synchronize_between_processes(self):
         for meter in self.meters.values():
