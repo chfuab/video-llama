@@ -699,7 +699,7 @@ class VideoLLAMA(Blip2Base):
                                        text_a_mask, atts_img, text_b_mask, ans_mask], dim=1)
 
             empty = torch.ones([atts_bos.shape[0], 
-                                atts_bos[1] + text_sys_mask[1] + 
+                                1 + text_sys_mask[1] + 
                                 text_a_mask[1] + att_vid_e1[1] + text_e1_mask[1] + 
                                 text_a_mask[1] + att_vid_e2[1] + text_e2_mask[1] + 
                                 text_a_mask[1] + att_vid_e3[1] + text_e3_mask[1] + 
