@@ -702,11 +702,11 @@ class VideoLLAMA(Blip2Base):
             print(f"\natt_vid_e1: {att_vid_e1[1]}\n")
             print(f"\natts_img: {atts_img[1]}\n")
             empty = torch.ones([atts_bos.shape[0], 
-                                1 + text_sys_mask[1] + 
-                                text_a_mask[1] + att_vid_e1[1] + text_e1_mask[1] + 
-                                text_a_mask[1] + att_vid_e2[1] + text_e2_mask[1] + 
-                                text_a_mask[1] + att_vid_e3[1] + text_e3_mask[1] + 
-                                text_a_mask[1] + atts_img[1] + text_b_mask[1]], dtype=torch.long).to(image.device).fill_(-100)
+                                1 + text_sys_mask[1].size(0) + 
+                                text_a_mask[1].size(0) + att_vid_e1[1].size(0) + text_e1_mask[1].size(0) + 
+                                text_a_mask[1].size(0) + att_vid_e2[1].size(0) + text_e2_mask[1].size(0) + 
+                                text_a_mask[1].size(0) + att_vid_e3[1].size(0) + text_e3_mask[1].size(0) + 
+                                text_a_mask[1].size(0) + atts_img[1].size(0) + text_b_mask[1].size(0)], dtype=torch.long).to(image.device).fill_(-100)
             real_target = ans_ids.masked_fill(
                 ans_ids == self.llama_tokenizer.pad_token_id, -100
             )
@@ -930,7 +930,7 @@ class VideoLLAMA(Blip2Base):
 
         prompt_path = cfg.get("prompt_path", "")
         prompt_template = cfg.get("prompt_template", "")
-        max_txt_len = cfg.get("max_txt_len", 32)
+        max_txt_len = cfg.get("max_txt_len", 320)
         end_sym = cfg.get("end_sym", '\n')
         
         frozen_llama_proj = cfg.get("frozen_llama_proj", True)
