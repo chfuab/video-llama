@@ -122,7 +122,7 @@ class BaseTask:
                 accuracy = score / max_score """
                 embs = model(samples)["inference_embeds"]
                 output_list = []
-                for k in embs.shape[0]:
+                for k in range(embs.shape[0]):
                     output = model.generate(
                         inputs_embeds=embs[k, :],
                         max_new_tokens=20,
