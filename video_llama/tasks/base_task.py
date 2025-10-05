@@ -121,8 +121,7 @@ class BaseTask:
                         score += 1
                 accuracy = score / max_score """
                 embs = model(samples)["inference_embeds"]
-                print(f"\nembs.shape: {embs.shape}\n")
-                """ output_list = []
+                output_list = []
                 for k in embs.shape[0]:
                     output = model.generate(
                         inputs_embeds=embs[k, :],
@@ -130,8 +129,7 @@ class BaseTask:
                         do_sample=False,
                     )
                     output_list.append(output)
-                return {"accuracy": str(output_list)} """
-                return {"accuracy": "abc"}
+                return {"accuracy": str(output_list)}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
