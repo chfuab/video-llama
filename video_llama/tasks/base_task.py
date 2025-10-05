@@ -121,15 +121,12 @@ class BaseTask:
                         score += 1
                 accuracy = score / max_score """
                 embs = model(samples)["inference_embeds"]
-                output_list = []
-                for k in range(embs.shape[0]):
-                    output = model.llama_model.generate(
-                        inputs_embeds=embs[k, :],
-                        max_new_tokens=20,
-                        do_sample=False,
-                    )
-                    output_list.append(output)
-                return {"accuracy": str(output_list)}
+                output = model.llama_model.generate(
+                    inputs_embeds=embs,
+                    max_new_tokens=20,
+                    do_sample=False,
+                )
+                return {"accuracy": str(output)}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
