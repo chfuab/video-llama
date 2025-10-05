@@ -720,8 +720,12 @@ class VideoLLAMA(Blip2Base):
                     labels=targets,
                 )
             loss = outputs.loss
-            logits = outputs.logits       
-
+            logits = outputs.logits    
+            inference_embs = torch.cat([bos_embeds, sys_embeds, 
+                                     a_embeds, img_embeds, b_embeds], dim=1)   
+            
+            return {"loss": loss, "logits": logits, "inference_embeds": inference_embs}
+        
         else:
             image = samples["image"]
 

@@ -90,7 +90,7 @@ class BaseTask:
     def valid_step(self, model, samples, metrics_name, model_name):
         if model_name == 'video_llama':
             if metrics_name == "accuracy":
-                logits = model(samples)["logits"]
+                """ logits = model(samples)["logits"]
                 # assume the logits is of shape (batch_size, seq_length, vocab_size)
                 output_softmax = Softmax(dim=2)(logits)
                 output_ids = torch.argmax(output_softmax, dim=2)
@@ -112,7 +112,7 @@ class BaseTask:
                     output_string = model.llama_tokenizer.convert_tokens_to_string(token_batch)
                     all_string.append(output_string)
 
-                assert len(samples["correct_ans"]) == len(all_string), "number of label answers must equal to number of predicted answers"
+                assert len(samples["correct_ans"]) == len(all_string), "number of label answers must equal to number of predicted answers" """
                 
                 """ max_score = len(samples["correct_ans"])
                 score = 0
@@ -120,9 +120,15 @@ class BaseTask:
                     if correct_ans == all_string[i]:
                         score += 1
                 accuracy = score / max_score """
-
-
-                return {"accuracy": str(all_string)}
+                embs = model(samples)["inference_embeds"]
+                output = model.llama_model.generate(
+                    inputs_embeds=embs,
+                    max_new_tokens=200,
+                    do_sample=False,
+                )
+                output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
+                return {"accuracy": str(output_text)}
+                # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
                 return {"loss": model(samples)["loss"]}
