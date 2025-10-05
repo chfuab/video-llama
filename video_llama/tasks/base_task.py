@@ -126,7 +126,8 @@ class BaseTask:
                     max_new_tokens=20,
                     do_sample=False,
                 )
-                return {"accuracy": str(output)}
+                output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
+                return {"accuracy": str(output_text)}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
