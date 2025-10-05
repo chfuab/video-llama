@@ -131,6 +131,7 @@ class BaseTask:
                     )
                     output_list.append(output)
                 return {"accuracy": str(output_list)} """
+                return {"accuracy": "abc"}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
