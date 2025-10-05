@@ -709,6 +709,7 @@ class VideoLLAMA(Blip2Base):
             )
             print(f"\nempty: {empty.size()}\nreal_target: {real_target.size()}\n")
             print(f"\nfull_embeds: {full_embeds.size()}\n")
+            print(f"\nans_embeds: {ans_embeds.size()}\n")
             targets = torch.cat([empty, real_target], dim=1)
 
             with self.maybe_autocast():
