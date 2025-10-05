@@ -123,7 +123,7 @@ class BaseTask:
                 embs = model(samples)["inference_embeds"]
                 output_list = []
                 for k in range(embs.shape[0]):
-                    output = model.generate(
+                    output = model.llama_model.generate(
                         inputs_embeds=embs[k, :],
                         max_new_tokens=20,
                         do_sample=False,
