@@ -138,7 +138,7 @@ class MetricLogger(object):
                 return self.delimiter.join(loss_str)
             elif name == "accuracy":
                 output_string.append(meter.str_record)
-                return self.delimiter.join(output_string)
+                return self.delimiter.join(str(output_string))
 
     def synchronize_between_processes(self):
         for meter in self.meters.values():
