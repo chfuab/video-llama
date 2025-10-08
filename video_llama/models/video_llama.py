@@ -645,7 +645,7 @@ class VideoLLAMA(Blip2Base):
                 vid_embeds_e2, att_vid_e2 = self.encode_videoQformer_visual(video_e2)
                 vid_embeds_e3, att_vid_e3 = self.encode_videoQformer_visual(video_e3)
 
-            self.llama_tokenizer.padding_side = "left"
+            self.llama_tokenizer.padding_side = "right"
 
             all_text = [text_sys, text_a, text_b, text_e1, text_e2, text_e3]
             for text in all_text:

@@ -123,7 +123,7 @@ class BaseTask:
                 embs = model(samples)["inference_embeds"]
                 output = model.llama_model.generate(
                     inputs_embeds=embs,
-                    max_new_tokens=20,
+                    max_new_tokens=3000,
                     do_sample=False,
                 )
                 output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
