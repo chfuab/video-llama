@@ -722,9 +722,6 @@ class VideoLLAMA(Blip2Base):
             loss = outputs.loss
             logits = outputs.logits    
             inference_embs = torch.cat([bos_embeds, sys_embeds, 
-                                     a_embeds, vid_embeds_e1, text_e1_embeds, 
-                                     a_embeds, vid_embeds_e2, text_e2_embeds, 
-                                     a_embeds, vid_embeds_e3, text_e3_embeds, 
                                      a_embeds, img_embeds, b_embeds], dim=1)   
             
             return {"loss": loss, "logits": logits, "inference_embeds": inference_embs}
