@@ -707,9 +707,6 @@ class VideoLLAMA(Blip2Base):
             real_target = ans_ids.masked_fill(
                 ans_ids == self.llama_tokenizer.pad_token_id, -100
             )
-            print(f"\nempty: {empty.size()}\nreal_target: {real_target.size()}\n")
-            print(f"\nfull_embeds: {full_embeds.size()}\n")
-            print(f"\nans_embeds: {ans_embeds.size()}\n")
             targets = torch.cat([empty, real_target], dim=1)
 
             with self.maybe_autocast():

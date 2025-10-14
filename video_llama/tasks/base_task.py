@@ -90,36 +90,7 @@ class BaseTask:
     def valid_step(self, model, samples, metrics_name, model_name):
         if model_name == 'video_llama':
             if metrics_name == "accuracy":
-                """ logits = model(samples)["logits"]
-                # assume the logits is of shape (batch_size, seq_length, vocab_size)
-                output_softmax = Softmax(dim=2)(logits)
-                output_ids = torch.argmax(output_softmax, dim=2)
-                output_ids_shape = tuple(output_ids.size())
-                
-                output_token_flatten = [model.llama_tokenizer._convert_id_to_token(id) for id in torch.flatten(output_ids).tolist()]
-                
-                batch_of_tokens = []
-                tokens = []
-                idx = 0
-                for token in output_token_flatten:
-                    tokens.append(token)
-                    idx += 1
-                    if idx % output_ids_shape[1] == 0 :
-                        batch_of_tokens.append(tokens)
-                        tokens = []
-                all_string = []
-                for token_batch in batch_of_tokens:
-                    output_string = model.llama_tokenizer.convert_tokens_to_string(token_batch)
-                    all_string.append(output_string)
 
-                assert len(samples["correct_ans"]) == len(all_string), "number of label answers must equal to number of predicted answers" """
-                
-                """ max_score = len(samples["correct_ans"])
-                score = 0
-                for i, correct_ans in enumerate(samples["correct_ans"]):
-                    if correct_ans == all_string[i]:
-                        score += 1
-                accuracy = score / max_score """
                 embs = model(samples)["inference_embeds"]
                 output = model.llama_model.generate(
                     inputs_embeds=embs,
