@@ -96,6 +96,7 @@ class BaseTask:
                     inputs_embeds=embs,
                     max_new_tokens=2000,
                     do_sample=False,
+                    temperature=0.2,
                 )
                 output_final = []
                 for i in range(2):
