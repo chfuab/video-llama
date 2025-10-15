@@ -94,11 +94,16 @@ class BaseTask:
                 embs = model(samples)["inference_embeds"]
                 output = model.llama_model.generate(
                     inputs_embeds=embs,
-                    max_new_tokens=2000,
+                    max_new_tokens=1000,
                     do_sample=False,
+                    temperature=0.2,
                 )
-                output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
-                return {"accuracy": str(output_text)}
+                output_final = []
+                for i in range(2):
+                    output_text = model.llama_tokenizer.decode(output[i], add_special_tokens=False)
+                    output_final.append(output_text)
+
+                return {"accuracy": str(output_final)}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
@@ -206,6 +211,8 @@ class BaseTask:
 
             samples = next(data_loader)
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
+            samples_text_b = samples.get("text_b")
+            print(f"\nsamples: {samples_text_b}\n")
             
             eval_output = {}
             # metrics are loss and accuracy
@@ -214,6 +221,7 @@ class BaseTask:
                 eval_output.update(eval_output_temp)
 
             metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
+            print(f"\n{i}\n")
 
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
