@@ -94,7 +94,7 @@ class BaseTask:
                 embs = model(samples)["inference_embeds"]
                 output = model.llama_model.generate(
                     inputs_embeds=embs,
-                    max_new_tokens=2000,
+                    max_new_tokens=200,
                     do_sample=False,
                     temperature=0.2,
                 )
@@ -102,7 +102,6 @@ class BaseTask:
                 for i in range(2):
                     output_text = model.llama_tokenizer.decode(output[i], add_special_tokens=False)
                     output_final.append(output_text)
-                print(f"\noutput_final: {output_final}\n")
 
                 return {"accuracy": str(output_final)}
                 # return {"accuracy": str(all_string)}
