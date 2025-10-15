@@ -94,7 +94,7 @@ class BaseTask:
                 embs = model(samples)["inference_embeds"]
                 output = model.llama_model.generate(
                     inputs_embeds=embs,
-                    max_new_tokens=200,
+                    max_new_tokens=1000,
                     do_sample=False,
                     temperature=0.2,
                 )
