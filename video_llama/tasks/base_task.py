@@ -211,7 +211,7 @@ class BaseTask:
 
             samples = next(data_loader)
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
-            print(f"\nsamples: {samples}\n")
+            print(f"\nsamples: {samples.get("text_b")}\n")
             
             eval_output = {}
             # metrics are loss and accuracy
