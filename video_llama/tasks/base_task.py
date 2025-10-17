@@ -211,14 +211,16 @@ class BaseTask:
 
             samples = next(data_loader)
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
+            print(f"\nsamples: {samples["text_b"]}\n")
             
             eval_output = {}
             # metrics are loss and accuracy
             for name in metrics:
                 eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
                 eval_output.update(eval_output_temp)
-            print(f"\neval_output: {eval_output}\n")
+
             metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
+            print(f"\n{i}\n")
 
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
