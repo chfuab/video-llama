@@ -132,10 +132,10 @@ class PrefetchLoader(object):
         method = self.loader.__getattribute__(name)
         return method
     
-    def __next__(self):
+    """ def __next__(self):
         self.preload(iter(self.loader))
         batch = self.next(iter(self.loader))
-        return batch
+        return batch """
 
 
 def record_cuda_stream(batch):
