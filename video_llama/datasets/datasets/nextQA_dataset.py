@@ -104,7 +104,8 @@ class NextQATrainDataset(BaseDataset):
             question_prompt, correct_answer = self._vqa_question(index, is_example=False)
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
-            question_prompt_a = f'''video_embeddings: '''
+            # question_prompt_a = f'''video_embeddings: '''
+            question_prompt_a = ""
             question_prompt_b = f'''{question_prompt}[/INST]'''
 
             # fetch video
