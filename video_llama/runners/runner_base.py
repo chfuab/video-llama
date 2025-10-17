@@ -712,10 +712,10 @@ class RunnerBase:
                     drop_last=True if is_train else False,
                 )
                 loader = PrefetchLoader(loader)
-
+                print(f"\nprefetchloader is loaded\n")
                 if is_train:
                     loader = IterLoader(loader, use_distributed=self.use_distributed)
-
+                    print(f"\nIterloader is loaded\n")
             return loader
 
         loaders = []
