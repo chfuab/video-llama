@@ -105,7 +105,7 @@ class NextQATrainDataset(BaseDataset):
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
             question_prompt_a = f'''video_embeddings: '''
-            question_prompt_b = f'''{question_prompt}'''
+            question_prompt_b = f'''{question_prompt}[/INST]'''
 
             # fetch video
             video_path = self._get_video_path(index, is_example=False) 
