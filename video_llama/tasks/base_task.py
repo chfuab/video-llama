@@ -95,7 +95,7 @@ class BaseTask:
                 output = model.llama_model.generate(
                     inputs_embeds=embs,
                     max_new_tokens=1000,
-                    do_sample=False,
+                    do_sample=True,
                     temperature=0.6,
                 )
                 output_final = []
