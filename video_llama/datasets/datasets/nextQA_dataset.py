@@ -102,7 +102,7 @@ class NextQATrainDataset(BaseDataset):
             
             # sys_prompt = '''You are given video_embeddings, a question, and five options of answers to the question indexed by A, B, C, D, E. Your task is to select the correct answer to the question from the five options according to the video_embeddings.'''
             
-            sys_prompt = '''You are given video_embeddings, a question called real_question, and five options of answers to real_question called real_answers which are indexed by A, B, C, D, E. Your task is to select the correct answer from the real_answers to the real_question according to the real_video_embeddings. Make sure your answer is concise with short explanation.'''
+            sys_prompt = '''You are given video_embeddings called real_video_embeddings, a question called real_question, and five options of answers to real_question called real_answers which are indexed by A, B, C, D, E. Your task is to select the correct answer from the real_answers to the real_question according to the real_video_embeddings. Make sure your answer is concise with short explanation.'''
             question_prompt, correct_answer = self._vqa_question(index, is_example=False)
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
@@ -175,8 +175,8 @@ class NextQATrainDataset(BaseDataset):
         else:
             correct_answer_in_example = ""
         
-        question_prompt = f'''qusetion: {question} options of answers: A. {answer_choices[0]} B. {answer_choices[1]} C. {answer_choices[2]} D. {answer_choices[3]} E. {answer_choices[4]} correct answer: {correct_answer_in_example}\n'''
-        real_question_prompt = f'''real qusetion: {question} real_answers: A. {answer_choices[0]} B. {answer_choices[1]} C. {answer_choices[2]} D. {answer_choices[3]} E. {answer_choices[4]} correct answer: {correct_answer_in_example}\n'''
+        question_prompt = f'''qusetion: {question} options of answers: A.{answer_choices[0]} B.{answer_choices[1]} C.{answer_choices[2]} D.{answer_choices[3]} E.{answer_choices[4]} correct answer: {correct_answer_in_example}\n'''
+        real_question_prompt = f'''real qusetion: {question} real_answers: A.{answer_choices[0]} B.{answer_choices[1]} C.{answer_choices[2]} D.{answer_choices[3]} E.{answer_choices[4]} correct answer: {correct_answer_in_example}\n'''
 
         if is_example:
             return question_prompt

@@ -646,7 +646,7 @@ class VideoLLAMA(Blip2Base):
                 vid_embeds_e2, att_vid_e2 = self.encode_videoQformer_visual(video_e2)
                 vid_embeds_e3, att_vid_e3 = self.encode_videoQformer_visual(video_e3)
 
-            self.llama_tokenizer.padding_side = "right"
+            self.llama_tokenizer.padding_side = "left"
 
             all_text = [text_sys, text_a, text_a_real, text_b, text_e1, text_e2, text_e3]
             for text in all_text:
@@ -724,7 +724,7 @@ class VideoLLAMA(Blip2Base):
             loss = outputs.loss
             logits = outputs.logits    
             inference_embs = torch.cat([bos_embeds, sys_embeds, 
-                                     img_embeds, b_embeds, ans_embeds], dim=1)  
+                                    a_real_embeds, img_embeds, b_embeds, ans_embeds], dim=1)  
             
             return {"loss": loss, "logits": logits, "inference_embeds": inference_embs}
         
