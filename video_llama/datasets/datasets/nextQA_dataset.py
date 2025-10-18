@@ -107,8 +107,8 @@ class NextQATrainDataset(BaseDataset):
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
             question_prompt_a = f'''Example: \nvideo_embeddings: '''
-            question_prompt_a_real = f'''\nreal_video_embeddings: '''
-            question_prompt_b = f'''\n{question_prompt}'''
+            question_prompt_a_real = f'''real_video_embeddings: '''
+            question_prompt_b = f'''\n{question_prompt}[/INST]'''
 
             # fetch video
             video_path = self._get_video_path(index, is_example=False) 
@@ -176,7 +176,7 @@ class NextQATrainDataset(BaseDataset):
             correct_answer_in_example = ""
         
         question_prompt = f'''qusetion: {question} \noptions of answers: \nA.{answer_choices[0]} \nB.{answer_choices[1]} \nC.{answer_choices[2]} \nD.{answer_choices[3]} \nE.{answer_choices[4]} \ncorrect answer: {correct_answer_in_example}\n'''
-        real_question_prompt = f'''qusetion: {question} \noptions of answers: \nA.{answer_choices[0]} \nB.{answer_choices[1]} \nC.{answer_choices[2]} \nD.{answer_choices[3]} \nE.{answer_choices[4]} \ncorrect answer: {correct_answer_in_example}\n'''
+        real_question_prompt = f'''real qusetion: {question} \nreal_answers: \nA.{answer_choices[0]} \nB.{answer_choices[1]} \nC.{answer_choices[2]} \nD.{answer_choices[3]} \nE.{answer_choices[4]} \ncorrect answer: {correct_answer_in_example}\n'''
 
         if is_example:
             return question_prompt
