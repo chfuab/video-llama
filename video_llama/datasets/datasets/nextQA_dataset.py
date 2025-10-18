@@ -100,11 +100,15 @@ class NextQATrainDataset(BaseDataset):
         num_retries = 10  # skip error videos
         for _ in range(num_retries):
             
-            sys_prompt = '''You are given video_embeddings, a question, and five options of answers to the question indexed by A, B, C, D, E. Your task is to select the correct answer to the question from the five options according to the video_embeddings.'''
+            # sys_prompt = '''You are given video_embeddings, a question, and five options of answers to the question indexed by A, B, C, D, E. Your task is to select the correct answer to the question from the five options according to the video_embeddings.'''
+            
+            sys_prompt = '''You are given three examples where in each example there is video_embeddings, a question, and five options of answers to the question indexed by A, B, C, D, E, as well as the correct answer to the question according to the video_embeddings. 
+            After the three examples, you are given video_embeddings called real_video_embeddings, a question called real_question, and five options of answers to real_question called real_answers which are also indexed by A, B, C, D, E. Your task is to select the correct answer from the real_answers to the real_question according to the real_video_embeddings.'''
             question_prompt, correct_answer = self._vqa_question(index, is_example=False)
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
-            question_prompt_a = f'''video_embeddings: '''
+            question_prompt_a = f'''Example: \nvideo_embeddings: '''
+            question_prompt_a_real = f'''real_video_embeddings: '''
             question_prompt_b = f'''{question_prompt}[/INST]'''
 
             # fetch video
@@ -137,6 +141,7 @@ class NextQATrainDataset(BaseDataset):
             "image": video,
             "text_sys": sys_prompt,
             "text_a": question_prompt_a,
+            "text_a_real": question_prompt_a_real, 
             "text_b": question_prompt_b,
             "text_e1": self.example_question_prompt_1,
             "text_e2": self.example_question_prompt_2,
@@ -171,11 +176,13 @@ class NextQATrainDataset(BaseDataset):
         else:
             correct_answer_in_example = ""
         
-        question_prompt = f'''qusetion: {question} options of answers: A. {answer_choices[0]} B. {answer_choices[1]} C. {answer_choices[2]} D. {answer_choices[3]} E. {answer_choices[4]} correct answer: {correct_answer_in_example}'''
+        question_prompt = f'''qusetion: {question} options of answers: A. {answer_choices[0]} B. {answer_choices[1]} C. {answer_choices[2]} D. {answer_choices[3]} E. {answer_choices[4]} correct answer: {correct_answer_in_example}\n'''
+        real_question_prompt = f'''real qusetion: {question} real_answers: A. {answer_choices[0]} B. {answer_choices[1]} C. {answer_choices[2]} D. {answer_choices[3]} E. {answer_choices[4]} correct answer: {correct_answer_in_example}\n'''
+
         if is_example:
             return question_prompt
         else:
-            return question_prompt, correct_answer
+            return real_question_prompt, correct_answer
         
     def _get_video_examples(self, idx):
         video_path = self._get_video_path(idx, is_example=True) 

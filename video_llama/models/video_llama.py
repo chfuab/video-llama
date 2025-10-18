@@ -622,6 +622,7 @@ class VideoLLAMA(Blip2Base):
             image = samples["image"]
             text_sys = samples["text_sys"]
             text_a = samples["text_a"]
+            text_a_real = samples["text_a_real"]
             text_b = samples["text_b"]
             text_e1 = samples["text_e1"]
             text_e2 = samples["text_e2"]
@@ -647,12 +648,13 @@ class VideoLLAMA(Blip2Base):
 
             self.llama_tokenizer.padding_side = "right"
 
-            all_text = [text_sys, text_a, text_b, text_e1, text_e2, text_e3]
+            all_text = [text_sys, text_a, text_a_real, text_b, text_e1, text_e2, text_e3]
             for text in all_text:
                 text = [t + self.end_sym for t in text]
 
             text_sys_tokens = self.tokenization(text_sys, image)
             text_a_tokens = self.tokenization(text_a, image)
+            text_a_real_tokens = self.tokenization(text_a_real, image)
             text_b_tokens = self.tokenization(text_b, image)
             text_e1_tokens = self.tokenization(text_e1, image)
             text_e2_tokens = self.tokenization(text_e2, image)
@@ -660,6 +662,7 @@ class VideoLLAMA(Blip2Base):
 
             text_sys_ids = text_sys_tokens.input_ids
             text_a_ids = text_a_tokens.input_ids
+            text_a_real_ids = text_a_real_tokens.input_ids
             text_b_ids = text_b_tokens.input_ids
             text_e1_ids = text_e1_tokens.input_ids
             text_e2_ids = text_e2_tokens.input_ids
@@ -668,6 +671,7 @@ class VideoLLAMA(Blip2Base):
 
             text_sys_mask = text_sys_tokens.attention_mask
             text_a_mask = text_a_tokens.attention_mask
+            text_a_real_mask = text_a_real_tokens.attention_mask
             text_b_mask = text_b_tokens.attention_mask
             text_e1_mask = text_e1_tokens.attention_mask
             text_e2_mask = text_e2_tokens.attention_mask
@@ -676,6 +680,7 @@ class VideoLLAMA(Blip2Base):
 
             sys_embeds = self.llama_model.model.embed_tokens(text_sys_ids)
             a_embeds = self.llama_model.model.embed_tokens(text_a_ids)
+            a_real_embeds = self.llama_model.model.embed_tokens(text_a_real_ids)
             b_embeds = self.llama_model.model.embed_tokens(text_b_ids)
             text_e1_embeds = self.llama_model.model.embed_tokens(text_e1_ids)
             text_e2_embeds = self.llama_model.model.embed_tokens(text_e2_ids)
@@ -691,19 +696,19 @@ class VideoLLAMA(Blip2Base):
                                      a_embeds, vid_embeds_e1, text_e1_embeds, 
                                      a_embeds, vid_embeds_e2, text_e2_embeds, 
                                      a_embeds, vid_embeds_e3, text_e3_embeds, 
-                                     a_embeds, img_embeds, b_embeds, ans_embeds], dim=1)
+                                     a_real_embeds, img_embeds, b_embeds, ans_embeds], dim=1)
             full_att_mask = torch.cat([atts_bos, text_sys_mask, 
                                        text_a_mask, att_vid_e1, text_e1_mask, 
                                        text_a_mask, att_vid_e2, text_e2_mask, 
                                        text_a_mask, att_vid_e3, text_e3_mask, 
-                                       text_a_mask, atts_img, text_b_mask, ans_mask], dim=1)
+                                       text_a_real_mask, atts_img, text_b_mask, ans_mask], dim=1)
 
             empty = torch.ones([atts_bos.shape[0], 
                                 1 + text_sys_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e1[1].size(0) + text_e1_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e2[1].size(0) + text_e2_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e3[1].size(0) + text_e3_mask[1].size(0) + 
-                                text_a_mask[1].size(0) + atts_img[1].size(0) + text_b_mask[1].size(0)], dtype=torch.long).to(image.device).fill_(-100)
+                                text_a_real_mask[1].size(0) + atts_img[1].size(0) + text_b_mask[1].size(0)], dtype=torch.long).to(image.device).fill_(-100)
             real_target = ans_ids.masked_fill(
                 ans_ids == self.llama_tokenizer.pad_token_id, -100
             )
@@ -718,11 +723,7 @@ class VideoLLAMA(Blip2Base):
                 )
             loss = outputs.loss
             logits = outputs.logits    
-            inference_embs = torch.cat([bos_embeds, sys_embeds, 
-                                     a_embeds, vid_embeds_e1, text_e1_embeds, 
-                                     a_embeds, vid_embeds_e2, text_e2_embeds, 
-                                     a_embeds, vid_embeds_e3, text_e3_embeds,
-                                     a_embeds, img_embeds, b_embeds], dim=1)   
+            inference_embs = full_embeds  
             
             return {"loss": loss, "logits": logits, "inference_embeds": inference_embs}
         
