@@ -93,7 +93,7 @@ class BaseTask:
 
                 embs = model(samples)["inference_embeds"]
                 output = model.llama_model.generate(
-                    inputs_embeds=embs[1],
+                    inputs_embeds=torch.unsqueeze(embs[1], 0),
                     max_new_tokens=1000,
                     do_sample=True,
                     temperature=0.6,
