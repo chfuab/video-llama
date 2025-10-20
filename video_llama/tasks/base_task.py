@@ -92,18 +92,18 @@ class BaseTask:
             if metrics_name == "accuracy":
 
                 embs = model(samples)["inference_embeds"]
-                output = model.llama_model.generate(
-                    inputs_embeds=embs,
-                    max_new_tokens=1000,
-                    do_sample=True,
-                    temperature=0.6,
-                    top_p=0.8,
-                    repetition_penalty=1.0,
-                    length_penalty=1,
-                )
                 output_final = []
                 for i in range(2):
-                    output_text = model.llama_tokenizer.decode(output[i], add_special_tokens=False)
+                    output = model.llama_model.generate(
+                        inputs_embeds=torch.unsqueeze(embs[i]),
+                        max_new_tokens=1000,
+                        do_sample=True,
+                        temperature=0.6,
+                        top_p=0.8,
+                        repetition_penalty=1.0,
+                        length_penalty=1,
+                    )                    
+                    output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
                     output_final.append(output_text)
 
                 return {"accuracy": str(output_final)}
