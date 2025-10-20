@@ -102,7 +102,7 @@ class NextQATrainDataset(BaseDataset):
             
             # sys_prompt = '''You are given video_embeddings, a question, and five options of answers to the question indexed by A, B, C, D, E. Your task is to select the correct answer to the question from the five options according to the video_embeddings.'''
             
-            sys_prompt = '''You are given video embeddings, a question, and five options of answers to the question which are indexed by A, B, C, D, E. Your task is to select the correct answer index from the five options of answers to the question according to the video embeddings.'''
+            sys_prompt = '''You are given video embeddings, a question. Your task is to answer the question according to the video embeddings.'''
             question_prompt, correct_answer = self._vqa_question(index, is_example=False)
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
