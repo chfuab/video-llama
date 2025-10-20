@@ -92,9 +92,8 @@ class BaseTask:
             if metrics_name == "accuracy":
 
                 embs = model(samples)["inference_embeds"]
-                print(f"\nembs shape: {embs[0].size()}\n")
                 output = model.llama_model.generate(
-                    inputs_embeds=embs,
+                    inputs_embeds=embs[1],
                     max_new_tokens=1000,
                     do_sample=True,
                     temperature=0.6,
