@@ -103,7 +103,7 @@ class BaseTask:
                 )
                 output_final = []
                 for i in range(2):
-                    output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
+                    output_text = model.llama_tokenizer.decode(output[i], add_special_tokens=False)
                     output_final.append(output_text)
 
                 return {"accuracy": str(output_final)}
