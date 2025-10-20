@@ -102,7 +102,7 @@ class NextQATrainDataset(BaseDataset):
             
             # sys_prompt = '''You are given video_embeddings, a question, and five options of answers to the question indexed by A, B, C, D, E. Your task is to select the correct answer to the question from the five options according to the video_embeddings.'''
             
-            sys_prompt = '''You are given video embeddings, a question called real_question, and five options of answers to real_question called real_answers which are indexed by A, B, C, D, E. Your task is to select the correct answer index from the real_answers to the real_question according to the video embeddings.'''
+            sys_prompt = '''You are given video embeddings, a question, and five options of answers to the question which are indexed by A, B, C, D, E. Your task is to select the correct answer index from the five options of answers to the question according to the video embeddings.'''
             question_prompt, correct_answer = self._vqa_question(index, is_example=False)
 
             sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
@@ -176,12 +176,10 @@ class NextQATrainDataset(BaseDataset):
             correct_answer_in_example = ""
         
         question_prompt = f'''qusetion: {question} \noptions of answers: \nA.{answer_choices[0]} \nB.{answer_choices[1]} \nC.{answer_choices[2]} \nD.{answer_choices[3]} \nE.{answer_choices[4]} \ncorrect answer: {correct_answer_in_example}\n'''
-        real_question_prompt = f'''real qusetion: {question} \nreal_answers: \nA.{answer_choices[0]} \nB.{answer_choices[1]} \nC.{answer_choices[2]} \nD.{answer_choices[3]} \nE.{answer_choices[4]} \ncorrect answer: {correct_answer_in_example}\n'''
-
         if is_example:
             return question_prompt
         else:
-            return real_question_prompt, correct_answer
+            return question_prompt, correct_answer
         
     def _get_video_examples(self, idx):
         video_path = self._get_video_path(idx, is_example=True) 
