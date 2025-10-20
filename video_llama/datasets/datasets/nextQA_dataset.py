@@ -178,7 +178,11 @@ class NextQATrainDataset(BaseDataset):
         question_prompt = f'''qusetion: 
                                 {question} 
                                 options of answers: 
-                                (A) {answer_choices[0]} (B) {answer_choices[1]} (C) {answer_choices[2]} (D) {answer_choices[3]} (E) {answer_choices[4]} 
+                                    (A) {answer_choices[0]} 
+                                    (B) {answer_choices[1]} 
+                                    (C) {answer_choices[2]} 
+                                    (D) {answer_choices[3]} 
+                                    (E) {answer_choices[4]} 
                                 correct answer: {correct_answer_in_example}'''
         if is_example:
             return question_prompt
