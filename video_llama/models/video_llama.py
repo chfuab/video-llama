@@ -192,6 +192,19 @@ class VideoLLAMA(Blip2Base):
         DEFAULT_AUDIO_PATCH_TOKEN = '<AudioHere>'
         self.llama_tokenizer.add_tokens([DEFAULT_IMAGE_PATCH_TOKEN], special_tokens=True)
         self.llama_tokenizer.add_tokens([DEFAULT_AUDIO_PATCH_TOKEN], special_tokens=True)
+        #
+        QUESTION_TOKEN = '<question>'
+        ANSWER_OPTIONS_TOKEN = '<options>'
+        CORRECT_ANSWER_TOKEN = '<answer>'
+
+        self.llama_tokenizer.add_tokens([QUESTION_TOKEN], special_tokens=True)
+        self.llama_tokenizer.add_tokens([ANSWER_OPTIONS_TOKEN], special_tokens=True)
+        self.llama_tokenizer.add_tokens([CORRECT_ANSWER_TOKEN], special_tokens=True)
+
+        self.QUESTION_ID = self.llama_tokenizer.get_vocab()[QUESTION_TOKEN]
+        self.ANSWER_OPTIONS_ID = self.llama_tokenizer.get_vocab()[ANSWER_OPTIONS_TOKEN]
+        self.CORRECT_ANSWER_ID = self.llama_tokenizer.get_vocab()[CORRECT_ANSWER_TOKEN]
+        #
         
         self.IMAGE_PATCH_TOKEN_ID = self.llama_tokenizer.get_vocab()[DEFAULT_IMAGE_PATCH_TOKEN]
         self.AUDIO_PATCH_TOKEN_ID = self.llama_tokenizer.get_vocab()[DEFAULT_AUDIO_PATCH_TOKEN]
@@ -214,6 +227,9 @@ class VideoLLAMA(Blip2Base):
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
             )
+        #
+        self.llama_model.resize_token_embeddings(len(self.llama_tokenizer))
+        #
 
         for name, param in self.llama_model.named_parameters():
             param.requires_grad = False

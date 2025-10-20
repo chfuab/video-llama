@@ -17,6 +17,7 @@ from video_llama.common.registry import registry
 from video_llama.datasets.data_utils import prepare_sample
 from video_llama.common.eval_metrics import metrics_mapping
 from torch.nn import Softmax
+import re
 
 class BaseTask:
     """ def __init__(self, **kwargs):
@@ -92,21 +93,29 @@ class BaseTask:
             if metrics_name == "accuracy":
 
                 embs = model(samples)["inference_embeds"]
-                output = model.llama_model.generate(
-                    inputs_embeds=embs,
-                    max_new_tokens=1000,
-                    do_sample=True,
-                    temperature=0.6,
-                    top_p=0.8,
-                    repetition_penalty=1.0,
-                    length_penalty=1,
-                )
                 output_final = []
-                for i in range(2):
-                    output_text = model.llama_tokenizer.decode(output[i], add_special_tokens=False)
+                ans_scores = 0
+                batch_size = len(samples["correct_ans_A-E"])
+                for i in range(batch_size):
+                    output = model.llama_model.generate(
+                        inputs_embeds=torch.unsqueeze(embs[i], 0),
+                        max_new_tokens=1000,
+                        do_sample=True,
+                        temperature=0.6,
+                        top_p=0.8,
+                        repetition_penalty=1.0,
+                        length_penalty=1,
+                    )                    
+                    output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
                     output_final.append(output_text)
+                    final_answer = re.findall(r'[A-Z]+', output_text)[-1]
+                    answer_label = samples["correct_ans_A-E"][i]
 
-                return {"accuracy": str(output_final)}
+                    print(f"\nfinal_ans: {final_answer}, answer_label: {answer_label}\n")
+                    if final_answer == answer_label:
+                        ans_scores += 1
+                print(f"\nvalid_step_accuracy: {ans_scores / batch_size}\n")
+                return {"accuracy": ans_scores / batch_size}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
@@ -214,8 +223,6 @@ class BaseTask:
 
             samples = next(data_loader)
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
-            samples_text_b = samples.get("text_b")
-            print(f"\nsamples: {samples_text_b}\n")
             
             eval_output = {}
             # metrics are loss and accuracy
@@ -224,7 +231,6 @@ class BaseTask:
                 eval_output.update(eval_output_temp)
 
             metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
-            print(f"\n{i}\n")
 
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
@@ -233,7 +239,7 @@ class BaseTask:
             dist.barrier()
 
         return {
-            k: meter.global_avg_1()
+            k: meter.global_avg()
             for k, meter in metric_logger.meters.items()
         }, {
             k: meter.value_record

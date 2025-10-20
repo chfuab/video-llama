@@ -68,16 +68,16 @@ class SmoothedValue(object):
     """ @property
     def global_avg(self):
         return self.total / self.count """
-    def global_avg_1(self):
+    """ def global_avg_1(self):
         if len(self.str_record) > 0:
             return str(self.str_record)
         elif self.total > 0.0:
-            return "{:.3f}".format(self.total / self.count)
+            return "{:.3f}".format(self.total / self.count)"""
     def global_avg(self):
         if len(self.str_record) > 0:
             return str(self.str_record)
         elif self.total > 0.0:
-            return self.total / self.count
+            return self.total / self.count 
 
     @property
     def max(self):
@@ -130,15 +130,10 @@ class MetricLogger(object):
         return self.delimiter.join(loss_str)
 
     def global_avg(self):
-        loss_str = []
-        output_string = []
+        output_str = []
         for name, meter in self.meters.items():
-            if name == "loss":
-                loss_str.append("{}: {:.4f}".format(name, meter.global_avg()))
-                return self.delimiter.join(loss_str)
-            elif name == "accuracy":
-                output_string.append(meter.str_record)
-                return "".join(str(output_string))
+            output_str.append("{}: {:.4f}".format(name, meter.global_avg()))
+            return self.delimiter.join(output_str)
 
     def synchronize_between_processes(self):
         for meter in self.meters.values():
