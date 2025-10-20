@@ -95,7 +95,7 @@ class BaseTask:
                 output_final = []
                 for i in range(2):
                     output = model.llama_model.generate(
-                        inputs_embeds=torch.unsqueeze(embs[i]),
+                        inputs_embeds=torch.unsqueeze(embs[i], 0),
                         max_new_tokens=1000,
                         do_sample=True,
                         temperature=0.6,
