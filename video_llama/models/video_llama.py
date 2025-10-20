@@ -227,6 +227,9 @@ class VideoLLAMA(Blip2Base):
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
             )
+        #
+        self.llama_model.resize_token_embeddings(len(self.llama_tokenizer))
+        #
 
         for name, param in self.llama_model.named_parameters():
             param.requires_grad = False
