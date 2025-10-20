@@ -105,10 +105,10 @@ class NextQATrainDataset(BaseDataset):
             sys_prompt = '''You are given video embeddings, a question called real_question, and five options of answers to real_question called real_answers which are indexed by A, B, C, D, E. Your task is to select the correct answer from the real_answers to the real_question according to the video embeddings. Give your answers in terms of the answer index only, that is, A, B, C, D or E.'''
             question_prompt, correct_answer = self._vqa_question(index, is_example=False)
 
-            sys_prompt = f'''<s>[INST]<<SYS>>{sys_prompt}<</SYS>>'''
+            sys_prompt = f'''<s><<SYS>>{sys_prompt}<</SYS>>'''
             question_prompt_a = f'''Example: \nvideo_embeddings: '''
             question_prompt_a_real = f'''<Video>'''
-            question_prompt_b = f'''</Video>{question_prompt}[/INST]'''
+            question_prompt_b = f'''</Video>[INST]{question_prompt}[/INST]'''
 
             # fetch video
             video_path = self._get_video_path(index, is_example=False) 
