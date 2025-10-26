@@ -132,8 +132,7 @@ class MetricLogger(object):
     def global_avg(self):
         output_str = []
         for name, meter in self.meters.items():
-            print(f"\nname: {name}, meter: {meter.global_avg()}\n")
-            # output_str.append("{}: {:.4f}".format(name, meter.global_avg()))
+            output_str.append("{}: {:.4f}".format(name, meter.global_avg()))
             return self.delimiter.join(output_str)
 
     def synchronize_between_processes(self):
