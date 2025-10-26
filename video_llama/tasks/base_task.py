@@ -113,7 +113,7 @@ class BaseTask:
 
                     if final_answer == answer_label:
                         ans_scores += 1
-
+                print(f"\nvalid_step_accuracy: {ans_scores / batch_size}\n")
                 return {"accuracy": ans_scores / batch_size}
                 # return {"accuracy": str(all_string)}
             
