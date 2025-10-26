@@ -65,19 +65,19 @@ class SmoothedValue(object):
         d = torch.tensor(list(self.deque), dtype=torch.float32)
         return d.mean().item()
 
-    @property
+    """ @property
     def global_avg(self):
-        return self.total / self.count
+        return self.total / self.count """
     """ def global_avg_1(self):
         if len(self.str_record) > 0:
             return str(self.str_record)
         elif self.total > 0.0:
-            return "{:.3f}".format(self.total / self.count)
+            return "{:.3f}".format(self.total / self.count)"""
     def global_avg(self):
         if len(self.str_record) > 0:
             return str(self.str_record)
         elif self.total > 0.0:
-            return self.total / self.count """
+            return self.total / self.count 
 
     @property
     def max(self):
