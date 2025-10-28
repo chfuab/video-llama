@@ -118,8 +118,7 @@ class BaseTask:
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
-                return {"loss": 1.02}
-                # return {"loss": float(model(samples)["loss"].item())}
+                return {"loss": float(model(samples)["loss"].item())}
 
 
     def before_evaluation(self, model, dataset, **kwargs):
