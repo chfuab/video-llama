@@ -111,14 +111,15 @@ class BaseTask:
                     final_answer = re.findall(r'[A-Z]+', output_text)[-1]
                     answer_label = samples["correct_ans_A-E"][i]
 
-                    print(f"\nfinal_ans: {final_answer}, answer_label: {answer_label}\n")
                     if final_answer == answer_label:
                         ans_scores += 1
-                print(f"\nvalid_step_accuracy: {ans_scores / batch_size}\n")
+
                 return {"accuracy": ans_scores / batch_size}
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
+                modelsamplesloss = model(samples)["loss"].item()
+                print(f"\nmodelsamplesloss: {modelsamplesloss}\n")
                 return {"loss": float(model(samples)["loss"].item())}
 
 
