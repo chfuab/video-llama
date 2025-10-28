@@ -108,9 +108,8 @@ class BaseTask:
                     )                    
                     output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
                     output_final.append(output_text)
-                    final_answer = re.findall(r'[A-Z]+', output_text)[-1]
+                    final_answer = re.findall(r'(.[(A-Z)]+)', output_text)[-1].split(" ")[-1]
                     answer_label = samples["correct_ans_A-E"][i]
-                    print(f"\noutput_text: {output_text}\n")
 
                     if final_answer == answer_label:
                         ans_scores += 1

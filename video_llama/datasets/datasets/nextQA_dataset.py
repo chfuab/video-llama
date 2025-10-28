@@ -110,7 +110,7 @@ class NextQATrainDataset(BaseDataset):
             question_prompt_a_real = f'''<Video>'''
             question_prompt_b = f'''</Video>{question_prompt}[/INST]'''
 
-            correct_answer_A_to_E = {"a0": "A", "a1": "B", "a2": "C", "a3": "D", "a4": "E"}[correct_answer_idx]
+            correct_answer_A_to_E = {"a0": "(A)", "a1": "(B)", "a2": "(C)", "a3": "(D)", "a4": "(E)"}[correct_answer_idx]
 
             # fetch video
             video_path = self._get_video_path(index, is_example=False) 
