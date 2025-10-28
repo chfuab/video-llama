@@ -119,6 +119,8 @@ class BaseTask:
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
+                loss = model(samples)["loss"]
+                print(f"\nloss: {loss}\n")
                 return {"loss": model(samples)["loss"]}
 
 
