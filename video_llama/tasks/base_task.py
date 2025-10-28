@@ -229,9 +229,8 @@ class BaseTask:
             for name in metrics:
                 eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
                 eval_output.update(eval_output_temp)
-            loss = eval_output['loss']
-            print(f"\nloss type: {type(loss.item())}\n")
-            metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'])
+
+            metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
