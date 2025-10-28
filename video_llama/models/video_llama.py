@@ -708,7 +708,7 @@ class VideoLLAMA(Blip2Base):
             bos_embeds = self.llama_model.model.embed_tokens(bos)
             atts_bos = atts_img[:, :1]
 
-            full_embeds = torch.cat([bos_embeds, sys_embeds, 
+            """ full_embeds = torch.cat([bos_embeds, sys_embeds, 
                                      a_embeds, vid_embeds_e1, text_e1_embeds, 
                                      a_embeds, vid_embeds_e2, text_e2_embeds, 
                                      a_embeds, vid_embeds_e3, text_e3_embeds, 
@@ -717,13 +717,20 @@ class VideoLLAMA(Blip2Base):
                                        text_a_mask, att_vid_e1, text_e1_mask, 
                                        text_a_mask, att_vid_e2, text_e2_mask, 
                                        text_a_mask, att_vid_e3, text_e3_mask, 
-                                       text_a_real_mask, atts_img, text_b_mask, ans_mask], dim=1)
+                                       text_a_real_mask, atts_img, text_b_mask, ans_mask], dim=1) """
 
-            empty = torch.ones([atts_bos.shape[0], 
+            """ empty = torch.ones([atts_bos.shape[0], 
                                 1 + text_sys_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e1[1].size(0) + text_e1_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e2[1].size(0) + text_e2_mask[1].size(0) + 
                                 text_a_mask[1].size(0) + att_vid_e3[1].size(0) + text_e3_mask[1].size(0) + 
+                                text_a_real_mask[1].size(0) + atts_img[1].size(0) + text_b_mask[1].size(0)], dtype=torch.long).to(image.device).fill_(-100) """
+            full_embeds = torch.cat([bos_embeds, sys_embeds, 
+                                     a_real_embeds, img_embeds, b_embeds, ans_embeds], dim=1)
+            full_att_mask = torch.cat([atts_bos, text_sys_mask, 
+                                       text_a_real_mask, atts_img, text_b_mask, ans_mask], dim=1)
+            empty = torch.ones([atts_bos.shape[0], 
+                                1 + text_sys_mask[1].size(0) + 
                                 text_a_real_mask[1].size(0) + atts_img[1].size(0) + text_b_mask[1].size(0)], dtype=torch.long).to(image.device).fill_(-100)
             real_target = ans_ids.masked_fill(
                 ans_ids == self.llama_tokenizer.pad_token_id, -100
