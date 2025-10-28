@@ -119,7 +119,7 @@ class BaseTask:
                 # return {"accuracy": str(all_string)}
             
             elif metrics_name == "loss":
-                return {"loss": model(samples)["loss"]}
+                return {"loss": float(model(samples)["loss"].item())}
 
 
     def before_evaluation(self, model, dataset, **kwargs):
@@ -230,7 +230,7 @@ class BaseTask:
                 eval_output_temp = self.valid_step(model=model, samples=samples, metrics_name=name, model_name=model_name) # load the best checkpoint of the model?
                 eval_output.update(eval_output_temp)
 
-            metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'].item())
+            metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'])
         logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
