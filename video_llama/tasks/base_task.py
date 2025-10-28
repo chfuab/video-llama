@@ -230,17 +230,12 @@ class BaseTask:
                 eval_output.update(eval_output_temp)
 
             metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'])
-        logging_str = "Averaged stats: \n" + str(metric_logger.global_avg())    # getting avg over all batch size of samples in one epoch
+        logging_str = "Averaged stats: \n" + str({k: meter.global_avg() for k, meter in metric_logger.meters.items()})    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
         if is_dist_avail_and_initialized():
             dist.barrier()
 
-        final_result = {
-            k: meter.global_avg()
-            for k, meter in metric_logger.meters.items()
-        }
-        print(f"\nfinal_result: {final_result}\n")
         return {
             k: meter.global_avg()
             for k, meter in metric_logger.meters.items()
