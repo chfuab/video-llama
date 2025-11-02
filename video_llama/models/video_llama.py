@@ -110,9 +110,9 @@ class VideoLLAMA(Blip2Base):
         self.Qformer, self.query_tokens = self.init_Qformer(
             num_query_token, self.visual_encoder.num_features
         )
-        self.Qformer.cls = None
-        self.Qformer.bert.embeddings.word_embeddings = None
-        self.Qformer.bert.embeddings.position_embeddings = None
+        # self.Qformer.cls = None
+        # self.Qformer.bert.embeddings.word_embeddings = None
+        # self.Qformer.bert.embeddings.position_embeddings = None
         # for layer in self.Qformer.bert.encoder.layer:
         #     layer.output = None
         #     layer.intermediate = None
@@ -140,6 +140,8 @@ class VideoLLAMA(Blip2Base):
                 for name, param in layer.intermediate_query.lora.named_parameters():
                     param.requires_grad = True
                 for name, param in layer.output_query.lora.named_parameters():
+                    param.requires_grad = True
+                for name, param in layer.attention.output.lora.named_parameters():
                     param.requires_grad = True
         logging.info('Loading Q-Former Done')
 
@@ -275,9 +277,9 @@ class VideoLLAMA(Blip2Base):
         self.video_Qformer,self.video_query_tokens = self.init_video_Qformer(num_query_token = num_video_query_token,\
             vision_width=self.Qformer.config.hidden_size, num_hidden_layers =2)
 
-        self.video_Qformer.cls = None
-        self.video_Qformer.bert.embeddings.word_embeddings = None
-        self.video_Qformer.bert.embeddings.position_embeddings = None
+        # self.video_Qformer.cls = None
+        # self.video_Qformer.bert.embeddings.word_embeddings = None
+        # self.video_Qformer.bert.embeddings.position_embeddings = None
         # for layer in self.video_Qformer.bert.encoder.layer:
         #     layer.output = None
         #     layer.intermediate = None
@@ -300,6 +302,8 @@ class VideoLLAMA(Blip2Base):
                 for name, param in layer.intermediate.lora.named_parameters():
                     param.requires_grad = True
                 for name, param in layer.output.lora.named_parameters():
+                    param.requires_grad = True
+                for name, param in layer.attention.output.lora.named_parameters():
                     param.requires_grad = True
 
         if frozen_video_Qformer and (not frozen_audio_Qformer):
@@ -402,7 +406,7 @@ class VideoLLAMA(Blip2Base):
                 encoder_attention_mask=image_atts,
                 return_dict=True,
                 is_video_Q_former=False,
-                num_query_part=1,
+                num_query_part=self.num_frames,
             )
 
             # add frame_pos embedding
@@ -421,7 +425,6 @@ class VideoLLAMA(Blip2Base):
             frame_atts = torch.ones(frame_hidden_state.size()[:-1], dtype=torch.long).to(device)
             video_query_tokens = self.video_query_tokens.expand(frame_hidden_state.shape[0], -1, -1)
 
-            print(f"\nframe_hidden_state: {frame_hidden_state.size()}\n")
             video_query_output = self.video_Qformer.bert(
                 query_embeds=video_query_tokens,
                 encoder_hidden_states=frame_hidden_state,
