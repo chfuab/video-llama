@@ -310,8 +310,10 @@ class BertSelfOutput(nn.Module):
         self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.lora = LoRA(config.hidden_size, config.intermediate_size, 32, 1)
+        print(f"\nlora size: {config.hidden_size}, {config.intermediate_size}\n")
 
     def forward(self, hidden_states, input_tensor):
+        print(f"\nhidden_states size: {hidden_states.size()}\n")
         hidden_states = self.dense(hidden_states) + self.lora(hidden_states)
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
