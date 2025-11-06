@@ -136,6 +136,7 @@ class VideoLLAMA(Blip2Base):
             self.all_query_tokens.requires_grad = False
             logging.info("freeze Qformer")
         if use_lora_in_Qformer:
+            self.query_tokens.requires_grad = True
             for layer in self.Qformer.bert.encoder.layer:
                 for name, param in layer.intermediate_query.lora.named_parameters():
                     param.requires_grad = True
