@@ -63,6 +63,7 @@ class RunnerBase:
 
         # self.setup_seeds()
         self.setup_output_dir()
+        self.last_saved_epoch = 0
 
     @property
     def device(self):
@@ -337,7 +338,11 @@ class RunnerBase:
 
     @property
     def resume_ckpt_path(self):
-        return self.config.run_cfg.get("resume_ckpt_path", None)
+        return self.config.run_cfg.get("resume_ckpt_path", False)
+    
+    @property
+    def ckpt_path(self):
+        return self.config.run_cfg.get("ckpt_path", "")
 
     @property
     def train_loader(self):
@@ -360,6 +365,7 @@ class RunnerBase:
     @property
     def allowed_metrics_delta(self):
         return self.config.run_cfg.get("allowed_metrics_delta", None)
+
     
     def setup_output_dir(self):
         lib_root = Path(registry.get_path("library_root"))
@@ -443,8 +449,8 @@ class RunnerBase:
         self.log_config()
 
         # resume from checkpoint if specified
-        if not self.evaluate_only and self.resume_ckpt_path is not None:
-            self._load_checkpoint(self.resume_ckpt_path)
+        if not self.evaluate_only and self.ckpt_path != "":
+            self._load_checkpoint(self.ckpt_path)
 
         window = []
         window_str = []
@@ -467,8 +473,7 @@ class RunnerBase:
                 val_log , record_log = self.eval_epoch(
                     split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch
                 )
-                if cur_epoch % 5 == 0:
-                    self._save_checkpoint(cur_epoch, is_best=False)
+
                 if val_log is not None:
                     self.log_stats(stats=val_log, split_name='eval')
                     if is_main_process():
@@ -516,11 +521,13 @@ class RunnerBase:
                             break
                 else:
                     if not self.evaluate_only:
-                        self._save_checkpoint(cur_epoch, is_best=False)                    
+                        if cur_epoch % 5 == 0:
+                            self._save_checkpoint(cur_epoch, is_best=False)                    
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
                 if not self.evaluate_only:
-                    self._save_checkpoint(cur_epoch, is_best=False)
+                    if cur_epoch % 5 == 0:
+                        self._save_checkpoint(cur_epoch, is_best=False)
 
             if self.evaluate_only:
                 break
@@ -636,7 +643,9 @@ class RunnerBase:
         # TODO consider moving to model.before_evaluation()
         model = self.unwrap_dist_model(self.model)
         if not skip_reload and cur_epoch == "best":
-            model = self._reload_best_model(model)
+            model = self._reload_best_model(model, cur_epoch)
+        elif not skip_reload and cur_epoch != "best":
+            model = self._reload_best_model(model, cur_epoch)
         model.eval()
 
         # results, records = self.task.evaluation(model, data_loader, metrics)
@@ -763,19 +772,22 @@ class RunnerBase:
             "epoch": cur_epoch,
         }
         save_to = os.path.join(
-            self.output_dir,
+            # self.output_dir,
+            self.config.run_cfg.output_dir, 
             "checkpoint_{}.pth".format("best" if is_best else cur_epoch),
         )
         logging.info("Saving checkpoint at epoch {} to {}.".format(cur_epoch, save_to))
         torch.save(save_obj, save_to)
 
-    def _reload_best_model(self, model):
+    def _reload_best_model(self, model, cur_epoch):
         """
         Load the best checkpoint for evaluation.
         """
         # checkpoint_path = os.path.join(self.output_dir, "checkpoint_best.pth")
-        # checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_best.pth")
-        checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "VL_LLaMA_2_7B_Finetuned.pth")
+        if cur_epoch == "best":
+            checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_best.pth")
+        else:
+            checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_{}.pth".format(cur_epoch // 5))
 
         logging.info("Loading checkpoint from {}.".format(checkpoint_path))
         checkpoint = torch.load(checkpoint_path, map_location="cpu")
