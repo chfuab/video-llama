@@ -173,7 +173,7 @@ class VideoLLAMA(Blip2Base):
         self.equip_QFormerAligned = equip_QFormerAligned
         logging.info("Load pretrained QFormerAligned") """
 
-        logging.info('Loading linear projection layer after Q-Former')
+        """ logging.info('Loading linear projection layer after Q-Former')
         self.linear_proj = nn.Linear(self.query_tokens.size()[-1], 1024)        ################################
         if frozen_linear_proj:
             #  todo frozen  llama_proj
@@ -184,7 +184,7 @@ class VideoLLAMA(Blip2Base):
             for name, param in self.linear_proj.named_parameters():
                 param.requires_grad = True
             logging.info('Linear proj is not frozen')
-        logging.info('Loading linear projection layer Done')
+        logging.info('Loading linear projection layer Done') """
 
         logging.info('Loading LLAMA Tokenizer')
         self.llama_tokenizer = LlamaTokenizer.from_pretrained(llama_model, use_fast=False)
