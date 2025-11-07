@@ -79,8 +79,6 @@ class PrefetchLoader(object):
         loader_it = iter(self.loader)
         self.preload(loader_it)
         batch = self.next(loader_it)
-        no_batch = batch is None
-        print(f"\nwhether batch is none: {no_batch}\n")
         while batch is not None:
             is_tuple = isinstance(batch, tuple)
             if is_tuple:
@@ -98,6 +96,7 @@ class PrefetchLoader(object):
     def preload(self, it):
         try:
             self.batch = next(it)
+            print(f"\nwith batch\n")
         except StopIteration:
             print(f"\nfuck your mother\n")
             self.batch = None
