@@ -206,7 +206,7 @@ class BaseTask:
                 k: meter.value_record
                 for k, meter in metric_logger.meters.items()
             } """
-        data_loader = iter(data_loader)
+
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
             data_loader = iter(data_loader)

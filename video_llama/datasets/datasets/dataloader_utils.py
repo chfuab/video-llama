@@ -37,10 +37,10 @@ class MultiIterLoader:
         self.loaders = loaders
         self.ratios = ratios
         ######
-        self.loaders_it = [iter(loader) for loader in loaders]
+        # self.loaders_it = [iter(loader) for loader in loaders]
         
 
-    def __iter__(self):
+    """ def __iter__(self):
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         selected_loader = self.loaders[loader_idx]
         batch = next(selected_loader)
@@ -49,7 +49,7 @@ class MultiIterLoader:
             yield batch
             ldr_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
             sel_ldr = self.loaders[ldr_idx]
-            batch = next(sel_ldr)
+            batch = next(sel_ldr) """
 
 
     def __next__(self):
@@ -75,7 +75,7 @@ class PrefetchLoader(object):
     def __init__(self, loader):
         self.loader = loader
         self.stream = torch.cuda.Stream()
-        self.ldr_it = iter(self.loader)
+        # self.ldr_it = iter(self.loader)
 
     def __iter__(self):
         loader_it = iter(self.loader)
@@ -131,8 +131,8 @@ class PrefetchLoader(object):
     def __getattr__(self, name):
         method = self.loader.__getattribute__(name)
         return method
-    def __next__(self):
-        return next(self.ldr_it)
+    """ def __next__(self):
+        return next(self.ldr_it) """
     
     """ def __next__(self):
         self.preload(iter(self.loader))
