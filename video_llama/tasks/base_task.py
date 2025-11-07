@@ -206,8 +206,8 @@ class BaseTask:
                 k: meter.value_record
                 for k, meter in metric_logger.meters.items()
             } """
-
-        print(f"\nis dataloader in eval has __next__?: {hasattr(data_loader, "__next__")}\n")
+        does_dataloader_has_next = hasattr(data_loader, "__next__")
+        print(f"\nis dataloader in eval has __next__?: {does_dataloader_has_next}\n")
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
             data_loader = iter(data_loader)
@@ -345,7 +345,8 @@ class BaseTask:
         training stops after #iters_per_epoch iterations.
         """
         use_amp = scaler is not None
-        print(f"\nis dataloader in train has __next__?: {hasattr(data_loader, "__next__")}\n")
+        does_dataloader_has_next = hasattr(data_loader, "__next__")
+        print(f"\nis dataloader in train has __next__?: {does_dataloader_has_next}\n")
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
             data_loader = iter(data_loader)
