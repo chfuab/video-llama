@@ -95,6 +95,7 @@ class PrefetchLoader(object):
 
     def preload(self, it):
         try:
+            print(f"\nwith data\n")
             self.batch = next(it)
         except StopIteration:
             print(f"\nfuck your mother\n")
