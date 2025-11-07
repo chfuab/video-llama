@@ -97,6 +97,7 @@ class PrefetchLoader(object):
         try:
             self.batch = next(it)
         except StopIteration:
+            print(f"\nfuck your mother\n")
             self.batch = None
             return
         # if record_stream() doesn't work, another option is to make sure
