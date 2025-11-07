@@ -59,10 +59,7 @@ class MultiIterLoader:
         return next(self.loaders[loader_idx])
     
     def __len__(self):
-        length = 0
-        for loader in self.loaders:
-            length += len(loader)
-        return length
+        return
 
 
 class PrefetchLoader(object):
