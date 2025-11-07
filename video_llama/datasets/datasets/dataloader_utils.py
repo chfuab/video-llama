@@ -23,10 +23,11 @@ class MultiIterLoader:
 
     def __init__(self, loaders, ratios=None):
         # assert all loaders has __next__ method
-        for loader in loaders:
+        """ for loader in loaders:
             assert hasattr(
                 loader, "__next__"
-            ), "Loader {} has no __next__ method.".format(loader)
+            ), "Loader {} has no __next__ method.".format(loader) """
+        # loaders = [iter(loader) for loader in loaders]
 
         if ratios is None:
             ratios = [1.0] * len(loaders)
@@ -34,13 +35,14 @@ class MultiIterLoader:
             assert len(ratios) == len(loaders)
             ratios = [float(ratio) / sum(ratios) for ratio in ratios]
 
+        # self.loaders = [iter(loader) for loader in loaders]
         self.loaders = loaders
         self.ratios = ratios
         ######
-        self.loaders_it = [iter(loader) for loader in loaders]
-        
+        # self.loaders_it = [iter(loader) for loader in loaders]
+        self.ldrs = self.loaders
 
-    def __iter__(self):
+    """ def __iter__(self):
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         selected_loader = self.loaders[loader_idx]
         batch = next(selected_loader)
@@ -49,21 +51,20 @@ class MultiIterLoader:
             yield batch
             ldr_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
             sel_ldr = self.loaders[ldr_idx]
-            batch = next(sel_ldr)
+            batch = next(sel_ldr) """
 
 
     def __next__(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        return next(self.loaders[loader_idx])
+        return next(self.ldrs[loader_idx])
     
-    def __len__(self):
-        length = 0
-        for loader in self.loaders:
-            length += len(loader)
-        return length
-
-
+    """ def __len__(self):
+        return """
+    def reset(self):
+        self.ldrs = [iter(loader) for loader in self.loaders]
+        
+        
 class PrefetchLoader(object):
     """
     Modified from https://github.com/ChenRocks/UNITER.
@@ -75,7 +76,7 @@ class PrefetchLoader(object):
     def __init__(self, loader):
         self.loader = loader
         self.stream = torch.cuda.Stream()
-        self.ldr_it = iter(self.loader)
+        # self.ldr_it = iter(self.loader)
 
     def __iter__(self):
         loader_it = iter(self.loader)
@@ -98,7 +99,9 @@ class PrefetchLoader(object):
     def preload(self, it):
         try:
             self.batch = next(it)
+            print(f"\nwith batch\n")
         except StopIteration:
+            print(f"\nfuck your mother\n")
             self.batch = None
             return
         # if record_stream() doesn't work, another option is to make sure
@@ -131,8 +134,8 @@ class PrefetchLoader(object):
     def __getattr__(self, name):
         method = self.loader.__getattribute__(name)
         return method
-    def __next__(self):
-        return next(self.ldr_it)
+    """ def __next__(self):
+        return """
     
     """ def __next__(self):
         self.preload(iter(self.loader))

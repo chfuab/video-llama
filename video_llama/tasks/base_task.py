@@ -207,7 +207,6 @@ class BaseTask:
                 for k, meter in metric_logger.meters.items()
             } """
 
-
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
             data_loader = iter(data_loader)
@@ -215,7 +214,7 @@ class BaseTask:
         metric_logger = MetricLogger(delimiter="  ")
         metric_logger.add_meter('accuracy', SmoothedValue(window_size=1, fmt="{value:.4f}"))
         metric_logger.add_meter('loss', SmoothedValue(window_size=1, fmt="{value:.4f}"))
-
+        data_loader.reset()
         for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
             if i >= iters_per_epoch:
                 break
@@ -230,11 +229,13 @@ class BaseTask:
                 eval_output.update(eval_output_temp)
 
             metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'])
+
+
         logging_str = "Averaged stats: \n" + str({k: meter.global_avg() for k, meter in metric_logger.meters.items()})    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
-        """ if is_dist_avail_and_initialized():
-            dist.barrier() """
+        if is_dist_avail_and_initialized():
+            dist.barrier()
 
         return {
             k: meter.global_avg()
