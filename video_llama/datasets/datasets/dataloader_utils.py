@@ -27,7 +27,7 @@ class MultiIterLoader:
             assert hasattr(
                 loader, "__next__"
             ), "Loader {} has no __next__ method.".format(loader) """
-        loaders = [iter(loader) for loader in loaders]
+        # loaders = [iter(loader) for loader in loaders]
 
         if ratios is None:
             ratios = [1.0] * len(loaders)
