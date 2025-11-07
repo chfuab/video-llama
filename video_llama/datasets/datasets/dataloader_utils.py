@@ -23,10 +23,10 @@ class MultiIterLoader:
 
     def __init__(self, loaders, ratios=None):
         # assert all loaders has __next__ method
-        for loader in loaders:
+        """ for loader in loaders:
             assert hasattr(
                 loader, "__next__"
-            ), "Loader {} has no __next__ method.".format(loader)
+            ), "Loader {} has no __next__ method.".format(loader) """
 
         if ratios is None:
             ratios = [1.0] * len(loaders)
@@ -131,8 +131,8 @@ class PrefetchLoader(object):
     def __getattr__(self, name):
         method = self.loader.__getattribute__(name)
         return method
-    def __next__(self):
-        return
+    """ def __next__(self):
+        return """
     
     """ def __next__(self):
         self.preload(iter(self.loader))
