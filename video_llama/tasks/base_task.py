@@ -207,7 +207,7 @@ class BaseTask:
                 for k, meter in metric_logger.meters.items()
             } """
 
-
+        print(f"\ndataloader in eval is: {data_loader}\n")
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
             data_loader = iter(data_loader)
@@ -233,8 +233,8 @@ class BaseTask:
         logging_str = "Averaged stats: \n" + str({k: meter.global_avg() for k, meter in metric_logger.meters.items()})    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
-        """ if is_dist_avail_and_initialized():
-            dist.barrier() """
+        if is_dist_avail_and_initialized():
+            dist.barrier()
 
         return {
             k: meter.global_avg()
@@ -345,7 +345,7 @@ class BaseTask:
         training stops after #iters_per_epoch iterations.
         """
         use_amp = scaler is not None
-
+        print(f"\ndataloader in train is: {data_loader}\n")
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
             data_loader = iter(data_loader)
