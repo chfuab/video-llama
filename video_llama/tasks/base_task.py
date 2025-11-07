@@ -233,8 +233,8 @@ class BaseTask:
         logging_str = "Averaged stats: \n" + str({k: meter.global_avg() for k, meter in metric_logger.meters.items()})    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
 
-        if is_dist_avail_and_initialized():
-            dist.barrier()
+        """ if is_dist_avail_and_initialized():
+            dist.barrier() """
 
         return {
             k: meter.global_avg()
