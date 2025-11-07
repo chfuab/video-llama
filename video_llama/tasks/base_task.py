@@ -209,7 +209,6 @@ class BaseTask:
 
         if not hasattr(data_loader, "__next__"):
             # convert to iterator if not already
-            print(f"\nis this run?\n")
             data_loader = iter(data_loader)
 
         metric_logger = MetricLogger(delimiter="  ")
