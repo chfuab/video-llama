@@ -35,8 +35,8 @@ class MultiIterLoader:
             assert len(ratios) == len(loaders)
             ratios = [float(ratio) / sum(ratios) for ratio in ratios]
 
-        # self.loaders = [iter(loader) for loader in loaders]
-        self.loaders = loaders
+        self.loaders = [iter(loader) for loader in loaders]
+        # self.loaders = loaders
         self.ratios = ratios
         ######
         # self.loaders_it = [iter(loader) for loader in loaders]
