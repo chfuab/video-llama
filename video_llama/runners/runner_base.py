@@ -521,12 +521,12 @@ class RunnerBase:
                             break
                 else:
                     if not self.evaluate_only:
-                        if cur_epoch % 5 == 0:
+                        if cur_epoch % 5 == 4:
                             self._save_checkpoint(cur_epoch, is_best=False)                    
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
                 if not self.evaluate_only:
-                    if cur_epoch % 5 == 0:
+                    if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False)
 
             if self.evaluate_only:
