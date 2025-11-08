@@ -520,7 +520,8 @@ class RunnerBase:
                             self.log_stats(stats=record_log, split_name='eval') """
                         if cur_epoch % 5 == 4:
                             self._save_checkpoint(cur_epoch, is_best=False)
-
+                    if cur_epoch % 5 == 4:
+                        self._save_checkpoint(cur_epoch, is_best=False)
                 else:
                     if not self.evaluate_only:
                         if cur_epoch % 5 == 4:
