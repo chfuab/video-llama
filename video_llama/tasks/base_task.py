@@ -108,7 +108,11 @@ class BaseTask:
                     )                    
                     output_text = model.llama_tokenizer.decode(output[0], add_special_tokens=False)
                     output_final.append(output_text)
-                    final_answer = re.findall(r'\([(A-Z)]+\)', output_text)[-1].split(" ")[-1]
+                    try:
+                        final_answer = re.findall(r'\([(A-Z)]+\)', output_text)[-1].split(" ")[-1]
+                    except IndexError:
+                        final_answer = "Z"
+                    
                     answer_label = samples["correct_ans_A-E"][i]
 
                     if final_answer == answer_label:
@@ -214,6 +218,7 @@ class BaseTask:
         metric_logger = MetricLogger(delimiter="  ")
         metric_logger.add_meter('accuracy', SmoothedValue(window_size=1, fmt="{value:.4f}"))
         metric_logger.add_meter('loss', SmoothedValue(window_size=1, fmt="{value:.4f}"))
+
         data_loader.reset()
         for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
             if i >= iters_per_epoch:
@@ -385,6 +390,15 @@ class BaseTask:
 
             lr_scheduler.step(cur_epoch=inner_epoch, cur_step=i)
 
+            ###
+            initial_params = {}
+            for name, param in model.video_Qformer.bert.encoder.layer.named_parameters():
+                initial_params[name] = param.data.clone()
+            for name, param in model.Qformer.bert.encoder.layer.named_parameters():
+                initial_params[name] = param.data.clone()
+            ###
+
+
             with torch.cuda.amp.autocast(enabled=use_amp):
                 loss = self.train_step(model=model, samples=samples)
 
@@ -402,6 +416,19 @@ class BaseTask:
                 else:    
                     optimizer.step()
                 optimizer.zero_grad()
+
+            ###
+            for name, param in model.video_Qformer.bert.encoder.layer.named_parameters():
+                if not torch.equal(initial_params[name], param.data):
+                    print(f"Parameter '{name}' has been updated.")
+                else:
+                    print(f"Parameter '{name}' has not been updated.")
+            for name, param in model.Qformer.bert.encoder.layer.named_parameters():
+                if not torch.equal(initial_params[name], param.data):
+                    print(f"Parameter '{name}' has been updated.")
+                else:
+                    print(f"Parameter '{name}' has not been updated.")
+            ###
 
             metric_logger.update(loss=loss.item())
             metric_logger.update(lr=optimizer.param_groups[0]["lr"])
