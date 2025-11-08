@@ -96,7 +96,7 @@ class BaseTask:
                 output_final = []
                 ans_scores = 0
                 batch_size = len(samples["correct_ans_A-E"])
-                for i in range(batch_size):
+                """ for i in range(batch_size):
                     output = model.llama_model.generate(
                         inputs_embeds=torch.unsqueeze(embs[i], 0),
                         max_new_tokens=1000,
@@ -116,7 +116,7 @@ class BaseTask:
                     answer_label = samples["correct_ans_A-E"][i]
 
                     if final_answer == answer_label:
-                        ans_scores += 1
+                        ans_scores += 1 """
 
                 return {"accuracy": ans_scores / batch_size}
                 # return {"accuracy": str(all_string)}
