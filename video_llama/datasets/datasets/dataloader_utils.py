@@ -40,6 +40,7 @@ class MultiIterLoader:
         self.ratios = ratios
         ######
         # self.loaders_it = [iter(loader) for loader in loaders]
+        self.ldrs = self.loaders
 
     """ def __iter__(self):
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
@@ -56,16 +57,14 @@ class MultiIterLoader:
     def __next__(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        return next(iter(self.loaders[loader_idx]))
+        return next(self.ldrs[loader_idx])
     
     """ def __len__(self):
         return """
-    def reset(self, i, iters_per_epoch):
-        if i >= iters_per_epoch:
-            self.new_epoch = True
-        else:
-            self.new_epoch = False
-
+    def reset(self):
+        self.ldrs = [iter(loader) for loader in self.loaders]
+        
+        
 class PrefetchLoader(object):
     """
     Modified from https://github.com/ChenRocks/UNITER.

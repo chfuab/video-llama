@@ -214,10 +214,9 @@ class BaseTask:
         metric_logger = MetricLogger(delimiter="  ")
         metric_logger.add_meter('accuracy', SmoothedValue(window_size=1, fmt="{value:.4f}"))
         metric_logger.add_meter('loss', SmoothedValue(window_size=1, fmt="{value:.4f}"))
-
+        data_loader.reset()
         for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
             if i >= iters_per_epoch:
-                # data_loader.reset(i, iters_per_epoch)
                 break
 
             samples = next(data_loader)
