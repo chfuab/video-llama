@@ -63,7 +63,7 @@ class MultiIterLoader:
         return """
     def reset(self):
         self.ldrs = [iter(loader) for loader in self.loaders]
-        
+
         
 class PrefetchLoader(object):
     """
@@ -134,14 +134,6 @@ class PrefetchLoader(object):
     def __getattr__(self, name):
         method = self.loader.__getattribute__(name)
         return method
-    """ def __next__(self):
-        return """
-    
-    """ def __next__(self):
-        self.preload(iter(self.loader))
-        batch = self.next(iter(self.loader))
-        return batch """
-
 
 def record_cuda_stream(batch):
     if isinstance(batch, torch.Tensor):
