@@ -477,6 +477,7 @@ class RunnerBase:
                 if val_log is not None:
                     self.log_stats(stats=val_log, split_name='eval')
                     if is_main_process():
+                        print("\nmain_process\n")
                         assert (agg_metrics in val_log), "the selected agg_metrics is not defined in evaluation"
                         agg_metrics_value = val_log[agg_metrics]
 
@@ -507,6 +508,7 @@ class RunnerBase:
                         if cnt > 0:
                             window.pop(0)
                             # window.append(agg_metrics_value)
+                            print("\nE\n")
                             continue
                         else:
                             best_epoch, best_agg_metric = cur_epoch, agg_metrics_value
@@ -519,12 +521,15 @@ class RunnerBase:
                             """ record_log = [float(val) for val in record_log['loss']]
                             self.log_stats(stats=record_log, split_name='eval') """
                         if cur_epoch % 5 == 4:
+                            print("\nA\n")
                             self._save_checkpoint(cur_epoch, is_best=False)
                     if cur_epoch % 5 == 4:
+                        print("\nB\n")
                         self._save_checkpoint(cur_epoch, is_best=False)
                 else:
                     if not self.evaluate_only:
                         if cur_epoch % 5 == 4:
+                            print("\nC\n")
                             self._save_checkpoint(cur_epoch, is_best=False)                    
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
