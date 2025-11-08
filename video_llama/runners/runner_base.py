@@ -828,9 +828,9 @@ class RunnerBase:
         state_dict = checkpoint["model"]
         self.unwrap_dist_model(self.model).load_state_dict(state_dict, strict=False)
 
-        self.optimizer.load_state_dict(checkpoint["optimizer"])
+        self.optimizer.load_state_dict(checkpoint["optimizer"], strict=False)
         if self.scaler and "scaler" in checkpoint:
-            self.scaler.load_state_dict(checkpoint["scaler"])
+            self.scaler.load_state_dict(checkpoint["scaler"], strict=False)
 
         self.start_epoch = checkpoint["epoch"] + 1
         logging.info("Resume checkpoint from {}".format(url_or_filename))
