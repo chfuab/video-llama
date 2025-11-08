@@ -479,7 +479,7 @@ class RunnerBase:
 
                     if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False)
-                        
+
                     if is_main_process():
                         assert (agg_metrics in val_log), "the selected agg_metrics is not defined in evaluation"
                         agg_metrics_value = val_log[agg_metrics]
@@ -652,7 +652,7 @@ class RunnerBase:
         model = self.unwrap_dist_model(self.model)
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model, cur_epoch)
-        elif not skip_reload and cur_epoch != "best" and (cur_epoch // 5 > 0):
+        elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0):
             model = self._reload_best_model(model, cur_epoch - 1)
         model.eval()
 
