@@ -391,9 +391,9 @@ class BaseTask:
             lr_scheduler.step(cur_epoch=inner_epoch, cur_step=i)
 
             ###
-            initial_params = {}
+            """ initial_params = {}
             for name, param in model.named_parameters():
-                initial_params[name] = param.data.clone()
+                initial_params[name] = param.data.clone() """
             ###
 
 
@@ -416,11 +416,11 @@ class BaseTask:
                 optimizer.zero_grad()
 
             ###
-            for name, param in model.named_parameters():
+            """ for name, param in model.named_parameters():
                 if not torch.equal(initial_params[name], param.data):
                     print(f"Parameter '{name}' has been updated.")
                 else:
-                    print(f"Parameter '{name}' has not been updated.")
+                    print(f"Parameter '{name}' has not been updated.") """
             ###
 
             metric_logger.update(loss=loss.item())
