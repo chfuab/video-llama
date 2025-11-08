@@ -63,7 +63,7 @@ run:
   warmup_lr: 1e-6
 
   weight_decay: 0.05
-  max_epoch: 5
+  max_epoch: 10
   batch_size_train: 2 #32
   batch_size_eval: 2 #32
   num_workers: 1 #8
@@ -75,7 +75,7 @@ run:
 
   amp: True
   # resume_ckpt_path: True
-  # ckpt_path: "output/videollama_interaction/checkpoint_5.pth"
+  ckpt_path: "output/videollama_interaction/VL_LLaMA_2_7B_Finetuned.pth"
 
   evaluate: False 
   train_splits: ["train"]

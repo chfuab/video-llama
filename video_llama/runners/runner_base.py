@@ -476,6 +476,10 @@ class RunnerBase:
 
                 if val_log is not None:
                     self.log_stats(stats=val_log, split_name='eval')
+
+                    if cur_epoch % 5 == 4:
+                        self._save_checkpoint(cur_epoch, is_best=False)
+
                     if is_main_process():
                         assert (agg_metrics in val_log), "the selected agg_metrics is not defined in evaluation"
                         agg_metrics_value = val_log[agg_metrics]
@@ -507,6 +511,7 @@ class RunnerBase:
                         if cnt > 0:
                             window.pop(0)
                             # window.append(agg_metrics_value)
+
                             continue
                         else:
                             best_epoch, best_agg_metric = cur_epoch, agg_metrics_value
@@ -515,18 +520,21 @@ class RunnerBase:
                                 self._save_checkpoint(cur_epoch, is_best=True)
 
                             val_log.update({"best_epoch": best_epoch, "best_agg_metric": best_agg_metric})
-
+                            
                             """ record_log = [float(val) for val in record_log['loss']]
                             self.log_stats(stats=record_log, split_name='eval') """
-                            break
+                        if cur_epoch % 5 == 4:
+                            self._save_checkpoint(cur_epoch, is_best=False)
+                    if cur_epoch % 5 == 4:
+                        self._save_checkpoint(cur_epoch, is_best=False)
                 else:
                     if not self.evaluate_only:
-                        if cur_epoch % 5 == 0:
+                        if cur_epoch % 5 == 4:
                             self._save_checkpoint(cur_epoch, is_best=False)                    
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
                 if not self.evaluate_only:
-                    if cur_epoch % 5 == 0:
+                    if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False)
 
             if self.evaluate_only:
@@ -644,8 +652,8 @@ class RunnerBase:
         model = self.unwrap_dist_model(self.model)
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model, cur_epoch)
-        elif not skip_reload and cur_epoch != "best" and (cur_epoch // 5 != 0):
-            model = self._reload_best_model(model, cur_epoch)
+        elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
+            model = self._reload_best_model(model, cur_epoch - 1)
         model.eval()
 
         # results, records = self.task.evaluation(model, data_loader, metrics)
@@ -779,15 +787,15 @@ class RunnerBase:
         logging.info("Saving checkpoint at epoch {} to {}.".format(cur_epoch, save_to))
         torch.save(save_obj, save_to)
 
-    def _reload_best_model(self, model, cur_epoch):
+    def _reload_best_model(self, model, epoch):
         """
         Load the best checkpoint for evaluation.
         """
         # checkpoint_path = os.path.join(self.output_dir, "checkpoint_best.pth")
-        if cur_epoch == "best":
+        if epoch == "best":
             checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_best.pth")
         else:
-            checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_{}.pth".format(cur_epoch // 5))
+            checkpoint_path = os.path.join(self.config.run_cfg.output_dir, "checkpoint_{}.pth".format(epoch))
 
         logging.info("Loading checkpoint from {}.".format(checkpoint_path))
         checkpoint = torch.load(checkpoint_path, map_location="cpu")
@@ -811,18 +819,18 @@ class RunnerBase:
             cached_file = download_cached_file(
                 url_or_filename, check_hash=False, progress=True
             )
-            checkpoint = torch.load(cached_file, map_location=self.device, strict=False)
+            checkpoint = torch.load(cached_file, map_location=self.device)
         elif os.path.isfile(url_or_filename):
-            checkpoint = torch.load(url_or_filename, map_location=self.device, strict=False)
+            checkpoint = torch.load(url_or_filename, map_location=self.device)
         else:
             raise RuntimeError("checkpoint url or path is invalid")
 
         state_dict = checkpoint["model"]
-        self.unwrap_dist_model(self.model).load_state_dict(state_dict)
+        self.unwrap_dist_model(self.model).load_state_dict(state_dict, strict=False)
 
-        self.optimizer.load_state_dict(checkpoint["optimizer"])
-        if self.scaler and "scaler" in checkpoint:
-            self.scaler.load_state_dict(checkpoint["scaler"])
+        # self.optimizer.load_state_dict(checkpoint["optimizer"])
+        #  if self.scaler and "scaler" in checkpoint:
+        #     self.scaler.load_state_dict(checkpoint["scaler"])
 
         self.start_epoch = checkpoint["epoch"] + 1
         logging.info("Resume checkpoint from {}".format(url_or_filename))
