@@ -59,8 +59,11 @@ class MultiIterLoader:
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
         return next(self.loaders[loader_idx])
     
-"""     def __len__(self):
+    """ def __len__(self):
         return """
+    
+    def reset(self):
+        self.loaders = [iter(loader) for loader in self.loaders]
 
 
 class PrefetchLoader(object):
