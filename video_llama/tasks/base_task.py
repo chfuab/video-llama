@@ -217,7 +217,7 @@ class BaseTask:
 
         for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
             if i >= iters_per_epoch:
-                data_loader.reset()
+                data_loader.reset(i, iters_per_epoch)
                 break
 
             samples = next(data_loader)

@@ -40,7 +40,7 @@ class MultiIterLoader:
         self.ratios = ratios
         ######
         # self.loaders_it = [iter(loader) for loader in loaders]
-        
+        self.new_epoch = False
 
     """ def __iter__(self):
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
@@ -57,11 +57,18 @@ class MultiIterLoader:
     def __next__(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        return next(iter(self.loaders[loader_idx]))
+        if self.new_epoch:
+            return next(iter(self.loaders[loader_idx]))
+        else:
+            return next(self.loaders[loader_idx])
     
     """ def __len__(self):
         return """
-
+    def reset(self, i, iters_per_epoch):
+        if i >= iters_per_epoch:
+            self.new_epoch = True
+        else:
+            self.new_epoch = False
 
 class PrefetchLoader(object):
     """
