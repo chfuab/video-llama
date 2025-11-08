@@ -35,12 +35,11 @@ class MultiIterLoader:
             assert len(ratios) == len(loaders)
             ratios = [float(ratio) / sum(ratios) for ratio in ratios]
 
-        self.loaders = [iter(loader) for loader in loaders]
-        # self.loaders = loaders
+        # self.loaders = [iter(loader) for loader in loaders]
+        self.loaders = loaders
         self.ratios = ratios
         ######
         # self.loaders_it = [iter(loader) for loader in loaders]
-        self.new_epoch = False
 
     """ def __iter__(self):
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
@@ -57,10 +56,7 @@ class MultiIterLoader:
     def __next__(self):
         # random sample from each loader by ratio
         loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
-        if self.new_epoch:
-            return next(iter(self.loaders[loader_idx]))
-        else:
-            return next(self.loaders[loader_idx])
+        return next(iter(self.loaders[loader_idx]))
     
     """ def __len__(self):
         return """
