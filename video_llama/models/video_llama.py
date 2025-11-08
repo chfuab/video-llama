@@ -144,6 +144,8 @@ class VideoLLAMA(Blip2Base):
                     param.requires_grad = True
                 for name, param in layer.attention.output.lora.named_parameters():
                     param.requires_grad = True
+                for name, param in layer.crossattention.output.lora.named_parameters():
+                    param.requires_grad = True
         logging.info('Loading Q-Former Done')
 
         """ if equip_QFormerAligned:
@@ -305,6 +307,8 @@ class VideoLLAMA(Blip2Base):
                 for name, param in layer.output.lora.named_parameters():
                     param.requires_grad = True
                 for name, param in layer.attention.output.lora.named_parameters():
+                    param.requires_grad = True
+                for name, param in layer.crossattention.output.lora.named_parameters():
                     param.requires_grad = True
 
         if frozen_video_Qformer and (not frozen_audio_Qformer):
