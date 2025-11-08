@@ -217,6 +217,7 @@ class BaseTask:
 
         for i in metric_logger.log_every(range(iters_per_epoch), print_freq, header):
             if i >= iters_per_epoch:
+                data_loader.reset()
                 break
 
             samples = next(data_loader)
@@ -230,7 +231,6 @@ class BaseTask:
 
             metric_logger.update(accuracy=eval_output['accuracy'], loss=eval_output['loss'])
 
-        data_loader.reset()
 
         logging_str = "Averaged stats: \n" + str({k: meter.global_avg() for k, meter in metric_logger.meters.items()})    # getting avg over all batch size of samples in one epoch
         logging.info(logging_str)
