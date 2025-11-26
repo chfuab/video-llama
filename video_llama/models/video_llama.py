@@ -137,6 +137,9 @@ class VideoLLAMA(Blip2Base):
             logging.info("freeze Qformer")
         if use_lora_in_Qformer:
             self.query_tokens.requires_grad = True
+            ###
+            self.all_query_tokens.requires_grad = True
+            ###
             for layer in self.Qformer.bert.encoder.layer:
                 for name, param in layer.intermediate_query.lora.named_parameters():
                     param.requires_grad = True
@@ -397,7 +400,7 @@ class VideoLLAMA(Blip2Base):
             # encode_videoQformer_visual self.visual_encoder: torch.Size([16, 257, 1408]) 
             # image_embeds.size() is torch.Size([16, 257, 1408])
             # change image_embeds shape into b (t q) h:
-            image_embeds = einops.rearrange(image_embeds, '(b t) q h -> b t q h', b=2, t=8)
+            image_embeds = einops.rearrange(image_embeds, '(b t) q h -> b t q h', b=batch_size, t=8)
             image_embeds = einops.rearrange(image_embeds, 'b t q h -> b (t q) h')
             
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
