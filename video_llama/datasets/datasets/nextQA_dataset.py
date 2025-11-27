@@ -53,7 +53,7 @@ class NextQATrainDataset(BaseDataset):
 
         df = pd.read_csv(os.path.join(ann_root, "anno.csv"))
         df_example = pd.read_csv(os.path.join(ann_root, "text_data_examples.csv"))
-        video_src_folder = os.path.join(vis_root, "nextqa-video")
+        video_src_folder = os.path.join(vis_root, "nextqa-video/NExTVideo")
         video_des_folder = os.path.join(vis_root, "nextqa-video-extracted")
 
         self.video_src_folder = video_src_folder
