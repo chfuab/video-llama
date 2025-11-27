@@ -64,11 +64,11 @@ run:
 
   weight_decay: 0.05
   max_epoch: 25
-  batch_size_train: 64 #32
-  batch_size_eval: 64 #32
+  batch_size_train: 32 #32
+  batch_size_eval: 32 #32
   num_workers: 1 #8
   warmup_steps: 2500
-  iters_per_epoch: 500 #2500
+  iters_per_epoch: 1000 #2500
 
   seed: 42
   output_dir: "output/videollama_interaction"
@@ -92,4 +92,4 @@ run:
   valid_splits: ["eval"]
   test_splits: ["eval"]
   evaluate_metrics: ["loss", "accuracy"]
-  iters_per_epoch_eval: 80
+  iters_per_epoch_eval: 160
