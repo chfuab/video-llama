@@ -92,4 +92,4 @@ run:
   valid_splits: ["eval"]
   test_splits: ["eval"]
   evaluate_metrics: ["loss", "accuracy"]
-  iters_per_epoch_eval: 320
+  iters_per_epoch_eval: 300
