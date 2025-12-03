@@ -478,6 +478,10 @@ class RunnerBase:
 
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
+                    self._save_checkpoint(cur_epoch, is_best=False)
+                    
+                    val_log.update({"cur_epoch": cur_epoch})
+                    self.log_stats(stats=val_log, split_name='eval')
 
                     if is_main_process():
                         assert (agg_metrics in val_log), "the selected agg_metrics is not defined in evaluation"
@@ -510,8 +514,7 @@ class RunnerBase:
                         if cnt > 0:
                             window.pop(0)
                             # window.append(agg_metrics_value)
-                            self._save_checkpoint(cur_epoch, is_best=False)
-                            self.log_stats(stats=val_log, split_name='eval')
+
                             continue
                         else:
                             best_epoch, best_agg_metric = cur_epoch, agg_metrics_value
