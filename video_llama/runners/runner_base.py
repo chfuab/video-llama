@@ -33,6 +33,7 @@ from video_llama.datasets.datasets.dataloader_utils import (
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader, DistributedSampler
 from pprint import pprint
+from copy import deepcopy
 
 @registry.register_runner("runner_base")
 class RunnerBase:
@@ -478,6 +479,7 @@ class RunnerBase:
 
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
+
                     self._save_checkpoint(cur_epoch, is_best=False)
                     
                     val_log.update({"cur_epoch": cur_epoch})
@@ -654,11 +656,35 @@ class RunnerBase:
         # TODO In validation, you need to compute loss as well as metrics
         # TODO consider moving to model.before_evaluation()
         model = self.unwrap_dist_model(self.model)
+
+        ###
+        state_dict_orig = deepcopy(model.state_dict())
+        orig_keys = state_dict_orig.keys()
+        ###
+
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model, cur_epoch)
         elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
             model = self._reload_best_model(model, cur_epoch - 1)
         model.eval()
+
+        ###
+        state_dict_after = model.state_dict()
+        after_keys= state_dict_after.keys()
+        ###
+
+        ###
+        # compare state_dict keys:
+        if orig_keys == after_keys:
+            print("\n Keys are the same.\n")
+        else:
+            print("\n Keys are different.\n")
+        # compare state_dict contents:
+        for k in after_keys:
+            if not torch.equal(state_dict_orig[k], state_dict_after[k]):
+                print(k)
+        ###
+
 
         # results, records = self.task.evaluation(model, data_loader, metrics)
 
