@@ -678,7 +678,9 @@ class RunnerBase:
         else:
             print("\n Keys are different.\n")
         # compare state_dict contents:
-        
+        for k in after_keys:
+            if not torch.equal(state_dict_orig[k], state_dict_after[k]):
+                print(k)
         ###
 
 
