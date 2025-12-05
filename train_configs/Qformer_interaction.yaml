@@ -75,7 +75,8 @@ run:
 
   amp: True
   # resume_ckpt_path: True
-  ckpt_path: "output/videollama_interaction/VL_LLaMA_2_7B_Finetuned.pth"
+  # ckpt_path: "output/videollama_interaction/VL_LLaMA_2_7B_Finetuned.pth"
+  ckpt_path: "output/videollama_interaction/checkpoint_best.pth"
 
   evaluate: False 
   train_splits: ["train"]
