@@ -654,11 +654,33 @@ class RunnerBase:
         # TODO In validation, you need to compute loss as well as metrics
         # TODO consider moving to model.before_evaluation()
         model = self.unwrap_dist_model(self.model)
+
+        ###
+        state_dict_orig = model.state_dict()
+        orig_keys = state_dict_orig.keys()
+        ###
+
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model, cur_epoch)
         elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
             model = self._reload_best_model(model, cur_epoch - 1)
         model.eval()
+
+        ###
+        state_dict_after = model.state_dict()
+        after_keys= state_dict_after.keys()
+        ###
+
+        ###
+        # compare state_dict keys:
+        if orig_keys == after_keys:
+            print("\n Keys are the same.\n")
+        else:
+            print("\n Keys are different.\n")
+        # compare state_dict contents:
+        
+        ###
+
 
         # results, records = self.task.evaluation(model, data_loader, metrics)
 
