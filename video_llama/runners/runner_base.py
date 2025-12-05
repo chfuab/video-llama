@@ -564,7 +564,7 @@ class RunnerBase:
                     split_name=split_name, cur_epoch=cur_epoch, metrics=self.metrics, skip_reload=skip_reload
                 ) """
                 test_logs[split_name], record = self.eval_epoch(
-                    split_name=split_name, cur_epoch=8, metrics=self.metrics, skip_reload=skip_reload
+                    split_name=split_name, cur_epoch=cur_epoch, metrics=self.metrics, skip_reload=skip_reload
                 )
             self.log_stats(stats=test_logs, split_name='eval')
             return test_logs
@@ -655,7 +655,7 @@ class RunnerBase:
         # TODO consider moving to model.before_evaluation()
         model = self.unwrap_dist_model(self.model)
         if not skip_reload and cur_epoch == "best":
-            model = self._reload_best_model(model, cur_epoch)
+            model = self._reload_best_model(model, 7)
         elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
             model = self._reload_best_model(model, cur_epoch - 1)
         model.eval()
