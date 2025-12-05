@@ -655,7 +655,7 @@ class RunnerBase:
         # TODO consider moving to model.before_evaluation()
         model = self.unwrap_dist_model(self.model)
         if not skip_reload and cur_epoch == "best":
-            model = self._reload_best_model(model, 7)
+            model = self._reload_best_model(model, cur_epoch)
         elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
             model = self._reload_best_model(model, cur_epoch - 1)
         model.eval()
