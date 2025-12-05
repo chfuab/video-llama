@@ -564,7 +564,7 @@ class RunnerBase:
                     split_name=split_name, cur_epoch=cur_epoch, metrics=self.metrics, skip_reload=skip_reload
                 ) """
                 test_logs[split_name], record = self.eval_epoch(
-                    split_name=split_name, cur_epoch=cur_epoch, metrics=self.metrics, skip_reload=skip_reload
+                    split_name=split_name, cur_epoch=8, metrics=self.metrics, skip_reload=skip_reload
                 )
             self.log_stats(stats=test_logs, split_name='eval')
             return test_logs
