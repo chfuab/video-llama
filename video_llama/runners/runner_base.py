@@ -464,6 +464,7 @@ class RunnerBase:
             ###
             statedict1 = self.model.state_dict()
             keys1 = statedict1.keys()
+            print("\nA\n")
             ###
 
             if not self.evaluate_only:
@@ -489,6 +490,7 @@ class RunnerBase:
                     for k in keys2:
                         if not torch.equal(statedict1[k], statedict1[k]):
                             print(k)
+                    print("\nB\n")
                     ###
                     self._save_checkpoint(cur_epoch, is_best=False)
                     
