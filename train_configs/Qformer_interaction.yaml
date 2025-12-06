@@ -65,7 +65,7 @@ run:
   weight_decay: 0.05
   max_epoch: 25
   batch_size_train: 2 #32
-  batch_size_eval: 2 #32
+  batch_size_eval: 16 #32
   num_workers: 1 #8
   warmup_steps: 2500
   iters_per_epoch: 2 #2500
@@ -75,8 +75,8 @@ run:
 
   amp: True
   # resume_ckpt_path: True
-  ckpt_path: "output/videollama_interaction/VL_LLaMA_2_7B_Finetuned.pth"
-  # ckpt_path: "output/videollama_interaction/checkpoint_best.pth"
+  # ckpt_path: "output/videollama_interaction/VL_LLaMA_2_7B_Finetuned.pth"
+  ckpt_path: "output/videollama_interaction/checkpoint_best.pth"
 
   evaluate: False 
   train_splits: ["train"]
@@ -87,10 +87,10 @@ run:
   distributed: False # True
 
   # newly added items:
-  allowed_metrics_delta: 0.05
+  allowed_metrics_delta: 0.1
   agg_metrics: "loss"
   agg_mode: "min"
   valid_splits: ["eval"]
   test_splits: ["eval"]
   evaluate_metrics: ["loss", "accuracy"]
-  iters_per_epoch_eval: 2
+  iters_per_epoch_eval: 300
