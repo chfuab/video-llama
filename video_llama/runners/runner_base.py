@@ -462,10 +462,6 @@ class RunnerBase:
 
         for cur_epoch in range(self.start_epoch, self.max_epoch):
             # training phase
-            ###
-            initial_state_dict = deepcopy(self.model.state_dict())
-            print("\nA\n") 
-            ###
             if not self.evaluate_only:
                 logging.info("Start training")
                 train_stats = self.train_epoch(cur_epoch)
@@ -483,13 +479,6 @@ class RunnerBase:
 
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
-                    ###
-                    trained_state_dict = self.model.state_dict()
-                    for key in initial_state_dict:
-                        if not torch.equal(initial_state_dict[key], trained_state_dict[key]):
-                            print(key)
-                    print("\nB\n")
-                    ###
 
                     self._save_checkpoint(cur_epoch, is_best=False)
                     
@@ -669,7 +658,7 @@ class RunnerBase:
         model = self.unwrap_dist_model(self.model)
 
         ###
-        state_dict_orig = model.state_dict()
+        state_dict_orig = deepcopy(model.state_dict())
         orig_keys = state_dict_orig.keys()
         ###
 
