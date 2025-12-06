@@ -33,6 +33,7 @@ from video_llama.datasets.datasets.dataloader_utils import (
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader, DistributedSampler
 from pprint import pprint
+from copy import deepcopy
 
 @registry.register_runner("runner_base")
 class RunnerBase:
@@ -462,7 +463,7 @@ class RunnerBase:
         for cur_epoch in range(self.start_epoch, self.max_epoch):
             # training phase
             ###
-            initial_weights = {name: param.clone() for name, param in self.model.named_parameters()}
+            initial_state_dict = deepcopy(self.model.state_dict())
             print("\nA\n") 
             ###
             if not self.evaluate_only:
@@ -483,9 +484,10 @@ class RunnerBase:
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
                     ###
-                    for name, param in self.model.named_parameters():
-                        if not torch.equal(param, initial_weights[name]):
-                            print(f"runner base Weight '{name}' has changed.")
+                    trained_state_dict = self.model.state_dict()
+                    for key in initial_state_dict:
+                        if torch.equal(initial_state_dict[key], trained_state_dict[key]):
+                            print(key)
                     print("\nB\n")
                     ###
 
