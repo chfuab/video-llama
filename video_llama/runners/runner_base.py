@@ -461,7 +461,10 @@ class RunnerBase:
 
         for cur_epoch in range(self.start_epoch, self.max_epoch):
             # training phase
-
+            ###
+            initial_weights = {name: param.clone() for name, param in self.model.named_parameters()}
+            print("\nA\n") 
+            ###
             if not self.evaluate_only:
                 logging.info("Start training")
                 train_stats = self.train_epoch(cur_epoch)
@@ -479,6 +482,13 @@ class RunnerBase:
 
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
+                    ###
+                    for name, param in self.model.named_parameters():
+                        if not torch.equal(param, initial_weights[name]):
+                            print(f"runner base Weight '{name}' has changed.")
+                    print("\nB\n")
+                    ###
+
                     self._save_checkpoint(cur_epoch, is_best=False)
                     
                     val_log.update({"cur_epoch": cur_epoch})
