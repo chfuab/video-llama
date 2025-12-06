@@ -486,7 +486,7 @@ class RunnerBase:
                     ###
                     trained_state_dict = self.model.state_dict()
                     for key in initial_state_dict:
-                        if torch.equal(initial_state_dict[key], trained_state_dict[key]):
+                        if not torch.equal(initial_state_dict[key], trained_state_dict[key]):
                             print(key)
                     print("\nB\n")
                     ###
