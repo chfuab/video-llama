@@ -488,7 +488,7 @@ class RunnerBase:
                     statedict2 = self.model.state_dict()
                     keys2 = statedict2.keys()
                     for k in keys2:
-                        if not torch.equal(statedict1[k], statedict1[k]):
+                        if not torch.equal(statedict1[k], statedict2[k]):
                             print(k)
                     print("\nB\n")
                     ###
