@@ -461,6 +461,11 @@ class RunnerBase:
 
         for cur_epoch in range(self.start_epoch, self.max_epoch):
             # training phase
+            ###
+            statedict1 = self.model.state_dict()
+            keys1 = statedict1.keys()
+            ###
+
             if not self.evaluate_only:
                 logging.info("Start training")
                 train_stats = self.train_epoch(cur_epoch)
@@ -478,6 +483,13 @@ class RunnerBase:
 
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
+                    ###
+                    statedict2 = self.model.state_dict()
+                    keys2 = statedict2.keys()
+                    for k in keys2:
+                        if not torch.equal(statedict1[k], statedict1[k]):
+                            print(k)
+                    ###
                     self._save_checkpoint(cur_epoch, is_best=False)
                     
                     val_log.update({"cur_epoch": cur_epoch})
