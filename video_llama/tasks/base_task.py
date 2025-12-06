@@ -374,6 +374,12 @@ class BaseTask:
             # In iter-based runner, we schedule the learning rate based on iterations.
             inner_epoch = start_iters // iters_per_epoch
             header = header + "; inner epoch [{}]".format(inner_epoch)
+
+        ###
+        statedict1 = model.state_dict()
+        keys1 = statedict1.keys()
+        print("\nA\n") 
+        ###
         for i in metric_logger.log_every(range(iters_per_epoch), log_freq, header):
             # if using iter-based runner, we stop after iters_per_epoch iterations.
             if i >= iters_per_epoch:
@@ -436,6 +442,15 @@ class BaseTask:
         # after train_epoch()
         # gather the stats from all processes
         
+        ###
+        statedict2 = model.state_dict()
+        keys2 = statedict2.keys()
+        for k in keys2:
+            if not torch.equal(statedict1[k], statedict2[k]):
+                print(k)
+        print("\nB\n")
+        ###
+
         metric_logger.synchronize_between_processes()
         logging.info("Averaged stats: " + str({
             k: "{:.6f}".format(meter.global_avg())
