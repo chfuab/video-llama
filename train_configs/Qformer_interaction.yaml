@@ -21,7 +21,7 @@ model:
   frozen_llama_proj: False
   frozen_video_Qformer: True
   frozen_audio_Qformer: True
-  use_lora_in_Qformer: True
+  use_lora_in_Qformer: False
   use_lora_in_video_Qformer: True
   
   fusion_head_layers: 2
@@ -68,7 +68,7 @@ run:
   batch_size_eval: 16 #32
   num_workers: 1 #8
   warmup_steps: 2500
-  iters_per_epoch: 2 #2500
+  iters_per_epoch: 2000 #2500
 
   seed: 42
   output_dir: "output/videollama_interaction"
@@ -87,7 +87,7 @@ run:
   distributed: False # True
 
   # newly added items:
-  allowed_metrics_delta: 0.1
+  allowed_metrics_delta: 0.05
   agg_metrics: "loss"
   agg_mode: "min"
   valid_splits: ["eval"]

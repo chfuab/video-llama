@@ -134,6 +134,7 @@ class VideoLLAMA(Blip2Base):
             self.Qformer = self.Qformer.eval()
             self.Qformer.train = disabled_train
             self.all_query_tokens.requires_grad = False
+            self.query_tokens.requires_grad = False
             logging.info("freeze Qformer")
         if use_lora_in_Qformer:
             self.query_tokens.requires_grad = True
@@ -322,7 +323,7 @@ class VideoLLAMA(Blip2Base):
             self.train_flag = 2 # video_Qformer and AL trained
         elif frozen_video_Qformer and frozen_audio_Qformer and use_lora_in_Qformer and use_lora_in_video_Qformer:
             self.train_flag = 4 # finetune LoRA adaptor in Qformer and video-Qformer
-        else:
+        elif frozen_video_Qformer and frozen_audio_Qformer and not(use_lora_in_Qformer) and use_lora_in_video_Qformer:
             self.train_flag = 3
         
         
@@ -387,7 +388,7 @@ class VideoLLAMA(Blip2Base):
         self.visual_encoder.to("cpu")
         self.visual_encoder.float()
 
-    def encode_videoQformer_visual(self, image):
+    """ def encode_videoQformer_visual(self, image):
         device = image.device
         
         # input shape b,c,t,h,w
@@ -445,9 +446,9 @@ class VideoLLAMA(Blip2Base):
 
             inputs_llama = self.llama_proj(video_hidden)
             atts_llama = torch.ones(inputs_llama.size()[:-1], dtype=torch.long).to(image_embeds.device)
-        return inputs_llama, atts_llama
+        return inputs_llama, atts_llama """
     
-    """ def encode_videoQformer_visual(self, image):
+    def encode_videoQformer_visual(self, image):
         device = image.device
         
         # input shape b,c,t,h,w
@@ -491,7 +492,7 @@ class VideoLLAMA(Blip2Base):
 
             inputs_llama = self.llama_proj(video_hidden)
             atts_llama = torch.ones(inputs_llama.size()[:-1], dtype=torch.long).to(image_embeds.device)
-        return inputs_llama, atts_llama """
+        return inputs_llama, atts_llama
 
     def prompt_wrap(self, img_embeds, atts_img, prompt):
         if prompt:
@@ -667,7 +668,7 @@ class VideoLLAMA(Blip2Base):
                 image = einops.rearrange(image, 'b c t h w -> b t c h w')
                 img_embeds, atts_img = self.encode_audioQformer(image, modality_type=ModalityType.VISION)
                 
-            elif self.train_flag == 4:
+            elif self.train_flag == 3:
                 img_embeds, atts_img = self.encode_videoQformer_visual(image)
                 vid_embeds_e1, att_vid_e1 = self.encode_videoQformer_visual(video_e1)
                 vid_embeds_e2, att_vid_e2 = self.encode_videoQformer_visual(video_e2)
@@ -1035,18 +1036,3 @@ class VideoLLAMA(Blip2Base):
             ckpt = torch.load(ckpt_path_2, map_location="cpu")
             msg = model.load_state_dict(ckpt['model'], strict=False)
         return model
-
-    def decode_llama_text(self, logits):
-        # logits of shape (batch_size, seq_length, vocab_size)
-        batch_size = logits.size()[0]
-        seq_length = logits.size()[1]
-
-        softmax_func = nn.Softmax(dim=2)
-        result_ids = softmax_func(logits).argmax(dim=2)
-
-        decoded_tokens = [[self.llama_tokenizer._convert_id_to_token(int(result_ids[k][s])) for s in range(seq_length)] for k in range(batch_size)]
-        result_texts = {k: [self.llama_tokenizer.convert_tokens_to_string(decoded_tokens[k])] for k in range(batch_size)}
-        return result_texts
-    
-    def decode_llama_choice(logits):
-        return
