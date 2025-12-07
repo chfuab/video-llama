@@ -472,11 +472,9 @@ class RunnerBase:
                 logging.info("Evaluating on val")
 
                 val_log , record_log = self.eval_epoch(
-                    split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch
+                    split_name='eval', metrics=self.metrics, cur_epoch=cur_epoch, skip_reload=True
                 )
-
                 if val_log is not None:
-
                     """ if cur_epoch % 5 == 4:
                         self._save_checkpoint(cur_epoch, is_best=False) """
 
@@ -657,34 +655,13 @@ class RunnerBase:
         # TODO consider moving to model.before_evaluation()
         model = self.unwrap_dist_model(self.model)
 
-        ###
-        state_dict_orig = deepcopy(model.state_dict())
-        orig_keys = state_dict_orig.keys()
-        ###
-
         if not skip_reload and cur_epoch == "best":
             model = self._reload_best_model(model, cur_epoch)
-        elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
-            model = self._reload_best_model(model, "best")
+        # elif not skip_reload and cur_epoch != "best" and (cur_epoch % 5 == 0) and (cur_epoch // 5 > 0):
+        #     model = self._reload_best_model(model, cur_epoch - 1) 
+        elif not skip_reload and cur_epoch != "best":
+            model = self._reload_best_model(model, cur_epoch)   # since saving checkpoint every epoch
         model.eval()
-
-        ###
-        state_dict_after = model.state_dict()
-        after_keys= state_dict_after.keys()
-        ###
-
-        ###
-        # compare state_dict keys:
-        if orig_keys == after_keys:
-            print("\n Keys are the same.\n")
-        else:
-            print("\n Keys are different.\n")
-        # compare state_dict contents:
-        for k in after_keys:
-            if not torch.equal(state_dict_orig[k], state_dict_after[k]):
-                print(k)
-        ###
-
 
         # results, records = self.task.evaluation(model, data_loader, metrics)
 
