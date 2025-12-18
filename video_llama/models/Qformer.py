@@ -309,7 +309,7 @@ class BertSelfOutput(nn.Module):
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.lora = LoRA(config.hidden_size, config.hidden_size, 32, 1)
+        self.lora = LoRA(config.hidden_size, config.hidden_size, 96, 1)
 
     def forward(self, hidden_states, input_tensor):
         hidden_states = self.dense(hidden_states) + self.lora(hidden_states)
@@ -376,11 +376,11 @@ class BertAttention(nn.Module):
 
 
 class BertIntermediate(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, lora_rank):
         super().__init__()
         self.dense = nn.Linear(config.hidden_size, config.intermediate_size)
 
-        self.lora = LoRA(config.hidden_size, config.intermediate_size, 32, 1)
+        self.lora = LoRA(config.hidden_size, config.intermediate_size, lora_rank, 1)
 
         if isinstance(config.hidden_act, str):
             self.intermediate_act_fn = ACT2FN[config.hidden_act]
@@ -394,12 +394,12 @@ class BertIntermediate(nn.Module):
 
 
 class BertOutput(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, lora_rank):
         super().__init__()
         self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
         self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.lora = LoRA(config.intermediate_size, config.hidden_size, 32, 1)
+        self.lora = LoRA(config.intermediate_size, config.hidden_size, lora_rank, 1)
 
     def forward(self, hidden_states, input_tensor):
         hidden_states = self.dense(hidden_states) + self.lora(hidden_states)
@@ -454,11 +454,11 @@ class BertLayer(nn.Module):
             self.has_cross_attention = True
         else:
             self.has_cross_attention = False
-        self.intermediate = BertIntermediate(config)
-        self.output = BertOutput(config)
+        self.intermediate = BertIntermediate(config, lora_rank=32)
+        self.output = BertOutput(config, lora_rank=32)
 
-        self.intermediate_query = BertIntermediate(config)
-        self.output_query = BertOutput(config)
+        self.intermediate_query = BertIntermediate(config, lora_rank=96)
+        self.output_query = BertOutput(config, lora_rank=96)
 
     """ def forward(
         self,
