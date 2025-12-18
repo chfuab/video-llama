@@ -380,7 +380,7 @@ class BertIntermediate(nn.Module):
         super().__init__()
         self.dense = nn.Linear(config.hidden_size, config.intermediate_size)
 
-        self.lora = LoRA(config.hidden_size, config.intermediate_size, 96, 1)
+        self.lora = LoRA(config.hidden_size, config.intermediate_size, 32, 1)
 
         if isinstance(config.hidden_act, str):
             self.intermediate_act_fn = ACT2FN[config.hidden_act]
@@ -399,7 +399,7 @@ class BertOutput(nn.Module):
         self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
         self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.lora = LoRA(config.intermediate_size, config.hidden_size, 96, 1)
+        self.lora = LoRA(config.intermediate_size, config.hidden_size, 32, 1)
 
     def forward(self, hidden_states, input_tensor):
         hidden_states = self.dense(hidden_states) + self.lora(hidden_states)
