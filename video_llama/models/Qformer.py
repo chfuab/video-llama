@@ -457,8 +457,8 @@ class BertLayer(nn.Module):
         self.intermediate = BertIntermediate(config, lora_rank=32)
         self.output = BertOutput(config, lora_rank=32)
 
-        self.intermediate_query = BertIntermediate(config, lora_rank=96)
-        self.output_query = BertOutput(config, lora_rank=96)
+        self.intermediate_query = BertIntermediate(config, lora_rank=384)
+        self.output_query = BertOutput(config, lora_rank=384)
 
     """ def forward(
         self,
